@@ -28,15 +28,15 @@
         </div>
         <div class="filelist">
             <div class="title">上传列表
-                <div class="copyall" style="display:none">
-                    <button title="ipfs.io永久链接国内不能访问" style="width:70px;background-color: #d0dbee;">网关<span class="tooltiptext">ipfs.io永久链接国内不能访问| 其它几个都支持中国访问</span></button>
+                <div class="button-group">
+                    <button title="ipfs.io永久链接国内不能访问" class="gateway-button">网关<span class="tooltiptext">ipfs.io永久链接国内不能访问| 其它几个都支持中国访问</span></button>
                     <button onclick="changeGateway(this);" value="https://ipfs.io" id="ipfs">国际1</button>
                     <button onclick="changeGateway(this);" value="https://i0.img2ipfs.com" id="img2ipfs">中国1</button>
                     <button onclick="changeGateway(this);" value="https://ipfs.crossbell.io" id="crossbell">中国2</button>
                     <button onclick="changeGateway(this);" value="https://gateway.ipfsscan.io" id="gateway">中国3</button>
                 </div>
-                <div class="copyall" style="display:none">
-                    <button onclick="copyAllLinks();" name="xkx" id="copyAll" style="width:70px;background-color: #d0dbee;">复制全部</button>
+                <div class="button-group">
+                    <button onclick="copyAllLinks();" name="xkx" id="copyAll">复制全部</button>
                     <button onclick="selectFormat(this);" name="xkx" id="_url">URL</button>
                     <button onclick="selectFormat(this);" name="xkx" id="_html">HTML</button>
                     <button onclick="selectFormat(this);" name="xkx" id="_Ubb">UBB</button>

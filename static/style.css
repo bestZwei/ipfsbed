@@ -109,17 +109,29 @@ body {
     align-items: center;
 }
 
-.copyall button {
+.button-group {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.button-group button {
     width: 70px;
     height: 28px;
     border-radius: 14px;
-    margin: 0 12px;
     background-color: #fff;
     transition: background-color 0.3s;
+    cursor: pointer;
 }
 
-.copyall button:hover {
+.button-group button:hover {
     background-color: #f0f0f0;
+}
+
+.gateway-button {
+    background-color: #d0dbee;
 }
 
 .upload .title select {
@@ -310,7 +322,7 @@ body {
         margin-bottom: 5px;
     }
 
-    .copyall button {
+    .button-group button {
         width: 50px;
         margin: 0 4px;
     }
