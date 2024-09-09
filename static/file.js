@@ -49,7 +49,7 @@ $(document).ready(() => {
 
     // 上传函数
     function upload(files) {
-        const maxSize = 1024 * 1024 * 1024; // 1024 MB
+        const maxSize = 5242880 * 20;
         const validExtensions = ['.PNG', '.GIF', '.JPG', '.JPEG', '.BMP', '.SVG', '.TIF', '.ICO', '.3GP', '.AVI', '.FLV', '.MOV', '.MKV', '.MP4', '.MP3', '.FLAC', '.WEBP', '.MPG', '.MPEG', '.M3U8', '.RM', '.RMVB', '.TS', '.WMV', '.ASF', '.WEBM', '.OGG', '.ACC', '.M4A', '.APE', '.TXT', '.JSON', '.DOC', '.DOCX', '.XLS', '.XLSX', '.CSV', '.SQL', '.BAK', '.PPT', '.PPTX', '.ZIP', '.RAR', '.7Z', '.GZ', '.TAR', '.ISO', '.MD', '.SH'];
 
         for (let i = 0; i < files.length; i++) {
