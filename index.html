@@ -1,8 +1,7 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="viewport" content="width=device-width, initial-scale=1.0">
     <title>IPFS图床</title>
     <meta name="keywords" content="IPFS图床,IPFS,去中心化图床,永久图床">
     <link rel="shortcut icon" href="https://pic.rmb.bdstatic.com/bjh/7f258369bc7cae227053a6588adb2453.png">
@@ -30,16 +29,17 @@
             <div class="title">上传列表
                 <div class="button-group">
                     <button title="ipfs.io永久链接国内不能访问" class="gateway-button">网关<span class="tooltiptext">ipfs.io官方网关已被GFW阻断| 其它几个都支持中国访问</span></button>
-                    <button onclick="changeGateway(this);" value="https://ipfs.io" id="ipfs">官方</button>
-                    <button onclick="changeGateway(this);" value="https://i0.img2ipfs.com" id="img2ipfs">中国1</button>
-                    <button onclick="changeGateway(this);" value="https://ipfs.crossbell.io" id="crossbell">中国2</button>
-                    <button onclick="changeGateway(this);" value="https://gateway.ipfsscan.io" id="gateway">中国3</button>
-                    <button onclick="changeGateway(this);" value="https://ipfs.cyou" id="ipfs-cyou">国际1</button>
-                    <button onclick="changeGateway(this);" value="https://trustless-gateway.link" id="trustless">国际2</button>
-                    <button onclick="changeGateway(this);" value="https://ipfs.runfission.com" id="runfission">国际3</button>
-                    <button onclick="changeGateway(this);" value="https://gateway.pinata.cloud" id="pinata">国际4</button>
-                    <button onclick="changeGateway(this);" value="https://hardbin.com" id="hardbin">国际5</button>
-                    <button onclick="changeGateway(this);" value="https://4everland.io" id="4everland">国际6</button>
+                    <button onclick="changeGateway(this);" value="https://cdn.ipfsscan.io" id="default">默认网关</button>
+                    <button onclick="changeGateway(this);" value="https://ipfs.io" id="ipfs">官方网关</button>
+                    <button onclick="changeGateway(this);" value="https://i0.img2ipfs.com" id="img2ipfs">网关1</button>
+                    <button onclick="changeGateway(this);" value="https://ipfs.crossbell.io" id="crossbell">网关2</button>
+                    <button onclick="changeGateway(this);" value="https://gateway.ipfsscan.io" id="gateway">网关3</button>
+                    <button onclick="changeGateway(this);" value="https://ipfs.cyou" id="ipfs-cyou">网关4</button>
+                    <button onclick="changeGateway(this);" value="https://gateway.pinata.cloud" id="pinata">网关5</button>
+                    <button onclick="changeGateway(this);" value="https://hardbin.com" id="hardbin">网关6</button>
+                    <button onclick="changeGateway(this);" value="https://dlunar.net" id="dlunar">网关7</button>
+                    <button onclick="changeGateway(this);" value="https://w3s.link" id="w3s">网关8</button>
+                    <button onclick="changeGateway(this);" value="https://dweb.link" id="dweb">网关9</button>
                 </div>
                 <div class="button-group">
                     <button onclick="copyAllLinks();" name="xkx" id="copyAll">复制全部</button>
