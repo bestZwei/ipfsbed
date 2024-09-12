@@ -1,6 +1,6 @@
 # IPFS图床
 
-演示：https://ipfs.cool.us.kg
+演示：https://ipfsbed.is-an.org/
 
 上传图片等文件到ipfs
 

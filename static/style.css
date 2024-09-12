@@ -65,6 +65,12 @@ body {
     font-size: 14px;
 }
 
+.language-selector {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+}
+
 .container {
     display: grid;
     gap: 20px;
