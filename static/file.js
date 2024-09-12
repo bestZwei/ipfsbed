@@ -50,21 +50,11 @@ $(document).ready(() => {
     // 上传函数
     function upload(files) {
         const maxSize = 5242880 * 20;
-        const validExtensions = [
-            // 图片格式
-            '.BMP', '.JPG', '.JPEG', '.PNG', '.TIF', '.GIF', '.PCX', '.TGA', '.EXIF', '.FPX', '.SVG', '.PSD', '.CDR', '.PCD', '.DXF', '.UFO', '.EPS', '.AI', '.RAW', '.WMF', '.WEBP', '.AVIF', '.APNG',
-            // 视频格式
-            '.3GP', '.AVI', '.FLV', '.MOV', '.MKV', '.MP4', '.MPG', '.MPEG', '.M3U8', '.RM', '.RMVB', '.TS', '.WMV', '.ASF', '.WEBM',
-            // 音频格式
-            '.MP3', '.FLAC', '.OGG', '.ACC', '.M4A', '.APE', '.WAV', '.WMA',
-            // 文档格式
-            '.TXT', '.JSON', '.DOC', '.DOCX', '.XLS', '.XLSX', '.CSV', '.SQL', '.BAK', '.PPT', '.PPTX', '.PDF', '.MD', '.RTF',
-            // 电子书格式
-            '.EPUB', '.MOBI', '.AZW', '.AZW3', '.CBR', '.CBZ', '.FB2',
-            // 压缩文件格式
-            '.ZIP', '.RAR', '.7Z', '.GZ', '.TAR', '.ISO',
-            // 源代码文件格式
-            '.C', '.CPP', '.H', '.HPP', '.JAVA', '.PY', '.JS', '.HTML', '.CSS', '.PHP', '.RB', '.GO', '.R', '.SWIFT', '.KT', '.TS', '.CS', '.VB', '.SH', '.BAT', '.CMD', '.PS1', '.PL', '.PM', '.R', '.RMD', '.IPYNB', '.RKT', '.SCALA', '.LUA', '.ML', '.VHD', '.V', '.SV', '.ASM', '.S', '.PAS', '.BAS', '.LISP', '.SCM', '.SCSS', '.SASS', '.LESS', '.COFFEE', '.TSX', '.JSX', '.XML', '.YAML', '.YML', '.INI', '.CFG', '.CONF'
+        const restrictedExtensions = [
+            // 可执行文件
+            '.EXE', '.BAT', '.CMD', '.COM', '.SCR', '.PIF', '.MSI', '.MSP', '.JAR',
+            // 脚本文件
+            '.JS', '.VBS', '.VBE', '.WSF', '.WSH', '.PS1', '.PSM1', '.SH', '.BASH', '.CSH', '.KSH', '.ZSH', '.TCSH', '.PL', '.CGI', '.PHP', '.ASP', '.ASPX', '.CER', '.CSR', '.JSP', '.JSPX', '.HTML', '.HTM'
         ];
 
         for (let i = 0; i < files.length; i++) {
@@ -72,7 +62,7 @@ $(document).ready(() => {
             const fileName = file.name;
             const fileExtension = fileName.substring(fileName.lastIndexOf('.')).toUpperCase();
 
-            if (!validExtensions.includes(fileExtension)) {
+            if (restrictedExtensions.includes(fileExtension)) {
                 alert('文件类型错误,不支持该文件类型');
                 $('#file').val(null);
                 return;
