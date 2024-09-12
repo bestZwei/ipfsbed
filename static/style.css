@@ -118,14 +118,13 @@ body {
 }
 
 .button-group button {
-    width: 90px; /* 增加按钮宽度 */
-    height: 35px; /* 增加按钮高度 */
-    border-radius: 17.5px;
+    width: 70px;
+    height: 28px;
+    border-radius: 14px;
     background-color: #fff;
     transition: background-color 0.3s, transform 0.3s;
     cursor: pointer;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    font-size: 12px; /* 调整字体大小以适应按钮 */
 }
 
 .button-group button:hover {
@@ -326,7 +325,7 @@ body {
     }
 
     .button-group button {
-        width: 70px; /* 调整移动端按钮宽度 */
+        width: 50px;
         margin: 0 4px;
     }
 
