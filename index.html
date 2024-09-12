@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>IPFS图床</title>
-    <meta name="keywords" content="IPFS图床,图床,文件床,IPFS,去中心化图床">
+    <meta name="keywords" content="IPFS图床,IPFS,去中心化图床,永久图床">
     <link rel="shortcut icon" href="https://pic.rmb.bdstatic.com/bjh/7f258369bc7cae227053a6588adb2453.png">
     <link rel="stylesheet" href="./static/style.css">
     <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js"></script>
@@ -29,7 +29,6 @@
         <div class="filelist">
             <div class="title">上传列表
                 <div class="button-group">
-                    <button title="ipfs.io永久链接国内不能访问" class="gateway-button">网关<span class="tooltiptext">ipfs.io官方网关已被GFW阻断| 其它几个都支持中国访问</span></button>
                     <button onclick="changeGateway(this);" value="https://cdn.ipfsscan.io" id="default">默认网关</button>
                     <button onclick="changeGateway(this);" value="https://ipfs.io" id="ipfs">官方网关</button>
                     <button onclick="changeGateway(this);" value="https://i0.img2ipfs.com" id="img2ipfs">网关1</button>
@@ -42,10 +41,8 @@
                     <button onclick="changeGateway(this);" value="https://w3s.link" id="w3s">网关8</button>
                     <button onclick="changeGateway(this);" value="https://dweb.link" id="dweb">网关9</button>
                     <button onclick="changeGateway(this);" value="https://ipfs.infura-ipfs.io" id="infura">网关10</button>
-                    <button onclick="changeGateway(this);" value="https://ipfs.runfission.com" id="runfission">网关11</button>
                 </div>
                 <div class="button-group">
-                    <button onclick="copyAllLinks();" name="xkx" id="copyAll">复制全部</button>
                     <button onclick="selectFormat(this);" name="xkx" id="_url">URL</button>
                     <button onclick="selectFormat(this);" name="xkx" id="_html">HTML</button>
                     <button onclick="selectFormat(this);" name="xkx" id="_Ubb">UBB</button>
@@ -62,7 +59,7 @@
                 <a href="https://ipfs.github.io/public-gateway-checker/">更多网关</a>
             </div>
         </div>
-        © 2021-2024
+        © 2024
     </div>
 </body>
 </html>
