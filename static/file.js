@@ -1,8 +1,8 @@
 function seeding(res) {
     const gateways = [
-        'https://i0.img2ipfs.com/ipfs/',
-        'https://ipfs.io/ipfs/',
         'https://cdn.ipfsscan.io/ipfs/',
+        'https://ipfs.io/ipfs/',
+        'https://i0.img2ipfs.com/ipfs/',
         'https://ipfs.crossbell.io/ipfs/',
         'https://gateway.ipfsscan.io/ipfs/',
         'https://ipfs.cyou/ipfs/',
@@ -96,7 +96,7 @@ $(document).ready(() => {
             }
 
             document.querySelector('.container').classList.add('start');
-            const api = 'https://i0.img2ipfs.com/api/v0/add?pin=false';
+            const api = 'https://cdn.ipfsscan.io/api/v0/add?pin=false';
             const formData = new FormData();
             formData.append('file', file);
             const randomClass = Date.now().toString(36);
