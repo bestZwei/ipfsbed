@@ -1,3 +1,16 @@
+function seeding(res) {
+    const gateways = [
+        'https://cdn.ipfsscan.io/ipfs/',
+        'https://ipfs.io/ipfs/',
+        // 添加其他网关
+    ];
+    gateways.forEach(gateway => {
+        fetch(gateway + res.Hash)
+            .then(response => console.log(`Seeding at ${gateway}: ${response.status}`))
+            .catch(error => console.error(`Error seeding at ${gateway}:`, error));
+    });
+}
+
 $(document).ready(() => {
     // 临时粘贴上传
     $(document).on('paste', event => {
@@ -159,6 +172,7 @@ $(document).ready(() => {
                         $('.copyall').show();
                         const title = $('.filelist .title').html().replace('上传列表', '');
                         $('.filelist .title').html(title);
+                        setTimeout(() => seeding(res), 3000);
                     } else {
                         handleError(randomClass);
                     }
@@ -225,20 +239,6 @@ function changeGateway(obj) {
         input.value = newUrl;
         input.closest('.item').querySelector(".file #url").href = newUrl;
     });
-}
-
-function copyAllLinks() {
-    let allLinks = '';
-    document.querySelectorAll('#show').forEach(input => {
-        allLinks += `${input.value}\n`;
-    });
-    const textarea = document.createElement('textarea');
-    textarea.value = allLinks;
-    document.body.appendChild(textarea);
-    textarea.select();
-    document.execCommand('copy');
-    document.body.removeChild(textarea);
-    alert('链接已复制到剪贴板');
 }
 
 function copyToClipboard(obj) {
