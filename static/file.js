@@ -2,7 +2,16 @@ function seeding(res) {
     const gateways = [
         'https://cdn.ipfsscan.io/ipfs/',
         'https://ipfs.io/ipfs/',
-        // 添加其他网关
+        'https://i0.img2ipfs.com/ipfs/',
+        'https://ipfs.crossbell.io/ipfs/',
+        'https://gateway.ipfsscan.io/ipfs/',
+        'https://ipfs.cyou/ipfs/',
+        'https://gateway.pinata.cloud/ipfs/',
+        'https://hardbin.com/ipfs/',
+        'https://dlunar.net/ipfs/',
+        'https://w3s.link/ipfs/',
+        'https://dweb.link/ipfs/',
+        'https://ipfs.infura-ipfs.io/ipfs/'
     ];
     gateways.forEach(gateway => {
         fetch(gateway + res.Hash)
