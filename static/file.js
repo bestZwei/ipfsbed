@@ -54,41 +54,35 @@ $(document).ready(() => {
 
             $('.filelist .list').append(createFileItem(file, randomClass));
 
-            if (uploadGateway === 'img2ipfs') {
-                await uploadToImg2IPFS(file, randomClass);
-            } else if (uploadGateway === 'pinata') {
-                await uploadToPinata(file, randomClass);
+            try {
+                let res;
+                if (uploadGateway === 'img2ipfs') {
+                    res = await uploadToImg2IPFS(file);
+                } else if (uploadGateway === 'pinata') {
+                    res = await uploadToPinata(file);
+                }
+                handleUploadSuccess(res, randomClass);
+            } catch (error) {
+                console.error(error);
+                handleError(randomClass);
             }
         }
     }
 
-    async function uploadToImg2IPFS(file, randomClass) {
+    async function uploadToImg2IPFS(file) {
         const api = 'https://cdn.ipfsscan.io/api/v0/add?pin=false';
         const formData = new FormData();
         formData.append('file', file);
 
-        try {
-            const res = await $.ajax({
-                url: api,
-                type: 'post',
-                dataType: 'json',
-                processData: false,
-                contentType: false,
-                data: formData,
-                xhr: () => {
-                    const xhr = $.ajaxSettings.xhr();
-                    if (!xhr.upload) return;
-                    xhr.upload.addEventListener('progress', e => updateProgress(e, randomClass), false);
-                    return xhr;
-                }
-            });
-            handleUploadSuccess(res, randomClass);
-        } catch (error) {
-            handleError(randomClass);
-        }
+        const response = await axios.post(api, formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data'
+            }
+        });
+        return response.data;
     }
 
-    async function uploadToPinata(file, randomClass) {
+    async function uploadToPinata(file) {
         const formData = new FormData();
         formData.append('file', file);
 
@@ -102,18 +96,14 @@ $(document).ready(() => {
         });
         formData.append('pinataOptions', pinataOptions);
 
-        try {
-            const res = await axios.post("https://api.pinata.cloud/pinning/pinFileToIPFS", formData, {
-                maxBodyLength: "Infinity",
-                headers: {
-                    'Content-Type': `multipart/form-data; boundary=${formData._boundary}`,
-                    'Authorization': `Bearer ${process.env.PINATA_JWT}`
-                }
-            });
-            handleUploadSuccess(res.data, randomClass);
-        } catch (error) {
-            handleError(randomClass);
-        }
+        const response = await axios.post("https://api.pinata.cloud/pinning/pinFileToIPFS", formData, {
+            maxBodyLength: "Infinity",
+            headers: {
+                'Content-Type': `multipart/form-data; boundary=${formData._boundary}`,
+                'Authorization': `Bearer ${process.env.PINATA_JWT}`
+            }
+        });
+        return response.data;
     }
 
     function createFileItem(file, randomClass) {
