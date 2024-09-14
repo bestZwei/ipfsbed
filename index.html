@@ -29,20 +29,18 @@
         <div class="filelist">
             <div class="title">上传列表
                 <div class="button-group">
-                    <select id="uploadGateway">
-                        <option value="https://cdn.ipfsscan.io/api/v0/add?pin=false">国内网关</option>
-                        <option value="https://ipfs.io/api/v0/add?pin=false">官方网关</option>
-                        <option value="https://i0.img2ipfs.com/api/v0/add?pin=false">网关1</option>
-                        <option value="https://ipfs.crossbell.io/api/v0/add?pin=false">网关2</option>
-                        <option value="https://gateway.ipfsscan.io/api/v0/add?pin=false">网关3</option>
-                        <option value="https://ipfs.cyou/api/v0/add?pin=false">网关4</option>
-                        <option value="https://gateway.pinata.cloud/api/v0/add?pin=false">网关5</option>
-                        <option value="https://hardbin.com/api/v0/add?pin=false">网关6</option>
-                        <option value="https://dlunar.net/api/v0/add?pin=false">网关7</option>
-                        <option value="https://w3s.link/api/v0/add?pin=false">网关8</option>
-                        <option value="https://dweb.link/api/v0/add?pin=false">网关9</option>
-                        <option value="https://ipfs.infura-ipfs.io/api/v0/add?pin=false">网关10</option>
-                    </select>
+                    <button onclick="changeGateway(this);" value="https://cdn.ipfsscan.io" id="default">国内网关</button>
+                    <button onclick="changeGateway(this);" value="https://ipfs.io" id="ipfs">官方网关</button>
+                    <button onclick="changeGateway(this);" value="https://i0.img2ipfs.com" id="img2ipfs">网关1</button>
+                    <button onclick="changeGateway(this);" value="https://ipfs.crossbell.io" id="crossbell">网关2</button>
+                    <button onclick="changeGateway(this);" value="https://gateway.ipfsscan.io" id="gateway">网关3</button>
+                    <button onclick="changeGateway(this);" value="https://ipfs.cyou" id="ipfs-cyou">网关4</button>
+                    <button onclick="changeGateway(this);" value="https://gateway.pinata.cloud" id="pinata">网关5</button>
+                    <button onclick="changeGateway(this);" value="https://hardbin.com" id="hardbin">网关6</button>
+                    <button onclick="changeGateway(this);" value="https://dlunar.net" id="dlunar">网关7</button>
+                    <button onclick="changeGateway(this);" value="https://w3s.link" id="w3s">网关8</button>
+                    <button onclick="changeGateway(this);" value="https://dweb.link" id="dweb">网关9</button>
+                    <button onclick="changeGateway(this);" value="https://ipfs.infura-ipfs.io" id="infura">网关10</button>
                 </div>
                 <div class="button-group">
                     <button onclick="selectFormat(this);" name="xkx" id="_url">URL</button>
