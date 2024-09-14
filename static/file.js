@@ -96,7 +96,7 @@ $(document).ready(() => {
             }
 
             document.querySelector('.container').classList.add('start');
-            const api = 'https://cdn.ipfsscan.io/api/v0/add?pin=false';
+            const api = $('#uploadGateway').val();
             const formData = new FormData();
             formData.append('file', file);
             const randomClass = Date.now().toString(36);
