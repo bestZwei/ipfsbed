@@ -358,3 +358,30 @@ span.tooltiptext {
 button:active .tooltiptext {
     visibility: visible;
 }
+
+.select-group {
+    margin: 10px 0;
+    text-align: center;
+}
+
+.select-group select {
+    padding: 5px 10px;
+    border-radius: 5px;
+    border: 1px solid #dcdfe6;
+    background-color: #fff;
+    color: #606266;
+    font-size: 14px;
+    transition: border-color 0.3s, box-shadow 0.3s;
+    outline: none;
+    cursor: pointer;
+}
+
+.select-group select:hover {
+    border-color: #409eff;
+    box-shadow: 0 0 5px rgba(64, 158, 255, 0.5);
+}
+
+.select-group select:focus {
+    border-color: #409eff;
+    box-shadow: 0 0 5px rgba(64, 158, 255, 0.5);
+}
