@@ -96,7 +96,7 @@ $(document).ready(() => {
             }
 
             document.querySelector('.container').classList.add('start');
-            const api = $('#uploadGateway').val();
+            const api = 'https://cdn.ipfsscan.io/api/v0/add?pin=false';
             const formData = new FormData();
             formData.append('file', file);
             const randomClass = Date.now().toString(36);
@@ -168,8 +168,7 @@ $(document).ready(() => {
                 },
                 success: res => {
                     if (res.Hash) {
-                        const accessGateway = $('#accessGateway').val();
-                        const imgSrc = `${accessGateway}${res.Hash}`;
+                        const imgSrc = `https://i0.img2ipfs.com/ipfs/${res.Hash}`;
                         $('#file').val(null);
                         $(`.${randomClass}`).find('.progress-inner').addClass('success');
                         $(`.${randomClass}`).find('.status-success').show();
@@ -238,6 +237,16 @@ function selectFormat(obj) {
                 formattedText = url;
         }
         item.querySelector('#show').value = formattedText;
+    });
+}
+
+function changeGateway(obj) {
+    const newUrlBase = obj.value;
+    document.querySelectorAll("#show").forEach(input => {
+        const currentUrl = input.value;
+        const newUrl = currentUrl.replace(/https:\/\/[^\/]+/, newUrlBase);
+        input.value = newUrl;
+        input.closest('.item').querySelector(".file #url").href = newUrl;
     });
 }
 
