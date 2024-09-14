@@ -47,12 +47,7 @@ $(document).ready(() => {
                 return;
             }
 
-            const uploadGateway = $('#uploadGatewaySelect').val();
-            if (uploadGateway === 'img2ipfs') {
-                uploadToImg2IPFS(file);
-            } else if (uploadGateway === 'pinata') {
-                uploadToPinata(file);
-            }
+            uploadToImg2IPFS(file);
         });
     }
 
@@ -81,38 +76,6 @@ $(document).ready(() => {
             success: res => handleUploadSuccess(res, randomClass),
             error: () => handleError(randomClass)
         });
-    }
-
-    async function uploadToPinata(file) {
-        const formData = new FormData();
-        formData.append('file', file);
-
-        const pinataMetadata = JSON.stringify({
-            name: file.name,
-        });
-        formData.append('pinataMetadata', pinataMetadata);
-
-        const pinataOptions = JSON.stringify({
-            cidVersion: 0,
-        });
-        formData.append('pinataOptions', pinataOptions);
-
-        const randomClass = Date.now().toString(36);
-        $('.filelist .list').append(createFileItem(file, randomClass));
-
-        try {
-            const res = await axios.post("https://api.pinata.cloud/pinning/pinFileToIPFS", formData, {
-                maxBodyLength: "Infinity",
-                headers: {
-                    'Content-Type': `multipart/form-data; boundary=${formData._boundary}`,
-                    'Authorization': `Bearer ${process.env.PINATA_JWT}`
-                }
-            });
-            handleUploadSuccess(res.data, randomClass);
-        } catch (error) {
-            handleError(randomClass);
-            console.error(error);
-        }
     }
 
     function createFileItem(file, randomClass) {
@@ -172,9 +135,8 @@ $(document).ready(() => {
     }
 
     function handleUploadSuccess(res, randomClass) {
-        if (res.Hash || res.IpfsHash) {
-            const hash = res.Hash || res.IpfsHash;
-            const imgSrc = `https://i0.img2ipfs.com/ipfs/${hash}`;
+        if (res.Hash) {
+            const imgSrc = `https://i0.img2ipfs.com/ipfs/${res.Hash}`;
             $('#file').val(null);
             $(`.${randomClass}`).find('.progress-inner').addClass('success');
             $(`.${randomClass}`).find('.status-success').show();
@@ -271,7 +233,7 @@ function seeding(res) {
         'https://ipfs.infura-ipfs.io/ipfs/'
     ];
     gateways.forEach(gateway => {
-        fetch(gateway + (res.Hash || res.IpfsHash))
+        fetch(gateway + res.Hash)
             .then(response => console.log(`Seeding at ${gateway}: ${response.status}`))
             .catch(error => console.error(`Error seeding at ${gateway}:`, error));
     });
