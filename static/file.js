@@ -1,40 +1,16 @@
-function seeding(res) {
-    const gateways = [
-        'https://cdn.ipfsscan.io/ipfs/',
-        'https://ipfs.io/ipfs/',
-        'https://i0.img2ipfs.com/ipfs/',
-        'https://ipfs.crossbell.io/ipfs/',
-        'https://gateway.ipfsscan.io/ipfs/',
-        'https://ipfs.cyou/ipfs/',
-        'https://gateway.pinata.cloud/ipfs/',
-        'https://hardbin.com/ipfs/',
-        'https://dlunar.net/ipfs/',
-        'https://w3s.link/ipfs/',
-        'https://dweb.link/ipfs/',
-        'https://ipfs.infura-ipfs.io/ipfs/'
-    ];
-    gateways.forEach(gateway => {
-        fetch(gateway + res.Hash)
-            .then(response => console.log(`Seeding at ${gateway}: ${response.status}`))
-            .catch(error => console.error(`Error seeding at ${gateway}:`, error));
-    });
-}
-
 $(document).ready(() => {
-    // 处理粘贴上传
-    $(document).on('paste', handlePasteUpload);
+    // 初始化事件监听
+    initEventListeners();
 
-    // 点击上传
-    $('.upload .content').on('click', () => $('#file').click());
-
-    // 监听文件选择
-    $('#file').on('change', () => upload($('#file')[0].files));
-
-    // 处理拖拽上传
-    $('#dragbox').on('dragover', e => e.preventDefault())
-                 .on('dragenter', () => $('.upload').addClass('dragenter'))
-                 .on('dragleave', () => $('.upload').removeClass('dragenter'))
-                 .on('drop', handleDropUpload);
+    function initEventListeners() {
+        $(document).on('paste', handlePasteUpload);
+        $('.upload .content').on('click', () => $('#file').click());
+        $('#file').on('change', () => upload($('#file')[0].files));
+        $('#dragbox').on('dragover', e => e.preventDefault())
+                     .on('dragenter', () => $('.upload').addClass('dragenter'))
+                     .on('dragleave', () => $('.upload').removeClass('dragenter'))
+                     .on('drop', handleDropUpload);
+    }
 
     function handlePasteUpload(event) {
         const clipboardData = event.clipboardData || window.clipboardData || event.originalEvent.clipboardData;
@@ -50,7 +26,6 @@ $(document).ready(() => {
         upload(e.originalEvent.dataTransfer.files);
     }
 
-    // 上传函数
     function upload(files) {
         const maxSize = 5242880 * 20;
         const restrictedExtensions = [
@@ -236,4 +211,26 @@ function copyToClipboard(obj) {
     obj.select();
     document.execCommand("Copy");
     alert('链接已复制到剪贴板');
+}
+
+function seeding(res) {
+    const gateways = [
+        'https://cdn.ipfsscan.io/ipfs/',
+        'https://ipfs.io/ipfs/',
+        'https://i0.img2ipfs.com/ipfs/',
+        'https://ipfs.crossbell.io/ipfs/',
+        'https://gateway.ipfsscan.io/ipfs/',
+        'https://ipfs.cyou/ipfs/',
+        'https://gateway.pinata.cloud/ipfs/',
+        'https://hardbin.com/ipfs/',
+        'https://dlunar.net/ipfs/',
+        'https://w3s.link/ipfs/',
+        'https://dweb.link/ipfs/',
+        'https://ipfs.infura-ipfs.io/ipfs/'
+    ];
+    gateways.forEach(gateway => {
+        fetch(gateway + res.Hash)
+            .then(response => console.log(`Seeding at ${gateway}: ${response.status}`))
+            .catch(error => console.error(`Error seeding at ${gateway}:`, error));
+    });
 }
