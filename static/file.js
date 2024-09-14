@@ -1,5 +1,39 @@
+const axios = require('axios');
+const FormData = require('form-data');
+const fs = require('fs');
+require('dotenv').config();
+
+const JWT = process.env.PINATA_JWT;
+
+const pinFileToIPFS = async (file) => {
+    const formData = new FormData();
+    formData.append('file', file);
+
+    const pinataMetadata = JSON.stringify({
+      name: 'File name',
+    });
+    formData.append('pinataMetadata', pinataMetadata);
+
+    const pinataOptions = JSON.stringify({
+      cidVersion: 0,
+    });
+    formData.append('pinataOptions', pinataOptions);
+
+    try {
+      const res = await axios.post("https://api.pinata.cloud/pinning/pinFileToIPFS", formData, {
+        maxBodyLength: "Infinity",
+        headers: {
+          'Content-Type': `multipart/form-data; boundary=${formData._boundary}`,
+          'Authorization': `Bearer ${JWT}`
+        }
+      });
+      console.log(res.data);
+    } catch (error) {
+      console.log(error);
+    }
+};
+
 $(document).ready(() => {
-    // 初始化事件监听
     initEventListeners();
 
     function initEventListeners() {
@@ -47,30 +81,38 @@ $(document).ready(() => {
                 return;
             }
 
-            document.querySelector('.container').classList.add('start');
-            const api = 'https://cdn.ipfsscan.io/api/v0/add?pin=false';
-            const formData = new FormData();
-            formData.append('file', file);
-            const randomClass = Date.now().toString(36);
+            const uploadGateway = $('#uploadGatewaySelect').val();
+            if (uploadGateway === 'pinata') {
+                pinFileToIPFS(file);
+            } else {
+                defaultUpload(file);
+            }
+        });
+    }
 
-            $('.filelist .list').append(createFileItem(file, randomClass));
+    function defaultUpload(file) {
+        const api = 'https://cdn.ipfsscan.io/api/v0/add?pin=false';
+        const formData = new FormData();
+        formData.append('file', file);
+        const randomClass = Date.now().toString(36);
 
-            $.ajax({
-                url: api,
-                type: 'post',
-                dataType: 'json',
-                processData: false,
-                contentType: false,
-                data: formData,
-                xhr: () => {
-                    const xhr = $.ajaxSettings.xhr();
-                    if (!xhr.upload) return;
-                    xhr.upload.addEventListener('progress', e => updateProgress(e, randomClass), false);
-                    return xhr;
-                },
-                success: res => handleUploadSuccess(res, randomClass),
-                error: () => handleError(randomClass)
-            });
+        $('.filelist .list').append(createFileItem(file, randomClass));
+
+        $.ajax({
+            url: api,
+            type: 'post',
+            dataType: 'json',
+            processData: false,
+            contentType: false,
+            data: formData,
+            xhr: () => {
+                const xhr = $.ajaxSettings.xhr();
+                if (!xhr.upload) return;
+                xhr.upload.addEventListener('progress', e => updateProgress(e, randomClass), false);
+                return xhr;
+            },
+            success: res => handleUploadSuccess(res, randomClass),
+            error: () => handleError(randomClass)
         });
     }
 
