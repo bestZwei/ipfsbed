@@ -20,54 +20,142 @@
     background-color: rgba(50, 50, 50, 0.1);
 }
 
-html, body {
+html {
+    height: 100%;
+}
+
+@-webkit-keyframes Gradient {
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+@keyframes Gradient {
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+body {
     height: 100%;
     display: flex;
     align-items: center;
     justify-content: center;
     background: linear-gradient(-45deg, rgba(9, 69, 138, 0.2), rgba(68, 155, 255, 0.7), rgba(117, 113, 251, 0.7), rgba(68, 155, 255, 0.7), rgba(9, 69, 138, 0.2));
     background-size: 400% 400%;
+    -webkit-animation: Gradient 15s ease infinite;
     animation: Gradient 15s ease infinite;
-    font-family: 'Helvetica Neue', Helvetica, 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', '微软雅黑', Arial, sans-serif;
-    font-size: 14px;
     -webkit-user-select: none;
     -moz-user-select: none;
     -ms-user-select: none;
     user-select: none;
-}
-
-@keyframes Gradient {
-    0% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
-    100% { background-position: 0% 50%; }
+    font-family: 'Helvetica Neue', Helvetica, 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', '微软雅黑', Arial, sans-serif;
+    font-size: 14px;
 }
 
 .container {
-    display: flex;
+    display: grid;
     gap: 20px;
-    flex-direction: column;
-    align-items: center;
+    grid-template-columns: 500px 250px;
+    grid-template-rows: 500px;
 }
 
-.upload, .filelist {
+.container.start {
+    display: grid;
+    gap: 20px;
+    grid-template-columns: 250px 500px;
+    grid-template-rows: 500px;
+}
+
+.upload,
+.filelist {
     background: #fff;
     border-radius: 8px;
     box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
     overflow: hidden;
-    width: 500px;
-    max-width: 90%;
 }
 
-.upload .title, .filelist .title {
+.upload .title,
+.filelist .title {
     height: 45px;
     border-bottom: 1px solid #f2f6fc;
     color: #606266;
     font-weight: 500;
     padding: 0 15px;
     font-size: 16px;
+}
+
+.upload {
+    -webkit-animation: slideRight 1.5s;
+    animation: slideRight 1.5s;
+    transition: box-shadow 0.35s;
+}
+
+.upload .title {
     display: flex;
-    align-items: center;
     justify-content: space-between;
+    align-items: center;
+}
+
+.button-group {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.button-group button {
+    width: 70px;
+    height: 28px;
+    border-radius: 14px;
+    background-color: #fff;
+    transition: background-color 0.3s, transform 0.3s;
+    cursor: pointer;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.button-group button:hover {
+    background-color: #f0f0f0;
+    transform: translateY(-2px);
+}
+
+.gateway-button {
+    background-color: #d0dbee;
+}
+
+.upload .title select {
+    height: 28px;
+    padding: 0 5px;
+    border-radius: 14px;
+}
+
+#show {
+    width: 475px;
+    height: 28px;
+    outline: none;
+    border: 1px solid #dcdfe6;
+    padding: 0 15px;
+    color: #606266;
+    border-radius: 14px;
+    font-size: 12px;
+    transition: border 0.35s;
+    -webkit-appearance: none;
+}
+
+.upload .title input:focus {
+    border-color: #409eff;
 }
 
 .upload .content {
@@ -97,6 +185,15 @@ html, body {
 .upload.dragenter {
     box-shadow: 20px 20px 20px 0 rgba(0, 0, 0, 0.25);
     background-color: #f0f8ff;
+}
+
+.upload.dragenter .content>* {
+    pointer-events: none;
+}
+
+.filelist {
+    -webkit-animation: slideLeft 1.5s;
+    animation: slideLeft 1.5s;
 }
 
 .filelist .list {
@@ -204,14 +301,71 @@ html, body {
     height: 14px;
 }
 
+@media (max-width: 780px) {
+    body {
+        height: auto;
+        padding: 5vh 0;
+    }
+
+    .container {
+        grid-template-columns: 350px;
+        grid-template-rows: 400px 150px;
+    }
+
+    .container.start {
+        grid-template-columns: 350px !important;
+        grid-template-rows: 150px 400px !important;
+    }
+
+    .upload .content .icon {
+        width: 50px;
+        height: 50px;
+        margin-bottom: 5px;
+    }
+
+    .button-group button {
+        width: 50px;
+        margin: 0 4px;
+    }
+
+    #show {
+        width: 320px;
+        padding: 0 11px;
+    }
+}
+
+.filelist .title {
+    text-align: center;
+    display: inline-table;
+    line-height: 35px;
+    padding: 5px 15px;
+}
+
+span.tooltiptext {
+    visibility: hidden;
+    width: 178px;
+    background-color: black;
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 5px 0;
+    position: absolute;
+    z-index: 1;
+    margin: -75px -100px;
+}
+
+button:active .tooltiptext {
+    visibility: visible;
+}
+
 .select-group {
     margin: 10px 0;
     text-align: center;
 }
 
 .select-group label {
-    margin-right: 10px;
-    font-weight: 500;
+    margin-right: 5px;
+    font-weight: bold;
     color: #606266;
 }
 
@@ -235,70 +389,4 @@ html, body {
 .select-group select:focus {
     border-color: #409eff;
     box-shadow: 0 0 5px rgba(64, 158, 255, 0.5);
-}
-
-.button-group {
-    display: flex;
-    justify-content: center;
-    gap: 10px;
-    margin-top: 10px;
-}
-
-.button-group button {
-    width: 70px;
-    height: 28px;
-    border-radius: 14px;
-    background-color: #fff;
-    transition: background-color 0.3s, transform 0.3s;
-    cursor: pointer;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-}
-
-.button-group button:hover {
-    background-color: #f0f0f0;
-    transform: translateY(-2px);
-}
-
-#show {
-    width: 475px;
-    height: 28px;
-    outline: none;
-    border: 1px solid #dcdfe6;
-    padding: 0 15px;
-    color: #606266;
-    border-radius: 14px;
-    font-size: 12px;
-    transition: border 0.35s;
-    -webkit-appearance: none;
-}
-
-#show:focus {
-    border-color: #409eff;
-}
-
-@media (max-width: 780px) {
-    .container {
-        flex-direction: column;
-        align-items: center;
-    }
-
-    .upload, .filelist {
-        width: 90%;
-    }
-
-    .upload .content .icon {
-        width: 50px;
-        height: 50px;
-        margin-bottom: 5px;
-    }
-
-    .button-group button {
-        width: 50px;
-        margin: 0 4px;
-    }
-
-    #show {
-        width: 320px;
-        padding: 0 11px;
-    }
 }
