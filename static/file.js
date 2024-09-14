@@ -1,39 +1,5 @@
-const axios = require('axios');
-const FormData = require('form-data');
-const fs = require('fs');
-require('dotenv').config();
-
-const JWT = process.env.PINATA_JWT;
-
-const pinFileToIPFS = async (file) => {
-    const formData = new FormData();
-    formData.append('file', file);
-
-    const pinataMetadata = JSON.stringify({
-      name: 'File name',
-    });
-    formData.append('pinataMetadata', pinataMetadata);
-
-    const pinataOptions = JSON.stringify({
-      cidVersion: 0,
-    });
-    formData.append('pinataOptions', pinataOptions);
-
-    try {
-      const res = await axios.post("https://api.pinata.cloud/pinning/pinFileToIPFS", formData, {
-        maxBodyLength: "Infinity",
-        headers: {
-          'Content-Type': `multipart/form-data; boundary=${formData._boundary}`,
-          'Authorization': `Bearer ${JWT}`
-        }
-      });
-      console.log(res.data);
-    } catch (error) {
-      console.log(error);
-    }
-};
-
 $(document).ready(() => {
+    // 初始化事件监听
     initEventListeners();
 
     function initEventListeners() {
@@ -60,14 +26,16 @@ $(document).ready(() => {
         upload(e.originalEvent.dataTransfer.files);
     }
 
-    function upload(files) {
+    async function upload(files) {
         const maxSize = 5242880 * 20;
         const restrictedExtensions = [
             '.EXE', '.BAT', '.CMD', '.COM', '.SCR', '.PIF', '.MSI', '.MSP', '.JAR',
             '.JS', '.VBS', '.VBE', '.WSF', '.WSH', '.PS1', '.PSM1', '.SH', '.BASH', '.CSH', '.KSH', '.ZSH', '.TCSH', '.PL', '.CGI', '.PHP', '.ASP', '.ASPX', '.CER', '.CSR', '.JSP', '.JSPX', '.HTML', '.HTM'
         ];
 
-        Array.from(files).forEach(file => {
+        const uploadGateway = $('#uploadGatewaySelect').val();
+
+        for (const file of files) {
             const fileExtension = file.name.substring(file.name.lastIndexOf('.')).toUpperCase();
 
             if (restrictedExtensions.includes(fileExtension)) {
@@ -81,39 +49,71 @@ $(document).ready(() => {
                 return;
             }
 
-            const uploadGateway = $('#uploadGatewaySelect').val();
-            if (uploadGateway === 'pinata') {
-                pinFileToIPFS(file);
-            } else {
-                defaultUpload(file);
+            document.querySelector('.container').classList.add('start');
+            const randomClass = Date.now().toString(36);
+
+            $('.filelist .list').append(createFileItem(file, randomClass));
+
+            if (uploadGateway === 'img2ipfs') {
+                await uploadToImg2IPFS(file, randomClass);
+            } else if (uploadGateway === 'pinata') {
+                await uploadToPinata(file, randomClass);
             }
-        });
+        }
     }
 
-    function defaultUpload(file) {
+    async function uploadToImg2IPFS(file, randomClass) {
         const api = 'https://cdn.ipfsscan.io/api/v0/add?pin=false';
         const formData = new FormData();
         formData.append('file', file);
-        const randomClass = Date.now().toString(36);
 
-        $('.filelist .list').append(createFileItem(file, randomClass));
+        try {
+            const res = await $.ajax({
+                url: api,
+                type: 'post',
+                dataType: 'json',
+                processData: false,
+                contentType: false,
+                data: formData,
+                xhr: () => {
+                    const xhr = $.ajaxSettings.xhr();
+                    if (!xhr.upload) return;
+                    xhr.upload.addEventListener('progress', e => updateProgress(e, randomClass), false);
+                    return xhr;
+                }
+            });
+            handleUploadSuccess(res, randomClass);
+        } catch (error) {
+            handleError(randomClass);
+        }
+    }
 
-        $.ajax({
-            url: api,
-            type: 'post',
-            dataType: 'json',
-            processData: false,
-            contentType: false,
-            data: formData,
-            xhr: () => {
-                const xhr = $.ajaxSettings.xhr();
-                if (!xhr.upload) return;
-                xhr.upload.addEventListener('progress', e => updateProgress(e, randomClass), false);
-                return xhr;
-            },
-            success: res => handleUploadSuccess(res, randomClass),
-            error: () => handleError(randomClass)
+    async function uploadToPinata(file, randomClass) {
+        const formData = new FormData();
+        formData.append('file', file);
+
+        const pinataMetadata = JSON.stringify({
+            name: file.name,
         });
+        formData.append('pinataMetadata', pinataMetadata);
+
+        const pinataOptions = JSON.stringify({
+            cidVersion: 0,
+        });
+        formData.append('pinataOptions', pinataOptions);
+
+        try {
+            const res = await axios.post("https://api.pinata.cloud/pinning/pinFileToIPFS", formData, {
+                maxBodyLength: "Infinity",
+                headers: {
+                    'Content-Type': `multipart/form-data; boundary=${formData._boundary}`,
+                    'Authorization': `Bearer ${process.env.PINATA_JWT}`
+                }
+            });
+            handleUploadSuccess(res.data, randomClass);
+        } catch (error) {
+            handleError(randomClass);
+        }
     }
 
     function createFileItem(file, randomClass) {
