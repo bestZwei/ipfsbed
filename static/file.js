@@ -26,16 +26,14 @@ $(document).ready(() => {
         upload(e.originalEvent.dataTransfer.files);
     }
 
-    async function upload(files) {
+    function upload(files) {
         const maxSize = 5242880 * 20;
         const restrictedExtensions = [
             '.EXE', '.BAT', '.CMD', '.COM', '.SCR', '.PIF', '.MSI', '.MSP', '.JAR',
             '.JS', '.VBS', '.VBE', '.WSF', '.WSH', '.PS1', '.PSM1', '.SH', '.BASH', '.CSH', '.KSH', '.ZSH', '.TCSH', '.PL', '.CGI', '.PHP', '.ASP', '.ASPX', '.CER', '.CSR', '.JSP', '.JSPX', '.HTML', '.HTM'
         ];
 
-        const uploadGateway = $('#uploadGatewaySelect').val();
-
-        for (const file of files) {
+        Array.from(files).forEach(file => {
             const fileExtension = file.name.substring(file.name.lastIndexOf('.')).toUpperCase();
 
             if (restrictedExtensions.includes(fileExtension)) {
@@ -49,37 +47,40 @@ $(document).ready(() => {
                 return;
             }
 
-            document.querySelector('.container').classList.add('start');
-            const randomClass = Date.now().toString(36);
-
-            $('.filelist .list').append(createFileItem(file, randomClass));
-
-            try {
-                let res;
-                if (uploadGateway === 'img2ipfs') {
-                    res = await uploadToImg2IPFS(file);
-                } else if (uploadGateway === 'pinata') {
-                    res = await uploadToPinata(file);
-                }
-                handleUploadSuccess(res, randomClass);
-            } catch (error) {
-                console.error(error);
-                handleError(randomClass);
+            const uploadGateway = $('#uploadGatewaySelect').val();
+            if (uploadGateway === 'img2ipfs') {
+                uploadToImg2IPFS(file);
+            } else if (uploadGateway === 'pinata') {
+                uploadToPinata(file);
             }
-        }
+        });
     }
 
-    async function uploadToImg2IPFS(file) {
+    function uploadToImg2IPFS(file) {
+        document.querySelector('.container').classList.add('start');
         const api = 'https://cdn.ipfsscan.io/api/v0/add?pin=false';
         const formData = new FormData();
         formData.append('file', file);
+        const randomClass = Date.now().toString(36);
 
-        const response = await axios.post(api, formData, {
-            headers: {
-                'Content-Type': 'multipart/form-data'
-            }
+        $('.filelist .list').append(createFileItem(file, randomClass));
+
+        $.ajax({
+            url: api,
+            type: 'post',
+            dataType: 'json',
+            processData: false,
+            contentType: false,
+            data: formData,
+            xhr: () => {
+                const xhr = $.ajaxSettings.xhr();
+                if (!xhr.upload) return;
+                xhr.upload.addEventListener('progress', e => updateProgress(e, randomClass), false);
+                return xhr;
+            },
+            success: res => handleUploadSuccess(res, randomClass),
+            error: () => handleError(randomClass)
         });
-        return response.data;
     }
 
     async function uploadToPinata(file) {
@@ -96,14 +97,22 @@ $(document).ready(() => {
         });
         formData.append('pinataOptions', pinataOptions);
 
-        const response = await axios.post("https://api.pinata.cloud/pinning/pinFileToIPFS", formData, {
-            maxBodyLength: "Infinity",
-            headers: {
-                'Content-Type': `multipart/form-data; boundary=${formData._boundary}`,
-                'Authorization': `Bearer ${process.env.PINATA_JWT}`
-            }
-        });
-        return response.data;
+        const randomClass = Date.now().toString(36);
+        $('.filelist .list').append(createFileItem(file, randomClass));
+
+        try {
+            const res = await axios.post("https://api.pinata.cloud/pinning/pinFileToIPFS", formData, {
+                maxBodyLength: "Infinity",
+                headers: {
+                    'Content-Type': `multipart/form-data; boundary=${formData._boundary}`,
+                    'Authorization': `Bearer ${process.env.PINATA_JWT}`
+                }
+            });
+            handleUploadSuccess(res.data, randomClass);
+        } catch (error) {
+            handleError(randomClass);
+            console.error(error);
+        }
     }
 
     function createFileItem(file, randomClass) {
@@ -163,8 +172,9 @@ $(document).ready(() => {
     }
 
     function handleUploadSuccess(res, randomClass) {
-        if (res.Hash) {
-            const imgSrc = `https://i0.img2ipfs.com/ipfs/${res.Hash}`;
+        if (res.Hash || res.IpfsHash) {
+            const hash = res.Hash || res.IpfsHash;
+            const imgSrc = `https://i0.img2ipfs.com/ipfs/${hash}`;
             $('#file').val(null);
             $(`.${randomClass}`).find('.progress-inner').addClass('success');
             $(`.${randomClass}`).find('.status-success').show();
@@ -261,7 +271,7 @@ function seeding(res) {
         'https://ipfs.infura-ipfs.io/ipfs/'
     ];
     gateways.forEach(gateway => {
-        fetch(gateway + res.Hash)
+        fetch(gateway + (res.Hash || res.IpfsHash))
             .then(response => console.log(`Seeding at ${gateway}: ${response.status}`))
             .catch(error => console.error(`Error seeding at ${gateway}:`, error));
     });
