@@ -1,27 +1,14 @@
 $(document).ready(() => {
-    // 显示倒计时
-    showCountdown();
+    // 显示上传提示框
+    $('#upload-warning').fadeIn();
 
-    function showCountdown() {
-        let countdown = 10;
-        const countdownElement = $('<div class="countdown">上传将在 <span id="countdown-timer">10</span> 秒后开始...</div>');
-        $('.upload .content').append(countdownElement);
+    // 5秒后隐藏提示框
+    setTimeout(() => {
+        $('#upload-warning').fadeOut();
+    }, 5000);
 
-        const interval = setInterval(() => {
-            countdown--;
-            $('#countdown-timer').text(countdown);
-            if (countdown <= 0) {
-                clearInterval(interval);
-                countdownElement.remove();
-                enableUpload();
-            }
-        }, 1000);
-    }
-
-    function enableUpload() {
-        // 初始化事件监听
-        initEventListeners();
-    }
+    // 初始化事件监听
+    initEventListeners();
 
     function initEventListeners() {
         $(document).on('paste', handlePasteUpload);
