@@ -3,8 +3,8 @@ $(document).ready(() => {
     showCountdown();
 
     function showCountdown() {
-        let countdown = 5;
-        const countdownElement = $('<div class="countdown">上传将在 <span id="countdown-timer">5</span> 秒后开始...</div>');
+        let countdown = 10;
+        const countdownElement = $('<div class="countdown">上传将在 <span id="countdown-timer">10</span> 秒后开始...</div>');
         $('.upload .content').append(countdownElement);
 
         const interval = setInterval(() => {
