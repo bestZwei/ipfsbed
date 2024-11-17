@@ -37,9 +37,44 @@ $(document).ready(() => {
     function upload(files) {
         const maxSize = 5242880 * 20;
         const restrictedExtensions = [
+            // 可执行文件
             '.EXE', '.BAT', '.CMD', '.COM', '.SCR', '.PIF', '.MSI', '.MSP', '.JAR',
-            '.JS', '.VBS', '.VBE', '.WSF', '.WSH', '.PS1', '.PSM1', '.SH', '.BASH', '.CSH', '.KSH', '.ZSH', '.TCSH', '.PL', '.CGI', '.PHP', '.ASP', '.ASPX', '.CER', '.CSR', '.JSP', '.JSPX', '.HTML', '.HTM'
+            '.DLL', '.SYS', '.DRV', '.OCX', '.GADGET', '.VB', '.VBE', '.WS', '.WSH',
+        
+            // 脚本文件
+            '.JS', '.JSE', '.VBS', '.VBE', '.WSF', '.WSH', '.PS1', '.PSM1', '.SH',
+            '.BASH', '.CSH', '.KSH', '.ZSH', '.TCSH', '.PL', '.PY', '.RB', '.RUBY',
+            '.TCL', '.PERL', '.PHP', '.PHP3', '.PHP4', '.PHP5', '.PHTML', '.PHPS',
+        
+            // Web文件
+            '.ASP', '.ASPX', '.CER', '.CSR', '.JSP', '.JSPX', '.HTML', '.HTM',
+            '.SHTML', '.XHTML', '.XHT', '.SVG', '.SVGZ', '.MHT', '.MHTML',
+        
+            // 配置和注册表文件
+            '.REG', '.INF', '.INI', '.CFG', '.CONF', '.LOG', '.DAT', '.DSN',
+        
+            // 压缩和磁盘映像
+            '.ISO', '.IMG', '.VHD', '.VHDX', '.VDI', '.VMDK', '.DMG', '.RAR', '.ZIP',
+            '.7Z', '.TAR', '.GZ', '.TGZ', '.BZ2', '.XZ',
+        
+            // 文档和数据库
+            '.MDB', '.ACCDB', '.DB', '.SQL', '.DBF', '.ORA', '.RDB', '.CSV', '.XLS',
+            '.XLSX', '.ODS', '.DOC', '.DOCX', '.PPT', '.PPTX', '.PDF',
+        
+            // 其他潜在危险文件
+            '.CHM', '.INS', '.ISP', '.MSC', '.LNK', '.URL', '.SCF', '.MHT', '.MHTML',
+            '.CHM', '.CPL', '.HTA', '.JAR', '.PY', '.RB', '.PS1', '.PSM1', '.PSC1',
+            '.PSC2', '.HTA', '.CPL', '.ADP', '.APP', '.BAS', '.CRT', '.CSPROJ',
+            '.CST', '.DBPROJ', '.DEPLOY', '.DOT', '.DOTX', '.GRP', '.HLP', '.HQX',
+            '.HPJ', '.HTT', '.ICO', '.IPF', '.ISP', '.JSE', '.LNK', '.MAK', '.MANIFEST',
+            '.MPP', '.MPT', '.MSG', '.OPS', '.PCD', '.PIF', '.PRF', '.PRG', '.PST',
+            '.QPX', '.RAR', '.RC', '.REG', '.SCF', '.SCR', '.SCT', '.SHB', '.SHTM',
+            '.SHTML', '.SOAP', '.STM', '.STP', '.SVC', '.SWF', '.TLB', '.TSPROJ',
+            '.URL', '.VB', '.VBE', '.VBS', '.VSD', '.VSS', '.VST', '.VSW', '.WEBARCHIVE',
+            '.WIZ', '.WSC', '.WSF', '.WSH', '.XLA', '.XLC', '.XLM', '.XLS', '.XLSB',
+            '.XLT', '.XLW', '.XML', '.XSL', '.XSLT', '.XSN', '.ZAP'
         ];
+        
 
         Array.from(files).forEach(file => {
             const fileExtension = file.name.substring(file.name.lastIndexOf('.')).toUpperCase();
