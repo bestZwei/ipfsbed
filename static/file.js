@@ -1,9 +1,27 @@
 $(document).ready(() => {
-    // 初始化事件监听
-    initEventListeners();
+    // 显示倒计时
+    showCountdown();
 
-    // 自动上传一个简单的文件
-    autoUpload();
+    function showCountdown() {
+        let countdown = 5;
+        const countdownElement = $('<div class="countdown">上传将在 <span id="countdown-timer">5</span> 秒后开始...</div>');
+        $('.upload .content').append(countdownElement);
+
+        const interval = setInterval(() => {
+            countdown--;
+            $('#countdown-timer').text(countdown);
+            if (countdown <= 0) {
+                clearInterval(interval);
+                countdownElement.remove();
+                enableUpload();
+            }
+        }, 1000);
+    }
+
+    function enableUpload() {
+        // 初始化事件监听
+        initEventListeners();
+    }
 
     function initEventListeners() {
         $(document).on('paste', handlePasteUpload);
@@ -13,15 +31,6 @@ $(document).ready(() => {
                      .on('dragenter', () => $('.upload').addClass('dragenter'))
                      .on('dragleave', () => $('.upload').removeClass('dragenter'))
                      .on('drop', handleDropUpload);
-    }
-
-    function autoUpload() {
-        // 创建一个简单的Blob文件
-        const blob = new Blob(['Hello, world!'], { type: 'text/plain' });
-        const file = new File([blob], 'example.txt', { type: 'text/plain' });
-
-        // 调用上传函数
-        upload([file]);
     }
 
     function handlePasteUpload(event) {
@@ -70,10 +79,7 @@ $(document).ready(() => {
         formData.append('file', file);
         const randomClass = Date.now().toString(36);
 
-        // 隐藏自动上传的文件项
-        const fileItem = createFileItem(file, randomClass);
-        $(fileItem).css('display', 'none');
-        $('.filelist .list').append(fileItem);
+        $('.filelist .list').append(createFileItem(file, randomClass));
 
         $.ajax({
             url: api,
