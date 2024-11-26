@@ -6,7 +6,7 @@ $(document).ready(() => {
     setTimeout(() => {
         $('#upload-warning').fadeOut();
     }, 5000);
-
+    
     // 初始化事件监听
     initEventListeners();
 
