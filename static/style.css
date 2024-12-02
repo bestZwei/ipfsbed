@@ -68,13 +68,6 @@ body {
 .container {
     display: grid;
     gap: 20px;
-    grid-template-columns: 500px 250px;
-    grid-template-rows: 500px;
-}
-
-.container.start {
-    display: grid;
-    gap: 20px;
     grid-template-columns: 250px 500px;
     grid-template-rows: 500px;
 }
@@ -98,6 +91,7 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
+    gap: 20px;
 }
 
 .upload {
@@ -195,6 +189,8 @@ body {
 }
 
 .filelist {
+    -webkit-animation: slideLeft 1.5s;
+    animation: slideLeft 1.5s;
     display: flex;
     flex-direction: column;
     height: 100%;
@@ -209,9 +205,9 @@ body {
     overflow-y: auto;
     min-height: 0;
     padding: 10px;
-    scroll-behavior: smooth;
     padding-bottom: 20px;
     margin-bottom: 10px;
+    scroll-behavior: smooth;
 }
 
 .filelist .list .item {
@@ -320,12 +316,7 @@ body {
 
     .container {
         grid-template-columns: 350px;
-        grid-template-rows: 400px 150px;
-    }
-
-    .container.start {
-        grid-template-columns: 350px !important;
-        grid-template-rows: 150px 400px !important;
+        grid-template-rows: 150px 400px;
     }
 
     .upload .content .icon {
