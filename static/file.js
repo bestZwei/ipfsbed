@@ -72,29 +72,64 @@ $(document).ready(() => {
 
     function uploadToImg2IPFS(file) {
         document.querySelector('.container').classList.add('start');
-        const api = 'https://cdn.ipfsscan.io/api/v0/add?pin=false';
+        const apis = [
+            'https://cdn.ipfsscan.io/api/v0/add?pin=false',
+            'https://ipfs.crossbell.io/api/v0/add?pin=false',
+            'https://ipfs.4everland.xyz/api/v0/add?pin=false'
+        ];
         const formData = new FormData();
         formData.append('file', file);
         const randomClass = Date.now().toString(36);
-
+        
         $('.filelist .list').append(createFileItem(file, randomClass));
+        
+        // 添加重试机制
+        const tryUpload = (apiIndex = 0, retryCount = 0) => {
+            if (apiIndex >= apis.length) {
+                handleError(randomClass, '所有API尝试失败');
+                return;
+            }
+            
+            $.ajax({
+                url: apis[apiIndex],
+                type: 'post',
+                dataType: 'json',
+                processData: false,
+                contentType: false,
+                data: formData,
+                timeout: 30000, // 30秒超时
+                xhr: () => {
+                    const xhr = $.ajaxSettings.xhr();
+                    if (xhr.upload) {
+                        xhr.upload.addEventListener('progress', e => updateProgress(e, randomClass), false);
+                    }
+                    return xhr;
+                },
+                success: res => {
+                    if (res.Hash) {
+                        handleUploadSuccess(res, randomClass);
+                        setTimeout(() => seeding(res), 1000);
+                    } else {
+                        if (retryCount < 2) {
+                            setTimeout(() => tryUpload(apiIndex, retryCount + 1), 1000);
+                        } else {
+                            tryUpload(apiIndex + 1, 0);
+                        }
+                    }
+                },
+                error: (xhr, status) => {
+                    if (status === 'timeout') {
+                        tryUpload(apiIndex + 1, 0);
+                    } else if (retryCount < 2) {
+                        setTimeout(() => tryUpload(apiIndex, retryCount + 1), 1000);
+                    } else {
+                        tryUpload(apiIndex + 1, 0);
+                    }
+                }
+            });
+        };
 
-        $.ajax({
-            url: api,
-            type: 'post',
-            dataType: 'json',
-            processData: false,
-            contentType: false,
-            data: formData,
-            xhr: () => {
-                const xhr = $.ajaxSettings.xhr();
-                if (!xhr.upload) return;
-                xhr.upload.addEventListener('progress', e => updateProgress(e, randomClass), false);
-                return xhr;
-            },
-            success: res => handleUploadSuccess(res, randomClass),
-            error: () => handleError(randomClass)
-        });
+        tryUpload();
     }
 
     function createFileItem(file, randomClass) {
@@ -154,31 +189,29 @@ $(document).ready(() => {
     }
 
     function handleUploadSuccess(res, randomClass) {
-        if (res.Hash) {
-            const imgSrc = `https://cdn.ipfsscan.io/ipfs/${res.Hash}`;
-            seeding(res);
-            $('#file').val(null);
-            $(`.${randomClass}`).find('.progress-inner').addClass('success');
-            $(`.${randomClass}`).find('.status-success').show();
-            $(`.${randomClass}`).find('#url').attr({ href: imgSrc, target: '_blank' });
-            $(`.${randomClass}`).find('#Imgs_url').val(imgSrc);
-            $(`.${randomClass}`).find('#Imgs_html').val(`<img src="${imgSrc}"/>`);
-            $(`.${randomClass}`).find('#Imgs_Ubb').val(`[img]${imgSrc}[/img]`);
-            $(`.${randomClass}`).find('#Imgs_markdown').val(`![](${imgSrc})`);
-            $(`.${randomClass}`).find('#show').show().val(imgSrc);
-            $('.copyall').show();
-            const title = $('.filelist .title').html().replace('上传列表', '');
-            $('.filelist .title').html(title);
-        } else {
-            handleError(randomClass);
-        }
+        const gateway = $('#gatewaySelect').val() || 'https://cdn.ipfsscan.io';
+        const imgSrc = `${gateway}/ipfs/${res.Hash}`;
+        
+        $('#file').val(null);
+        $(`.${randomClass}`).find('.progress-inner').addClass('success');
+        $(`.${randomClass}`).find('.status-success').show();
+        $(`.${randomClass}`).find('#url').attr({ href: imgSrc, target: '_blank' });
+        
+        // 更新各种格式的链接
+        $(`.${randomClass}`).find('#Imgs_url').val(imgSrc);
+        $(`.${randomClass}`).find('#Imgs_html').val(`<img src="${imgSrc}"/>`);
+        $(`.${randomClass}`).find('#Imgs_Ubb').val(`[img]${imgSrc}[/img]`);
+        $(`.${randomClass}`).find('#Imgs_markdown').val(`![](${imgSrc})`);
+        $(`.${randomClass}`).find('#show').show().val(imgSrc);
+        
+        $('.copyall').show();
     }
 
-    function handleError(randomClass) {
+    function handleError(randomClass, message = '上传出错！请稍后重试') {
         $(`.${randomClass}`).find('.progress-inner').addClass('error');
         $(`.${randomClass}`).find('.status-error').show();
-        $(`.${randomClass}`).find('#show').show().val("上传出错！请稍后重试");
-        // 3秒后自动隐藏错误提示
+        $(`.${randomClass}`).find('#show').show().val(message);
+        
         setTimeout(() => {
             $(`.${randomClass}`).find('.status-error').hide();
         }, 3000);
