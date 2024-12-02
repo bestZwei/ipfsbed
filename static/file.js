@@ -34,14 +34,29 @@ $(document).ready(() => {
             
             // 办公文档
             '.DOC', '.DOCX', '.XLS', '.XLSX', '.PPT', '.PPTX', '.PDF', '.ODF', '.ODS', '.ODT', 
+            '.WPS', '.WPT', '.DOT', '.DOTX', '.XLT', '.XLTX', '.POT', '.POTX',
             
             // 文本文件
             '.TXT', '.MD', '.MARKDOWN', '.RTF', '.CSV', '.JSON', '.XML', '.YAML', '.YML',
             '.INI', '.CFG', '.CONF', '.LOG', '.NFO',
             '.LICENSE', '.README',
             
+            // 视频文件
+            '.MP4', '.WEBM', '.OGV', '.MKV', '.AVI', '.MOV', '.WMV', '.FLV', '.F4V', 
+            '.M4V', '.MPG', '.MPEG', '.3GP', '.3G2', '.TS', '.MTS', '.M2TS',
+            
+            // 音频文件
+            '.MP3', '.WAV', '.OGG', '.M4A', '.AAC', '.WMA', '.FLAC', '.APE', 
+            '.OPUS', '.AIFF', '.DSD', '.DSF', '.CUE', '.MID', '.MIDI',
+            
             // 字幕文件
-            '.SRT', '.ASS', '.SSA', '.VTT'
+            '.SRT', '.ASS', '.SSA', '.VTT', '.SUB', '.IDX',
+            
+            // 电子书格式
+            '.EPUB', '.MOBI', '.AZW3', '.FB2', '.LIT', '.LRF', '.PDB', '.PRC',
+            
+            // 压缩文件
+            '.ZIP', '.RAR', '.7Z', '.TAR', '.GZ'
         ];
 
         Array.from(files).forEach(file => {
