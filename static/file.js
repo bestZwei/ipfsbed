@@ -1,11 +1,24 @@
 $(document).ready(() => {
-    // 显示上传提示框
-    $('#upload-warning').fadeIn();
+    // 预热IPFS节点
+    function warmupIPFS() {
+        fetch('https://cdn.ipfsscan.io/api/v0/version')
+            .then(response => {
+                console.log('IPFS node warmed up');
+                // 隐藏警告提示
+                $('#upload-warning').fadeOut();
+            })
+            .catch(error => {
+                console.error('IPFS node warmup failed:', error);
+                // 5秒后重试
+                setTimeout(warmupIPFS, 5000);
+            });
+    }
 
-    // 5秒后隐藏提示框
-    setTimeout(() => {
-        $('#upload-warning').fadeOut();
-    }, 5000);
+    // 显示上传提示框
+    $('#upload-warning').html('<p>正在连接IPFS网络，首次上传可能需要等待几秒...</p>').fadeIn();
+
+    // 开始预热
+    warmupIPFS();
     
     // 初始化事件监听
     initEventListeners();
@@ -110,14 +123,35 @@ $(document).ready(() => {
             processData: false,
             contentType: false,
             data: formData,
+            timeout: 30000, // 增加超时时间到30秒
+            retries: 2,     // 添加重试次数
+            retryCount: 0,  // 当前重试次数
             xhr: () => {
                 const xhr = $.ajaxSettings.xhr();
                 if (!xhr.upload) return;
-                xhr.upload.addEventListener('progress', e => updateProgress(e, randomClass), false);
+                xhr.upload.addEventListener('progress', e => {
+                    const percent = Math.floor((e.loaded / e.total) * 100);
+                    $(`.${randomClass}`).find('.progress-inner').css('width', `${percent}%`);
+                }, false);
                 return xhr;
             },
-            success: res => handleUploadSuccess(res, randomClass),
-            error: () => handleError(randomClass)
+            success: res => {
+                if (res.Hash) {
+                    handleUploadSuccess(res, randomClass);
+                } else {
+                    handleError(randomClass);
+                }
+            },
+            error: (jqXHR, textStatus, errorThrown) => {
+                // 如果是超时错误且未超过重试次数，则重试
+                if (textStatus === 'timeout' && this.retryCount < this.retries) {
+                    this.retryCount++;
+                    $(`.${randomClass}`).find('#show').show().val(`正在重试上传... (${this.retryCount}/${this.retries})`);
+                    $.ajax(this);
+                } else {
+                    handleError(randomClass);
+                }
+            }
         });
     }
 
@@ -172,40 +206,13 @@ $(document).ready(() => {
         `;
     }
 
-    function updateProgress(e, randomClass) {
-        const percent = Math.floor((e.loaded / e.total) * 100);
-        $(`.${randomClass}`).find('.progress-inner').css('width', `${percent}%`);
-    }
-
-    function handleUploadSuccess(res, randomClass) {
-        if (res.Hash) {
-            const imgSrc = `https://cdn.ipfsscan.io/ipfs/${res.Hash}`;
-            seeding(res);
-            $('#file').val(null);
-            $(`.${randomClass}`).find('.progress-inner').addClass('success');
-            $(`.${randomClass}`).find('.status-success').show();
-            $(`.${randomClass}`).find('#url').attr({ href: imgSrc, target: '_blank' });
-            $(`.${randomClass}`).find('#Imgs_url').val(imgSrc);
-            $(`.${randomClass}`).find('#Imgs_html').val(`<img src="${imgSrc}"/>`);
-            $(`.${randomClass}`).find('#Imgs_Ubb').val(`[img]${imgSrc}[/img]`);
-            $(`.${randomClass}`).find('#Imgs_markdown').val(`![](${imgSrc})`);
-            $(`.${randomClass}`).find('#show').show().val(imgSrc);
-            $('.copyall').show();
-            const title = $('.filelist .title').html().replace('上传列表', '');
-            $('.filelist .title').html(title);
-        } else {
-            handleError(randomClass);
-        }
-    }
-
     function handleError(randomClass) {
         $(`.${randomClass}`).find('.progress-inner').addClass('error');
         $(`.${randomClass}`).find('.status-error').show();
-        $(`.${randomClass}`).find('#show').show().val("上传出错！请稍后重试");
-        // 3秒后自动隐藏错误提示
-        setTimeout(() => {
-            $(`.${randomClass}`).find('.status-error').hide();
-        }, 3000);
+        $(`.${randomClass}`).find('#show').show().val("上传出错！正在重新连接IPFS网络，请稍后重试");
+        
+        // 重新预热IPFS节点
+        warmupIPFS();
     }
 
     function formatBytes(bytes, decimals = 2) {
