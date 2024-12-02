@@ -1,13 +1,5 @@
 $(document).ready(() => {
-    // 显示上传提示框
-    $('#upload-warning').fadeIn();
-
-    // 5秒后隐藏提示框
-    setTimeout(() => {
-        $('#upload-warning').fadeOut();
-    }, 5000);
-    
-    // 初始化事件监听
+    // 直接开始初始化事件监听
     initEventListeners();
 
     function initEventListeners() {
