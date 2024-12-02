@@ -281,3 +281,17 @@ function seeding(res) {
             .catch(error => console.error(`Error seeding at ${gateway}:`, error));
     });
 }
+
+function copyAllLinks() {
+    let allLinks = '';
+    document.querySelectorAll('#show').forEach(input => {
+        allLinks += `${input.value}\n`;
+    });
+    const textarea = document.createElement('textarea');
+    textarea.value = allLinks;
+    document.body.appendChild(textarea);
+    textarea.select();
+    document.execCommand('copy');
+    document.body.removeChild(textarea);
+    alert('链接已复制到剪贴板');
+}
