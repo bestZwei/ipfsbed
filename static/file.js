@@ -1,12 +1,4 @@
 $(document).ready(() => {
-    // 显示上传提示框
-    $('#upload-warning').fadeIn();
-
-    // 5秒后隐藏提示框
-    setTimeout(() => {
-        $('#upload-warning').fadeOut();
-    }, 5000);
-    
     // 初始化事件监听
     initEventListeners();
 
@@ -116,7 +108,26 @@ $(document).ready(() => {
                 xhr.upload.addEventListener('progress', e => updateProgress(e, randomClass), false);
                 return xhr;
             },
-            success: res => handleUploadSuccess(res, randomClass),
+            success: res => {
+                if (res.Hash) {
+                    const imgSrc = `https://cdn.ipfsscan.io/ipfs/${res.Hash}`;
+                    seeding(res);
+                    $('#file').val(null);
+                    $(`.${randomClass}`).find('.progress-inner').addClass('success');
+                    $(`.${randomClass}`).find('.status-success').show();
+                    $(`.${randomClass}`).find('#url').attr({ href: imgSrc, target: '_blank' });
+                    $(`.${randomClass}`).find('#Imgs_url').val(imgSrc);
+                    $(`.${randomClass}`).find('#Imgs_html').val(`<img src="${imgSrc}"/>`);
+                    $(`.${randomClass}`).find('#Imgs_Ubb').val(`[img]${imgSrc}[/img]`);
+                    $(`.${randomClass}`).find('#Imgs_markdown').val(`![](${imgSrc})`);
+                    $(`.${randomClass}`).find('#show').show().val(imgSrc);
+                    $('.copyall').show();
+                    const title = $('.filelist .title').html().replace('上传列表', '');
+                    $('.filelist .title').html(title);
+                } else {
+                    handleError(randomClass);
+                }
+            },
             error: () => handleError(randomClass)
         });
     }
@@ -175,27 +186,6 @@ $(document).ready(() => {
     function updateProgress(e, randomClass) {
         const percent = Math.floor((e.loaded / e.total) * 100);
         $(`.${randomClass}`).find('.progress-inner').css('width', `${percent}%`);
-    }
-
-    function handleUploadSuccess(res, randomClass) {
-        if (res.Hash) {
-            const imgSrc = `https://i0.img2ipfs.com/ipfs/${res.Hash}`;
-            $('#file').val(null);
-            $(`.${randomClass}`).find('.progress-inner').addClass('success');
-            $(`.${randomClass}`).find('.status-success').show();
-            $(`.${randomClass}`).find('#url').attr({ href: imgSrc, target: '_blank' });
-            $(`.${randomClass}`).find('#Imgs_url').val(imgSrc);
-            $(`.${randomClass}`).find('#Imgs_html').val(`<img src="${imgSrc}"/>`);
-            $(`.${randomClass}`).find('#Imgs_Ubb').val(`[img]${imgSrc}[/img]`);
-            $(`.${randomClass}`).find('#Imgs_markdown').val(`![](${imgSrc})`);
-            $(`.${randomClass}`).find('#show').show().val(imgSrc);
-            $('.copyall').show();
-            const title = $('.filelist .title').html().replace('上传列表', '');
-            $('.filelist .title').html(title);
-            setTimeout(() => seeding(res), 3000);
-        } else {
-            handleError(randomClass);
-        }
     }
 
     function handleError(randomClass) {
@@ -273,13 +263,33 @@ function seeding(res) {
         'https://dlunar.net/ipfs/',
         'https://w3s.link/ipfs/',
         'https://dweb.link/ipfs/',
-        'https://ipfs.infura-ipfs.io/ipfs/'
+        'https://ipfs.infura-ipfs.io/ipfs/',
+        'https://4everland.io/ipfs/',
+        'https://polygon.stampsdaq.com/ipfs/',
+        'https://ipfs.supremelegend.io/ipfs/',
+        'https://ipfs.decentralized-content.com/ipfs/',
+        'https://eth.sucks/ipfs/',
+        'https://gw.ipfs-lens.dev/ipfs/'
     ];
+
     gateways.forEach(gateway => {
         fetch(gateway + res.Hash)
-            .then(response => console.log(`Seeding at ${gateway}: ${response.status}`))
-            .catch(error => console.error(`Error seeding at ${gateway}:`, error));
+            .then(response => {
+                console.log(`Seeding at ${gateway}: ${response.status}`);
+                return response.status === 200;
+            })
+            .catch(error => {
+                console.error(`Error seeding at ${gateway}:`, error);
+                return false;
+            });
     });
+
+    setTimeout(() => {
+        gateways.forEach(gateway => {
+            fetch(gateway + res.Hash)
+                .catch(error => console.error(`Retry seeding error at ${gateway}:`, error));
+        });
+    }, 30000);
 }
 
 function copyAllLinks() {
