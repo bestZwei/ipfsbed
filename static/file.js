@@ -80,7 +80,10 @@ $(document).ready(() => {
     function uploadToImg2IPFS(file) {
         document.querySelector('.container').classList.add('start');
         const apis = [
+            'http://2ipfs.zone.id/api/v0/add?pin=false',
             'https://cdn.ipfsscan.io/api/v0/add?pin=false',
+            'https://api.img2ipfs.org/api/v0/add?pin=false',
+            'https://ipfs.io/api/v0/add?pin=false',
             'https://ipfs.crossbell.io/api/v0/add?pin=false',
             'https://ipfs.4everland.xyz/api/v0/add?pin=false'
         ];
@@ -285,15 +288,13 @@ function seeding(res) {
         'https://cdn.ipfsscan.io/ipfs/',
         'https://ipfs.io/ipfs/',
         'https://i0.img2ipfs.com/ipfs/',
-        'https://ipfs.crossbell.io/ipfs/',
         'https://gateway.ipfsscan.io/ipfs/',
         'https://ipfs.cyou/ipfs/',
         'https://gateway.pinata.cloud/ipfs/',
         'https://hardbin.com/ipfs/',
         'https://dlunar.net/ipfs/',
         'https://w3s.link/ipfs/',
-        'https://dweb.link/ipfs/',
-        'https://ipfs.infura-ipfs.io/ipfs/'
+        'https://dweb.link/ipfs/'
     ];
     gateways.forEach(gateway => {
         fetch(gateway + res.Hash)
