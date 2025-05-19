@@ -182,7 +182,7 @@ $(document).ready(() => {
                         </svg>
                     </div>
                 </div>
-                <!-- Remove the input text fields and add buttons instead -->
+                <!-- Copy buttons group -->
                 <div class="copy-buttons-group" style="display:none">
                     <button class="copy-btn" data-type="url" onclick="copySpecificFormat(this)">URL</button>
                     <button class="copy-btn" data-type="cid" onclick="copySpecificFormat(this)">CID</button>
@@ -214,7 +214,7 @@ $(document).ready(() => {
         $(`.${randomClass}`).find('.status-success').show();
         $(`.${randomClass}`).find('#url').attr({ href: imgSrc, target: '_blank' });
         
-        // 存储各种格式的链接到隐藏字段
+        // Store the various format values in hidden inputs
         $(`.${randomClass}`).find('.data-url').val(imgSrc);
         $(`.${randomClass}`).find('.data-cid').val(res.Hash);
         $(`.${randomClass}`).find('.data-html').val(`<img src="${imgSrc}"/>`);
