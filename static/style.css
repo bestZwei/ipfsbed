@@ -254,20 +254,42 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 5px;
+    padding: 8px;
     cursor: pointer;
     margin-left: 10px;
     border-radius: 50%;
-    transition: background 0.2s;
+    transition: all 0.2s ease;
+    background-color: rgba(240, 240, 240, 0.5);
+    width: 34px;
+    height: 34px;
 }
 
 .filelist .list .item .file .link svg {
     width: 18px;
     height: 18px;
+    transition: all 0.2s ease;
 }
 
 .filelist .list .item .file .link:hover {
-    background: #f56c6c50;
+    background: rgba(240, 240, 240, 0.95);
+    transform: translateY(-2px);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.filelist .list .item .file .link:hover svg {
+    fill: #409eff;
+}
+
+.filelist .list .item .file .link:active {
+    transform: translateY(0);
+}
+
+.icon-open:hover {
+    fill: #409eff !important;
+}
+
+.icon-delete:hover {
+    fill: #f56c6c !important;
 }
 
 .filelist .list .item .progress {
