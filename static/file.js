@@ -182,13 +182,20 @@ $(document).ready(() => {
                         </svg>
                     </div>
                 </div>
-                <div class="result" style="display:none">
-                    <input value="" id="Imgs_url">URL</input>
-                    <input value="" id="Imgs_html">HTML</input>
-                    <input value="" id="Imgs_Ubb">BBCode</input>
-                    <input value="" id="Imgs_markdown">Markdown</input>
+                <!-- Remove the input text fields and add buttons instead -->
+                <div class="copy-buttons-group" style="display:none">
+                    <button class="copy-btn" data-type="url" onclick="copySpecificFormat(this)">URL</button>
+                    <button class="copy-btn" data-type="cid" onclick="copySpecificFormat(this)">CID</button>
+                    <button class="copy-btn" data-type="html" onclick="copySpecificFormat(this)">HTML</button>
+                    <button class="copy-btn" data-type="ubb" onclick="copySpecificFormat(this)">UBB</button>
+                    <button class="copy-btn" data-type="markdown" onclick="copySpecificFormat(this)">MD</button>
                 </div>
-                <input id="show" name="show" onclick="copyToClipboard(this)" type="text" value="" readonly style="display:none">
+                <!-- Hidden inputs to store the data -->
+                <input type="hidden" class="data-url" value="">
+                <input type="hidden" class="data-cid" value="">
+                <input type="hidden" class="data-html" value="">
+                <input type="hidden" class="data-ubb" value="">
+                <input type="hidden" class="data-markdown" value="">
             </div>
         `;
     }
@@ -207,12 +214,15 @@ $(document).ready(() => {
         $(`.${randomClass}`).find('.status-success').show();
         $(`.${randomClass}`).find('#url').attr({ href: imgSrc, target: '_blank' });
         
-        // 更新各种格式的链接
-        $(`.${randomClass}`).find('#Imgs_url').val(imgSrc);
-        $(`.${randomClass}`).find('#Imgs_html').val(`<img src="${imgSrc}"/>`);
-        $(`.${randomClass}`).find('#Imgs_Ubb').val(`[img]${imgSrc}[/img]`);
-        $(`.${randomClass}`).find('#Imgs_markdown').val(`![](${imgSrc})`);
-        $(`.${randomClass}`).find('#show').show().val(imgSrc);
+        // 存储各种格式的链接到隐藏字段
+        $(`.${randomClass}`).find('.data-url').val(imgSrc);
+        $(`.${randomClass}`).find('.data-cid').val(res.Hash);
+        $(`.${randomClass}`).find('.data-html').val(`<img src="${imgSrc}"/>`);
+        $(`.${randomClass}`).find('.data-ubb').val(`[img]${imgSrc}[/img]`);
+        $(`.${randomClass}`).find('.data-markdown').val(`![](${imgSrc})`);
+        
+        // 显示复制按钮组
+        $(`.${randomClass}`).find('.copy-buttons-group').show();
         
         $('.copyall').show();
     }
@@ -242,46 +252,65 @@ function deleteItem(obj) {
     item.parentNode.removeChild(item);
 }
 
-function selectFormat(obj) {
-    const format = obj.id.replace('_', '');
-    document.querySelectorAll('.item').forEach(item => {
-        const url = item.querySelector('#Imgs_url').value;
-        let formattedText;
-        switch (format) {
-            case 'url':
-                formattedText = url;
-                break;
-            case 'html':
-                formattedText = `<img src="${url}"/>`;
-                break;
-            case 'Ubb':
-                formattedText = `[img]${url}[/img]`;
-                break;
-            case 'markdown':
-                formattedText = `![](${url})`;
-                break;
-            default:
-                formattedText = url;
-        }
-        item.querySelector('#show').value = formattedText;
-    });
+// 替换旧的selectFormat函数
+function copySpecificFormat(button) {
+    const item = button.closest('.item');
+    const formatType = button.getAttribute('data-type');
+    let textToCopy;
+    
+    switch(formatType) {
+        case 'url':
+            textToCopy = item.querySelector('.data-url').value;
+            break;
+        case 'cid':
+            textToCopy = item.querySelector('.data-cid').value;
+            break;
+        case 'html':
+            textToCopy = item.querySelector('.data-html').value;
+            break;
+        case 'ubb':
+            textToCopy = item.querySelector('.data-ubb').value;
+            break;
+        case 'markdown':
+            textToCopy = item.querySelector('.data-markdown').value;
+            break;
+        default:
+            textToCopy = item.querySelector('.data-url').value;
+    }
+    
+    // 创建临时textarea来执行复制操作
+    const textarea = document.createElement('textarea');
+    textarea.value = textToCopy;
+    document.body.appendChild(textarea);
+    textarea.select();
+    document.execCommand('copy');
+    document.body.removeChild(textarea);
+    
+    // 显示复制成功提示
+    alert(`已复制${button.innerText}格式的链接到剪贴板`);
 }
 
 function changeGateway(obj) {
     const newUrlBase = obj.value;
-    document.querySelectorAll("#show").forEach(input => {
-        const currentUrl = input.value;
-        const newUrl = currentUrl.replace(/https:\/\/[^\/]+/, newUrlBase);
-        input.value = newUrl;
-        input.closest('.item').querySelector(".file #url").href = newUrl;
+    document.querySelectorAll('.item').forEach(item => {
+        // 获取CID
+        const cid = item.querySelector('.data-cid').value;
+        if (!cid) return;
+        
+        // 更新URL
+        const newUrl = `${newUrlBase}/ipfs/${cid}`;
+        item.querySelector('.data-url').value = newUrl;
+        item.querySelector('.data-html').value = `<img src="${newUrl}"/>`;
+        item.querySelector('.data-ubb').value = `[img]${newUrl}[/img]`;
+        item.querySelector('.data-markdown').value = `![](${newUrl})`;
+        
+        // 更新预览链接
+        item.querySelector(".file #url").href = newUrl;
     });
 }
 
-function copyToClipboard(obj) {
-    obj.select();
-    document.execCommand("Copy");
-    alert('链接已复制到剪贴板');
-}
+// 不再需要这个函数，被copySpecificFormat替代
+// function copyToClipboard(obj) { ... }
 
 function seeding(res) {
     const gateways = [
@@ -305,8 +334,10 @@ function seeding(res) {
 
 function copyAllLinks() {
     let allLinks = '';
-    document.querySelectorAll('#show').forEach(input => {
-        allLinks += `${input.value}\n`;
+    document.querySelectorAll('.data-url').forEach(input => {
+        if (input.value) {
+            allLinks += `${input.value}\n`;
+        }
     });
     const textarea = document.createElement('textarea');
     textarea.value = allLinks;
