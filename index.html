@@ -34,10 +34,12 @@
                 <p class="desc">点击上传 / 粘贴上传 / 拖拽上传</p>
                 <p class="desc">永久的、去中心化保存和共享文件</p>
             </div>
-        </div>
-        <div class="filelist">
+        </div>        <div class="filelist">
             <div class="title">
-                上传列表
+                <span class="title-text">上传列表</span>
+                <a class="copyall" onclick="copyAllLinks()" title="复制所有链接">复制全部</a>
+            </div>
+            <div class="gateway-selector">
                 <div class="select-group">
                     <label for="gatewaySelect">访问网关：</label>
                     <select id="gatewaySelect" onchange="changeGateway(this);">
@@ -78,7 +80,6 @@
                         <option value="https://ipfs-internal.xnftdata.com">xnftdata</option>
                         <option value="https://ipfs-12.yoghourt.cloud">yoghourt-12</option>
                     </select>
-                    <a class="copyall" onclick="copyAllLinks()" title="复制所有链接">复制全部</a>
                 </div>
             </div>
             <div class="list"></div>

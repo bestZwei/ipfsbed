@@ -101,6 +101,17 @@ body {
     gap: 8px;
 }
 
+/* 新增网关选择器样式 */
+.gateway-selector {
+    padding: 10px 20px;
+    border-bottom: 1px solid #f2f6fc;
+    background-color: #f9fafc;
+}
+
+.title-text {
+    font-weight: 600;
+}
+
 .upload {
     -webkit-animation: slideRight 1.5s;
     animation: slideRight 1.5s;
@@ -539,6 +550,12 @@ body {
     .filelist .title {
         font-size: 15px;
         padding: 10px 15px;
+        min-height: 50px;
+    }
+    
+    .gateway-selector {
+        padding: 8px 15px;
+        padding: 10px 15px;
         min-height: 60px;
     }
     
@@ -546,31 +563,19 @@ body {
         display: block;
         margin-top: 2px;
     }
-      .filelist .title {
-        display: grid;
-        grid-template-areas: 
-            "title title"
-            "select copyall";
-        grid-template-columns: auto auto;
-        gap: 12px;
+    .filelist .title {
+        display: flex;
+        justify-content: space-between;
         align-items: center;
         padding: 12px 15px;
     }
     
-    .filelist .title::before {
-        content: "上传列表";
-        grid-area: title;
-        font-weight: 600;
-        margin-bottom: 5px;
-    }
-    
     .select-group {
-        grid-area: select;
         display: flex;
         flex-wrap: nowrap;
         align-items: center;
         gap: 8px;
-        width: auto;
+        width: 100%;
     }
     
     .select-group label {
@@ -585,9 +590,7 @@ body {
         min-width: 0;
         max-width: 160px;
     }
-    
-    .copyall {
-        grid-area: copyall;
+      .copyall {
         height: 36px;
         display: inline-flex;
         align-items: center;
@@ -632,22 +635,34 @@ body {
 @media (max-width: 480px) {
     .filelist .title {
         display: flex;
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 8px;
+        align-items: center;
+        justify-content: space-between;
         padding: 10px 15px;
     }
-    .filelist .title::before {
-        content: none;
+    
+    .gateway-selector {
+        padding: 10px 15px;
+        min-height: 60px;
+        border-bottom: 1px solid #f2f6fc;
+        background-color: #f9fafc;
     }
-    .select-group,
-    .copyall {
+    
+    .select-group {
         width: 100%;
     }
+    
+    .select-group label {
+        font-size: 13px;
+    }
+    
+    .select-group select {
+        flex: 1;
+        min-width: 0;
+        max-width: none;
+    }
+    
     .copyall {
-        display: block;
-        text-align: right;
-        margin-top: 4px;
+        white-space: nowrap;
     }
 }
 
@@ -952,24 +967,28 @@ body {
 /* Extra small devices */
 @media (max-width: 360px) {
     .filelist .title {
-        grid-template-areas: 
-            "title"
-            "select"
-            "copyall";
-        grid-template-columns: 1fr;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
     }
     
-    .select-group {
-        width: 100%;
+    .gateway-selector .select-group {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 5px;
+    }
+    
+    .gateway-selector .select-group label {
+        margin-bottom: 3px;
     }
     
     .select-group select {
+        width: 100%;
         max-width: none;
     }
     
     .copyall {
-        margin: 0;
-        width: 100%;
-        justify-content: center;
+        padding: 0 10px;
+        min-width: 60px;
     }
 }
