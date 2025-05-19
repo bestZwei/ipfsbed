@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IPFS File Upload</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="file.js"></script>
+</head>
+<body>
+    <div class="theme-toggle" title="Toggle dark/light mode">
+        <svg class="sun" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M12 2c5.514 0 10 4.486 10 10s-4.486 10-10 10S2 17.514 2 12 6.486 2 12 2zm0 18c4.411 0 8-3.589 8-8s-3.589-8-8-8-8 3.589-8 8 3.589 8 8 8zm0-15c-3.866 0-7 3.134-7 7s3.134 7 7 7 7-3.134 7-7-3.134-7-7-7zm0 12c-2.757 0-5-2.243-5-5s2.243-5 5-5 5 2.243 5 5-2.243 5-5 5zm0-8c-1.654 0-3 1.346-3 3s1.346 3 3 3 3-1.346 3-3-1.346-3-3-3z"/>
+        </svg>
+        <svg class="moon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M12 11.807A9.002 9.002 0 0 1 10.049 2a9.942 9.942 0 0 0-5.12 2.735c-3.905 3.905-3.905 10.237 0 14.142 3.906 3.906 10.237 3.905 14.143 0a9.946 9.946 0 0 0 2.735-5.119A9.003 9.003 0 0 1 12 11.807z"/>
+        </svg>
+    </div>
+
+    <div class="container">
+        <div class="upload" id="dragbox">
+            <div class="title">
+                <div class="select-group">
+                    <label>Gateway:</label>
+                    <select id="gatewaySelect" onchange="changeGateway(this)">
+                        <option value="https://cdn.ipfsscan.io">ipfsscan.io</option>
+                        <option value="https://ipfs.io">ipfs.io</option>
+                        <option value="https://dweb.link">dweb.link</option>
+                        <option value="https://gateway.pinata.cloud">pinata.cloud</option>
+                        <option value="https://w3s.link">w3s.link</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="content">
+                <svg class="icon" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M554.666667 810.666667V725.333333h-85.333334v85.333334H384V725.333333H298.666667v-85.333333H213.333333v-85.333333H128v-85.333334H213.333333V384h85.333334V298.666667h85.333333V213.333333h85.333333V128h85.333334v85.333333h85.333333v85.333334h85.333333v85.333333h85.333334v85.333333h-85.333334v85.333334h-85.333333v85.333333h-85.333333v85.333333h-85.333334z" fill="#409EFF"></path>
+                </svg>
+                <p class="desc">Click or Drag Files Here to Upload</p>
+            </div>
+            <input id="file" accept="image/*" multiple="multiple" style="display:none;" type="file">
+        </div>
+
+        <div class="filelist">
+            <div class="title">
+                <button id="_url" class="tooltip" onclick="selectFormat(this)">
+                    URL
+                    <span class="tooltiptext">Copy Direct URL</span>
+                </button>
+                <button id="_html" class="tooltip" onclick="selectFormat(this)">
+                    HTML
+                    <span class="tooltiptext">Copy HTML Code</span>
+                </button>
+                <button id="_Ubb" class="tooltip" onclick="selectFormat(this)">
+                    BBCode
+                    <span class="tooltiptext">Copy BBCode</span>
+                </button>
+                <button id="_markdown" class="tooltip" onclick="selectFormat(this)">
+                    MD
+                    <span class="tooltiptext">Copy Markdown</span>
+                </button>
+            </div>
+            <div class="list"></div>
+        </div>
+    </div>
+    
+    <button class="copy-all-btn tooltip" onclick="copyAllLinks()">
+        Copy All Links
+        <span class="tooltiptext">Copy all uploaded file links</span>
+    </button>
+</body>
+</html>
