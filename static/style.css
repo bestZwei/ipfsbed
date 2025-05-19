@@ -49,13 +49,14 @@ html {
 }
 
 body {
-    height: 100%;
+    min-height: 100%;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     background: linear-gradient(-45deg, rgba(9, 69, 138, 0.2), rgba(68, 155, 255, 0.7), rgba(117, 113, 251, 0.7), rgba(68, 155, 255, 0.7), rgba(9, 69, 138, 0.2));
     background-size: 400% 400%;
+    background-attachment: fixed;
     -webkit-animation: Gradient 15s ease infinite;
     animation: Gradient 15s ease infinite;
     -webkit-user-select: none;
@@ -65,6 +66,7 @@ body {
     font-family: 'Helvetica Neue', Helvetica, 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', '微软雅黑', Arial, sans-serif;
     font-size: 14px;
     padding: 20px;
+    overflow-x: hidden;
 }
 
 .container {
@@ -382,16 +384,68 @@ body {
     height: 14px;
 }
 
+@-webkit-keyframes slideRight {
+    from {
+        opacity: 0;
+        transform: translateX(-50px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes slideRight {
+    from {
+        opacity: 0;
+        transform: translateX(-50px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@-webkit-keyframes slideLeft {
+    from {
+        opacity: 0;
+        transform: translateX(50px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes slideLeft {
+    from {
+        opacity: 0;
+        transform: translateX(50px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
 @media (max-width: 900px) {
+    body {
+        justify-content: flex-start;
+        padding-top: 40px;
+        padding-bottom: 60px;
+    }
+    
     .container {
         grid-template-columns: minmax(300px, 90%);
         grid-template-rows: auto auto;
         width: 100%;
+        margin-bottom: 40px;
     }
     
     .upload, .filelist {
         height: auto;
         min-height: 200px;
+        transition: all 0.4s ease;
     }
     
     .upload .content {
@@ -408,15 +462,29 @@ body {
         width: 100%;
         max-width: 350px;
     }
+    
+    .filelist .title {
+        height: auto;
+        min-height: 50px;
+        padding: 10px 15px;
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+    
+    .filelist .list {
+        max-height: 400px;
+    }
 }
 
 @media (max-width: 480px) {
     body {
         padding: 10px;
+        padding-bottom: 50px;
     }
     
     .container {
         gap: 15px;
+        max-width: 95%;
     }
     
     .upload .content .icon {
@@ -438,18 +506,75 @@ body {
     .filelist .list .item {
         padding: 10px;
     }
+    
+    .upload .title,
+    .filelist .title {
+        font-size: 15px;
+        padding: 0 15px;
+    }
+    
+    .upload .title small {
+        display: block;
+        margin-top: 2px;
+    }
+    
+    .select-group {
+        flex-wrap: wrap;
+        margin-top: 5px;
+        width: 100%;
+        justify-content: space-between;
+    }
+    
+    .select-group label {
+        font-size: 13px;
+    }
+    
+    .select-group select {
+        flex-grow: 1;
+        max-width: calc(100% - 90px);
+    }
+    
+    .upload .content .desc {
+        font-size: 14px;
+    }
+    
+    .filelist .list .item .file {
+        flex-wrap: wrap;
+    }
+    
+    .filelist .list .item .file .icon {
+        width: 40px;
+        height: 40px;
+        padding: 8px;
+    }
+    
+    .filelist .list .item .file .link {
+        width: 32px;
+        height: 32px;
+    }
+    
+    .copy-buttons-group {
+        gap: 6px;
+    }
+    
+    .copy-btn {
+        padding: 4px 10px;
+        font-size: 11px;
+    }
 }
 
 .select-group {
     display: flex;
     align-items: center;
     gap: 8px;
+    transition: all 0.3s ease;
 }
 
 .select-group label {
     color: #444;
     font-size: 14px;
     font-weight: 500;
+    white-space: nowrap;
 }
 
 .select-group select {
@@ -461,6 +586,13 @@ body {
     outline: none;
     transition: all 0.3s ease;
     background-color: #f5f7fa;
+    -webkit-appearance: none;
+    appearance: none;
+    background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23444%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E");
+    background-repeat: no-repeat;
+    background-position: right 8px top 50%;
+    background-size: 10px auto;
+    padding-right: 24px;
 }
 
 .select-group select:focus {
@@ -511,6 +643,8 @@ body {
     border-radius: 4px;
     transition: all 0.25s ease;
     background-color: rgba(64, 158, 255, 0.1);
+    white-space: nowrap;
+    display: inline-block;
 }
 
 .copyall:hover {
@@ -525,6 +659,19 @@ body {
     right: 20px;
     z-index: 9999;
     max-width: 300px;
+}
+
+@media (max-width: 480px) {
+    .toast-container {
+        top: 10px;
+        right: 10px;
+        left: 10px;
+        max-width: calc(100% - 20px);
+    }
+    
+    .toast {
+        width: 100%;
+    }
 }
 
 .toast {
@@ -611,6 +758,7 @@ body {
     backdrop-filter: blur(5px);
     -webkit-backdrop-filter: blur(5px);
     border-radius: 8px 8px 0 0;
+    z-index: 100;
 }
 
 #footer a {
@@ -640,4 +788,47 @@ body {
 
 .filelist .list .item.uploading {
     animation: pulse 1.5s infinite ease-in-out;
+}
+
+/* Add touch specific enhancements for mobile */
+@media (hover: none) and (pointer: coarse) {
+    .upload .content:active {
+        background-color: #f0f8ff;
+        transform: scale(0.98);
+    }
+    
+    .upload .content:active .icon {
+        transform: translateY(-5px);
+        fill: #409eff;
+    }
+    
+    .filelist .list .item .file .link {
+        padding: 10px;
+        width: 40px;
+        height: 40px;
+    }
+    
+    .filelist .list .item .file .link svg {
+        width: 20px;
+        height: 20px;
+    }
+    
+    .copy-btn {
+        padding: 8px 15px;
+        font-size: 14px;
+    }
+    
+    /* Add active state feedback for mobile taps */
+    .copy-btn:active,
+    .select-group select:active,
+    .copyall:active,
+    .filelist .list .item .file .link:active {
+        transform: scale(0.95);
+        opacity: 0.9;
+    }
+    
+    /* Improved scrolling for touch devices */
+    .filelist .list {
+        -webkit-overflow-scrolling: touch;
+    }
 }
