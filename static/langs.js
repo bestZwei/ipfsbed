@@ -172,6 +172,180 @@ const translations = {
         
         // File info
         'file-size': 'TAMAÑO: {size}'
+    },
+    'ar': {
+        // Meta information
+        'meta-title': 'IPFSBED - خدمة استضافة صور IPFS اللامركزية الدائمة | ipfsbed.is-an.org',
+        'meta-keywords': 'IPFSBED,استضافة صور IPFS,IPFS,استضافة صور لامركزية,استضافة صور دائمة,نظام الملفات بين الكواكب,استضافة الصور,استضافة صور مجانية,تحميل الملفات',
+        'meta-description': 'IPFSBED هي خدمة استضافة صور دائمة ولامركزية تعتمد على IPFS (نظام الملفات بين الكواكب). تدعم طرق تحميل متعددة بما في ذلك السحب والإفلات واللصق، وتوفر بوابات وصول موثوقة متعددة.',
+        
+        // UI elements
+        'upload-text': 'انقر للتحميل / لصق / سحب وإفلات',
+        'upload-description': 'تخزين ومشاركة الملفات بشكل دائم ولامركزي',
+        'file-list': 'قائمة التحميل',
+        'copy-all': 'نسخ الكل',
+        'gateway-selector': 'بوابة الوصول:',
+        'footer-project': 'المشروع',
+        'footer-more-gateways': 'المزيد من البوابات',
+        'footer-copyright': '© 2021-2025 IPFSBED - استضافة صور لامركزية تعتمد على IPFS',
+        
+        // Toast messages
+        'clipboard-empty': 'المتصفح الحالي لا يدعم التحميل باللصق',
+        'clipboard-no-file': 'لا يوجد محتوى في الحافظة أو ملف سطح المكتب غير مدعوم',
+        'unsupported-type': 'نوع الملف غير مدعوم، يتم دعم التنسيقات الشائعة فقط مثل الصور والمستندات وملفات النصوص',
+        'file-too-large': 'لا يمكن أن يتجاوز حجم الملف المحمّل {size} ميغابايت',
+        'upload-error': 'خطأ في التحميل! يرجى المحاولة مرة أخرى لاحقًا',
+        'copied-format': 'تم نسخ رابط بتنسيق {format} إلى الحافظة',
+        'copied-all': 'تم نسخ جميع الروابط إلى الحافظة',
+        'all-apis-failed': 'فشلت جميع محاولات API',
+        
+        // File info
+        'file-size': 'الحجم: {size}'
+    },
+    'fa': {
+        // Meta information
+        'meta-title': 'IPFSBED - سرویس میزبانی تصاویر غیرمتمرکز و دائمی IPFS | ipfsbed.is-an.org',
+        'meta-keywords': 'IPFSBED,میزبانی تصاویر IPFS,IPFS,میزبانی تصاویر غیرمتمرکز,میزبانی تصاویر دائمی,سیستم فایل بین سیاره‌ای,میزبانی تصاویر,میزبانی تصاویر رایگان,آپلود فایل',
+        'meta-description': 'IPFSBED یک سرویس میزبانی تصاویر دائمی و غیرمتمرکز بر اساس IPFS (سیستم فایل بین سیاره‌ای) است. از روش‌های آپلود متعدد از جمله کشیدن و رها کردن و چسباندن پشتیبانی می‌کند و دروازه‌های دسترسی قابل اعتماد متعددی ارائه می‌دهد.',
+        
+        // UI elements
+        'upload-text': 'برای آپلود کلیک کنید / بچسبانید / بکشید و رها کنید',
+        'upload-description': 'ذخیره و اشتراک‌گذاری فایل‌ها به صورت دائمی و غیرمتمرکز',
+        'file-list': 'لیست آپلود',
+        'copy-all': 'کپی همه',
+        'gateway-selector': 'دروازه دسترسی:',
+        'footer-project': 'پروژه',
+        'footer-more-gateways': 'دروازه‌های بیشتر',
+        'footer-copyright': '© 2021-2025 IPFSBED - میزبانی تصاویر غیرمتمرکز بر اساس IPFS',
+        
+        // Toast messages
+        'clipboard-empty': 'مرورگر فعلی از آپلود چسباندن پشتیبانی نمی‌کند',
+        'clipboard-no-file': 'محتوایی در کلیپ‌بورد وجود ندارد یا فایل دسکتاپ پشتیبانی نمی‌شود',
+        'unsupported-type': 'نوع فایل پشتیبانی نمی‌شود، فقط فرمت‌های رایج مانند تصاویر، اسناد و فایل‌های متنی پشتیبانی می‌شوند',
+        'file-too-large': 'فایل آپلود شده نمی‌تواند از {size}MB بیشتر باشد',
+        'upload-error': 'خطای آپلود! لطفاً بعداً دوباره امتحان کنید',
+        'copied-format': 'پیوند با فرمت {format} در کلیپ‌بورد کپی شد',
+        'copied-all': 'تمام پیوندها در کلیپ‌بورد کپی شدند',
+        'all-apis-failed': 'همه تلاش‌های API ناموفق بودند',
+        
+        // File info
+        'file-size': 'اندازه: {size}'
+    },
+    'tr': {
+        // Meta information
+        'meta-title': 'IPFSBED - Kalıcı Merkeziyetsiz IPFS Resim Barındırma | ipfsbed.is-an.org',
+        'meta-keywords': 'IPFSBED,IPFS resim barındırma,IPFS,merkeziyetsiz resim barındırma,kalıcı resim barındırma,Gezegenler Arası Dosya Sistemi,resim barındırma,ücretsiz resim barındırma,dosya yükleme',
+        'meta-description': 'IPFSBED, IPFS (Gezegenler Arası Dosya Sistemi) tabanlı kalıcı, merkeziyetsiz bir resim barındırma hizmetidir. Sürükle-bırak ve yapıştırma dahil çoklu yükleme yöntemlerini destekler ve birden fazla güvenilir erişim ağ geçidi sağlar.',
+        
+        // UI elements
+        'upload-text': 'Yüklemek için Tıklayın / Yapıştırın / Sürükleyip Bırakın',
+        'upload-description': 'Dosyaları kalıcı ve merkeziyetsiz olarak depolayın ve paylaşın',
+        'file-list': 'Yükleme Listesi',
+        'copy-all': 'Tümünü Kopyala',
+        'gateway-selector': 'Erişim Ağ Geçidi:',
+        'footer-project': 'Proje',
+        'footer-more-gateways': 'Daha Fazla Ağ Geçidi',
+        'footer-copyright': '© 2021-2025 IPFSBED - IPFS tabanlı Merkeziyetsiz Resim Barındırma',
+        
+        // Toast messages
+        'clipboard-empty': 'Mevcut tarayıcı yapıştırarak yüklemeyi desteklemiyor',
+        'clipboard-no-file': 'Panoda içerik yok veya masaüstü dosyası desteklenmiyor',
+        'unsupported-type': 'Desteklenmeyen dosya türü, yalnızca resimler, belgeler ve metin dosyaları gibi yaygın formatlar desteklenir',
+        'file-too-large': 'Yüklenen dosya {size}MB\'ı aşamaz',
+        'upload-error': 'Yükleme hatası! Lütfen daha sonra tekrar deneyin',
+        'copied-format': '{format} biçimindeki bağlantı panoya kopyalandı',
+        'copied-all': 'Tüm bağlantılar panoya kopyalandı',
+        'all-apis-failed': 'Tüm API denemeleri başarısız oldu',
+        
+        // File info
+        'file-size': 'BOYUT: {size}'
+    },
+    'pt': {
+        // Meta information
+        'meta-title': 'IPFSBED - Hospedagem de Imagens IPFS Descentralizada e Permanente | ipfsbed.is-an.org',
+        'meta-keywords': 'IPFSBED,hospedagem de imagens IPFS,IPFS,hospedagem de imagens descentralizada,hospedagem de imagens permanente,Sistema de Arquivos Interplanetário,hospedagem de imagens,hospedagem de imagens gratuita,upload de arquivos',
+        'meta-description': 'IPFSBED é um serviço de hospedagem de imagens permanente e descentralizado baseado no IPFS (Sistema de Arquivos Interplanetário). Suporta múltiplos métodos de upload, incluindo arrastar e soltar e colar, e fornece múltiplos gateways de acesso confiáveis.',
+        
+        // UI elements
+        'upload-text': 'Clique para Enviar / Colar / Arrastar e Soltar',
+        'upload-description': 'Armazene e compartilhe arquivos de forma permanente e descentralizada',
+        'file-list': 'Lista de Uploads',
+        'copy-all': 'Copiar Tudo',
+        'gateway-selector': 'Gateway de Acesso:',
+        'footer-project': 'Projeto',
+        'footer-more-gateways': 'Mais Gateways',
+        'footer-copyright': '© 2021-2025 IPFSBED - Hospedagem de Imagens Descentralizada baseada em IPFS',
+        
+        // Toast messages
+        'clipboard-empty': 'O navegador atual não suporta upload por colagem',
+        'clipboard-no-file': 'Nenhum conteúdo na área de transferência ou arquivo de desktop não suportado',
+        'unsupported-type': 'Tipo de arquivo não suportado, apenas formatos comuns como imagens, documentos e arquivos de texto são suportados',
+        'file-too-large': 'O arquivo enviado não pode exceder {size}MB',
+        'upload-error': 'Erro no upload! Por favor, tente novamente mais tarde',
+        'copied-format': 'Link no formato {format} copiado para a área de transferência',
+        'copied-all': 'Todos os links copiados para a área de transferência',
+        'all-apis-failed': 'Todas as tentativas de API falharam',
+        
+        // File info
+        'file-size': 'TAMANHO: {size}'
+    },
+    'ko': {
+        // Meta information
+        'meta-title': 'IPFSBED - 영구적인 탈중앙화 IPFS 이미지 호스팅 | ipfsbed.is-an.org',
+        'meta-keywords': 'IPFSBED,IPFS 이미지 호스팅,IPFS,탈중앙화 이미지 호스팅,영구 이미지 호스팅,행성간 파일 시스템,이미지 호스팅,무료 이미지 호스팅,파일 업로드',
+        'meta-description': 'IPFSBED는 IPFS(행성간 파일 시스템)를 기반으로 한 영구적이고 탈중앙화된 이미지 호스팅 서비스입니다. 드래그 앤 드롭 및 붙여넣기를 포함한 다양한 업로드 방법을 지원하며 여러 신뢰할 수 있는 액세스 게이트웨이를 제공합니다.',
+        
+        // UI elements
+        'upload-text': '클릭하여 업로드 / 붙여넣기 / 드래그 앤 드롭',
+        'upload-description': '영구적이고 탈중앙화된 방식으로 파일 저장 및 공유',
+        'file-list': '업로드 목록',
+        'copy-all': '모두 복사',
+        'gateway-selector': '접근 게이트웨이:',
+        'footer-project': '프로젝트',
+        'footer-more-gateways': '더 많은 게이트웨이',
+        'footer-copyright': '© 2021-2025 IPFSBED - IPFS 기반 탈중앙화 이미지 호스팅',
+        
+        // Toast messages
+        'clipboard-empty': '현재 브라우저는 붙여넣기 업로드를 지원하지 않습니다',
+        'clipboard-no-file': '클립보드에 내용이 없거나 데스크톱 파일이 지원되지 않습니다',
+        'unsupported-type': '지원되지 않는 파일 유형입니다. 이미지, 문서, 텍스트 파일과 같은 일반적인 형식만 지원됩니다',
+        'file-too-large': '업로드된 파일은 {size}MB를 초과할 수 없습니다',
+        'upload-error': '업로드 오류! 나중에 다시 시도해 주세요',
+        'copied-format': '{format} 형식 링크가 클립보드에 복사되었습니다',
+        'copied-all': '모든 링크가 클립보드에 복사되었습니다',
+        'all-apis-failed': '모든 API 시도가 실패했습니다',
+        
+        // File info
+        'file-size': '크기: {size}'
+    },
+    'ja': {
+        // Meta information
+        'meta-title': 'IPFSBED - 永続的な分散型IPFS画像ホスティング | ipfsbed.is-an.org',
+        'meta-keywords': 'IPFSBED,IPFS画像ホスティング,IPFS,分散型画像ホスティング,永続的画像ホスティング,惑星間ファイルシステム,画像ホスティング,無料画像ホスティング,ファイルアップロード',
+        'meta-description': 'IPFSBEDは、IPFS（惑星間ファイルシステム）に基づいた永続的で分散型の画像ホスティングサービスです。ドラッグアンドドロップや貼り付けなど複数のアップロード方法をサポートし、複数の信頼性の高いアクセスゲートウェイを提供します。',
+        
+        // UI elements
+        'upload-text': 'クリックしてアップロード / 貼り付け / ドラッグアンドドロップ',
+        'upload-description': '永続的かつ分散型でファイルを保存・共有',
+        'file-list': 'アップロードリスト',
+        'copy-all': 'すべてコピー',
+        'gateway-selector': 'アクセスゲートウェイ:',
+        'footer-project': 'プロジェクト',
+        'footer-more-gateways': 'その他のゲートウェイ',
+        'footer-copyright': '© 2021-2025 IPFSBED - IPFSベースの分散型画像ホスティング',
+        
+        // Toast messages
+        'clipboard-empty': '現在のブラウザは貼り付けアップロードをサポートしていません',
+        'clipboard-no-file': 'クリップボードに内容がないか、デスクトップファイルがサポートされていません',
+        'unsupported-type': 'サポートされていないファイル形式です。画像、ドキュメント、テキストファイルなどの一般的な形式のみサポートされています',
+        'file-too-large': 'アップロードされたファイルは{size}MBを超えることはできません',
+        'upload-error': 'アップロードエラー！後でもう一度お試しください',
+        'copied-format': '{format}形式のリンクがクリップボードにコピーされました',
+        'copied-all': 'すべてのリンクがクリップボードにコピーされました',
+        'all-apis-failed': 'すべてのAPIの試行が失敗しました',
+        
+        // File info
+        'file-size': 'サイズ: {size}'
     }
 };
 
