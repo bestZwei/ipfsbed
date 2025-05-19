@@ -2,6 +2,9 @@ $(document).ready(() => {
     // 直接开始初始化事件监听
     initEventListeners();
 
+    // Create toast container
+    $('body').append('<div class="toast-container"></div>');
+
     function initEventListeners() {
         $(document).on('paste', handlePasteUpload);
         $('.upload .content').on('click', () => $('#file').click());
@@ -14,9 +17,9 @@ $(document).ready(() => {
 
     function handlePasteUpload(event) {
         const clipboardData = event.clipboardData || window.clipboardData || event.originalEvent.clipboardData;
-        if (!clipboardData || !clipboardData.items) return alert('当前浏览器不支持粘贴上传');
+        if (!clipboardData || !clipboardData.items) return showToast('当前浏览器不支持粘贴上传', 'error');
         const file = Array.from(clipboardData.items).find(item => item.type.indexOf('image') !== -1)?.getAsFile();
-        if (!file) return alert('剪切板内无内容或不支持桌面文件');
+        if (!file) return showToast('剪切板内无内容或不支持桌面文件', 'error');
         upload([file]);
     }
 
@@ -63,13 +66,13 @@ $(document).ready(() => {
             const fileExtension = file.name.substring(file.name.lastIndexOf('.')).toUpperCase();
 
             if (!allowedExtensions.includes(fileExtension)) {
-                alert('不支持该文件类型，仅支持图片、文档、文本等常见文件格式');
+                showToast('不支持该文件类型，仅支持图片、文档、文本等常见文件格式', 'error');
                 $('#file').val(null);
                 return;
             }
 
             if (file.size >= maxSize) {
-                alert(`上传的文件不能超过${maxSize / 1024 / 1024}MB`);
+                showToast(`上传的文件不能超过${maxSize / 1024 / 1024}MB`, 'error');
                 return;
             }
 
@@ -235,35 +238,7 @@ function deleteItem(obj) {
     item.parentNode.removeChild(item);
 }
 
-// Add this function to create toast notifications
-function showToast(message, type = 'success') {
-    // Create toast container if it doesn't exist
-    let container = document.querySelector('.toast-container');
-    if (!container) {
-        container = document.createElement('div');
-        container.className = 'toast-container';
-        document.body.appendChild(container);
-    }
-    
-    // Create toast element
-    const toast = document.createElement('div');
-    toast.className = `toast ${type}`;
-    toast.textContent = message;
-    
-    // Add to container
-    container.appendChild(toast);
-    
-    // Remove after animation completes
-    setTimeout(() => {
-        toast.remove();
-        // Remove container if empty
-        if (container.children.length === 0) {
-            container.remove();
-        }
-    }, 3000);
-}
-
-// Replace copySpecificFormat function
+// 复制特定格式的链接
 function copySpecificFormat(button) {
     const item = button.closest('.item');
     const formatType = button.getAttribute('data-type');
@@ -297,8 +272,8 @@ function copySpecificFormat(button) {
     document.execCommand('copy');
     document.body.removeChild(textarea);
     
-    // 显示复制成功提示 - 使用 toast 而不是 alert
-    showToast(`已复制${button.innerText}格式的链接到剪贴板`);
+    // 显示复制成功提示
+    showToast(`已复制${button.innerText}格式的链接到剪贴板`, 'success');
 }
 
 function changeGateway(obj) {
@@ -319,9 +294,6 @@ function changeGateway(obj) {
         item.querySelector(".file #url").href = newUrl;
     });
 }
-
-// 不再需要这个函数，被copySpecificFormat替代
-// function copyToClipboard(obj) { ... }
 
 function seeding(res) {
     const gateways = [
@@ -356,5 +328,36 @@ function copyAllLinks() {
     textarea.select();
     document.execCommand('copy');
     document.body.removeChild(textarea);
-    showToast('链接已复制到剪贴板');
+    showToast('所有链接已复制到剪贴板', 'success');
+}
+
+// Toast notification function
+function showToast(message, type = 'info', duration = 3000) {
+    const toastId = 'toast-' + Date.now();
+    const toast = `
+        <div id="${toastId}" class="toast ${type}">
+            <span class="toast-message">${message}</span>
+            <span class="toast-close">×</span>
+        </div>
+    `;
+    
+    $('.toast-container').append(toast);
+    
+    // Attach close event
+    $(`#${toastId} .toast-close`).on('click', function() {
+        $(`#${toastId}`).addClass('hide');
+        setTimeout(() => {
+            $(`#${toastId}`).remove();
+        }, 700);
+    });
+    
+    // Auto remove after duration
+    setTimeout(() => {
+        if ($(`#${toastId}`).length) {
+            $(`#${toastId}`).addClass('hide');
+            setTimeout(() => {
+                $(`#${toastId}`).remove();
+            }, 700);
+        }
+    }, duration);
 }
