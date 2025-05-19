@@ -628,6 +628,29 @@ body {
     }
 }
 
+/* Mobile optimized filelist title layout */
+@media (max-width: 480px) {
+    .filelist .title {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+        padding: 10px 15px;
+    }
+    .filelist .title::before {
+        content: none;
+    }
+    .select-group,
+    .copyall {
+        width: 100%;
+    }
+    .copyall {
+        display: block;
+        text-align: right;
+        margin-top: 4px;
+    }
+}
+
 .select-group {
     display: flex;
     align-items: center;
@@ -827,13 +850,6 @@ body {
     -webkit-backdrop-filter: blur(5px);
     border-radius: 8px 8px 0 0;
     z-index: 100;
-}
-
-@media (max-width: 900px) {
-    #footer {
-        padding: 8px 5px;
-        font-size: 12px;
-    }
 }
 
 #footer a {
