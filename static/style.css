@@ -106,6 +106,7 @@ body {
     padding: 10px 20px;
     border-bottom: 1px solid #f2f6fc;
     background-color: #f9fafc;
+    text-align: center; /* 添加居中对齐 */
 }
 
 .title-text {
@@ -557,6 +558,7 @@ body {
         padding: 8px 15px;
         padding: 10px 15px;
         min-height: 60px;
+        text-align: center; /* 确保在移动端也居中 */
     }
     
     .upload .title small {
@@ -568,6 +570,7 @@ body {
         justify-content: space-between;
         align-items: center;
         padding: 12px 15px;
+        flex-wrap: nowrap; /* 防止换行 */
     }
     
     .select-group {
@@ -576,6 +579,7 @@ body {
         align-items: center;
         gap: 8px;
         width: 100%;
+        justify-content: center; /* 确保在移动端也居中 */
     }
     
     .select-group label {
@@ -588,7 +592,7 @@ body {
     .select-group select {
         flex: 1;
         min-width: 0;
-        max-width: 160px;
+        max-width: none;
     }
       .copyall {
         height: 36px;
@@ -600,6 +604,8 @@ body {
         font-weight: 500;
         min-width: 70px;
         margin-left: auto;
+        white-space: nowrap;
+        flex-shrink: 0; /* 防止按钮缩小 */
     }
     
     .upload .content .desc {
@@ -638,6 +644,7 @@ body {
         align-items: center;
         justify-content: space-between;
         padding: 10px 15px;
+        flex-wrap: nowrap; /* 防止换行 */
     }
     
     .gateway-selector {
@@ -645,14 +652,17 @@ body {
         min-height: 60px;
         border-bottom: 1px solid #f2f6fc;
         background-color: #f9fafc;
+        text-align: center; /* 确保在移动端也居中 */
     }
     
     .select-group {
         width: 100%;
+        justify-content: center; /* 确保在移动端也居中 */
     }
     
     .select-group label {
         font-size: 13px;
+        white-space: nowrap; /* 防止标签换行 */
     }
     
     .select-group select {
@@ -663,6 +673,13 @@ body {
     
     .copyall {
         white-space: nowrap;
+        margin-left: 8px; /* 确保与标题有一定间距 */
+    }
+    
+    .title-text {
+        white-space: nowrap; /* 防止标题文字换行 */
+        overflow: hidden;
+        text-overflow: ellipsis;
     }
 }
 
@@ -672,6 +689,7 @@ body {
     gap: 8px;
     transition: all 0.3s ease;
     flex-wrap: nowrap;
+    justify-content: center; /* 添加居中对齐 */
 }
 
 .select-group label {
@@ -751,6 +769,7 @@ body {
     display: inline-flex;
     align-items: center;
     height: 28px;
+    flex-shrink: 0; /* 防止按钮缩小 */
 }
 
 .copyall:hover {
@@ -974,7 +993,7 @@ body {
     
     .gateway-selector .select-group {
         flex-direction: column;
-        align-items: flex-start;
+        align-items: center; /* 修改为居中对齐 */
         gap: 5px;
     }
     
