@@ -235,7 +235,35 @@ function deleteItem(obj) {
     item.parentNode.removeChild(item);
 }
 
-// 替换旧的selectFormat函数
+// Add this function to create toast notifications
+function showToast(message, type = 'success') {
+    // Create toast container if it doesn't exist
+    let container = document.querySelector('.toast-container');
+    if (!container) {
+        container = document.createElement('div');
+        container.className = 'toast-container';
+        document.body.appendChild(container);
+    }
+    
+    // Create toast element
+    const toast = document.createElement('div');
+    toast.className = `toast ${type}`;
+    toast.textContent = message;
+    
+    // Add to container
+    container.appendChild(toast);
+    
+    // Remove after animation completes
+    setTimeout(() => {
+        toast.remove();
+        // Remove container if empty
+        if (container.children.length === 0) {
+            container.remove();
+        }
+    }, 3000);
+}
+
+// Replace copySpecificFormat function
 function copySpecificFormat(button) {
     const item = button.closest('.item');
     const formatType = button.getAttribute('data-type');
@@ -269,8 +297,8 @@ function copySpecificFormat(button) {
     document.execCommand('copy');
     document.body.removeChild(textarea);
     
-    // 显示复制成功提示
-    alert(`已复制${button.innerText}格式的链接到剪贴板`);
+    // 显示复制成功提示 - 使用 toast 而不是 alert
+    showToast(`已复制${button.innerText}格式的链接到剪贴板`);
 }
 
 function changeGateway(obj) {
@@ -328,5 +356,5 @@ function copyAllLinks() {
     textarea.select();
     document.execCommand('copy');
     document.body.removeChild(textarea);
-    alert('链接已复制到剪贴板');
+    showToast('链接已复制到剪贴板');
 }
