@@ -17,9 +17,9 @@ $(document).ready(() => {
 
     function handlePasteUpload(event) {
         const clipboardData = event.clipboardData || window.clipboardData || event.originalEvent.clipboardData;
-        if (!clipboardData || !clipboardData.items) return showToast('当前浏览器不支持粘贴上传', 'error');
+        if (!clipboardData || !clipboardData.items) return showToast(_t('clipboard-empty'), 'error');
         const file = Array.from(clipboardData.items).find(item => item.type.indexOf('image') !== -1)?.getAsFile();
-        if (!file) return showToast('剪切板内无内容或不支持桌面文件', 'error');
+        if (!file) return showToast(_t('clipboard-no-file'), 'error');
         upload([file]);
     }
 
@@ -66,13 +66,13 @@ $(document).ready(() => {
             const fileExtension = file.name.substring(file.name.lastIndexOf('.')).toUpperCase();
 
             if (!allowedExtensions.includes(fileExtension)) {
-                showToast('不支持该文件类型，仅支持图片、文档、文本等常见文件格式', 'error');
+                showToast(_t('unsupported-type'), 'error');
                 $('#file').val(null);
                 return;
             }
 
             if (file.size >= maxSize) {
-                showToast(`上传的文件不能超过${maxSize / 1024 / 1024}MB`, 'error');
+                showToast(_t('file-too-large', {size: maxSize / 1024 / 1024}), 'error');
                 return;
             }
 
@@ -99,7 +99,7 @@ $(document).ready(() => {
         // 添加重试机制
         const tryUpload = (apiIndex = 0, retryCount = 0) => {
             if (apiIndex >= apis.length) {
-                handleError(randomClass, '所有API尝试失败');
+                handleError(randomClass, _t('all-apis-failed'));
                 return;
             }
             
@@ -155,7 +155,7 @@ $(document).ready(() => {
                     </svg>
                     <div class="desc">
                         <div class="desc__name">${file.name}</div>
-                        <div class="desc__size">SIZE: ${formatBytes(file.size)}</div>
+                        <div class="desc__size">${_t('file-size', {size: formatBytes(file.size)})}</div>
                     </div>
                     <a id="url" href="javascript:void(0);" class="link">
                         <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" class="icon-open">
@@ -213,7 +213,7 @@ $(document).ready(() => {
         $('.copyall').show();
     }
 
-    function handleError(randomClass, message = '上传出错！请稍后重试') {
+    function handleError(randomClass, message = _t('upload-error')) {
         $(`.${randomClass}`).find('.progress-inner').addClass('error');
         $(`.${randomClass}`).find('.status-error').show();
         $(`.${randomClass}`).find('#show').show().val(message);
@@ -273,7 +273,7 @@ function copySpecificFormat(button) {
     document.body.removeChild(textarea);
     
     // 显示复制成功提示
-    showToast(`已复制${button.innerText}格式的链接到剪贴板`, 'success');
+    showToast(_t('copied-format', {format: button.innerText}), 'success');
 }
 
 function changeGateway(obj) {
@@ -328,7 +328,7 @@ function copyAllLinks() {
     textarea.select();
     document.execCommand('copy');
     document.body.removeChild(textarea);
-    showToast('所有链接已复制到剪贴板', 'success');
+    showToast(_t('copied-all'), 'success');
 }
 
 // Toast notification function

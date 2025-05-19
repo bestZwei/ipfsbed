@@ -1011,3 +1011,33 @@ body {
         min-width: 60px;
     }
 }
+
+/* Language selector styling */
+.lang-selector {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+#langSelect {
+    padding: 3px 5px;
+    border-radius: 4px;
+    border: 1px solid #dcdfe6;
+    background-color: #fff;
+    font-size: 12px;
+    color: #606266;
+    cursor: pointer;
+}
+
+#langSelect:focus {
+    outline: none;
+    border-color: #409eff;
+}
+
+/* Make sure the title has position relative to contain the absolute positioned language selector */
+.upload .title {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
