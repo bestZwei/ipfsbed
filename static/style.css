@@ -88,7 +88,7 @@ body {
 
 .upload .title,
 .filelist .title {
-    height: 50px;
+    min-height: 50px;
     border-bottom: 1px solid #f2f6fc;
     color: #444;
     font-weight: 600;
@@ -97,6 +97,8 @@ body {
     display: flex;
     align-items: center;
     justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 8px;
 }
 
 .upload {
@@ -433,6 +435,7 @@ body {
         justify-content: flex-start;
         padding-top: 40px;
         padding-bottom: 60px;
+        min-height: 100vh;
     }
     
     .container {
@@ -442,9 +445,15 @@ body {
         margin-bottom: 40px;
     }
     
-    .upload, .filelist {
+    .upload {
         height: auto;
         min-height: 200px;
+        transition: all 0.4s ease;
+    }
+    
+    .filelist {
+        height: auto;
+        min-height: 300px;
         transition: all 0.4s ease;
     }
     
@@ -467,12 +476,31 @@ body {
         height: auto;
         min-height: 50px;
         padding: 10px 15px;
-        flex-wrap: wrap;
         gap: 8px;
     }
     
     .filelist .list {
         max-height: 400px;
+        padding-bottom: 40px; /* 确保底部内容不被footer遮挡 */
+    }
+}
+
+/* Medium-sized mobile devices in landscape mode */
+@media (min-width: 481px) and (max-width: 900px) {
+    .filelist .title {
+        grid-template-areas: 
+            "title copyall"
+            "select select";
+        align-items: center;
+    }
+    
+    .select-group {
+        width: 100%;
+        margin-top: 8px;
+    }
+    
+    .select-group select {
+        max-width: none;
     }
 }
 
@@ -510,28 +538,65 @@ body {
     .upload .title,
     .filelist .title {
         font-size: 15px;
-        padding: 0 15px;
+        padding: 10px 15px;
+        min-height: 60px;
     }
     
     .upload .title small {
         display: block;
         margin-top: 2px;
     }
+      .filelist .title {
+        display: grid;
+        grid-template-areas: 
+            "title title"
+            "select copyall";
+        grid-template-columns: auto auto;
+        gap: 12px;
+        align-items: center;
+        padding: 12px 15px;
+    }
+    
+    .filelist .title::before {
+        content: "上传列表";
+        grid-area: title;
+        font-weight: 600;
+        margin-bottom: 5px;
+    }
     
     .select-group {
-        flex-wrap: wrap;
-        margin-top: 5px;
-        width: 100%;
-        justify-content: space-between;
+        grid-area: select;
+        display: flex;
+        flex-wrap: nowrap;
+        align-items: center;
+        gap: 8px;
+        width: auto;
     }
     
     .select-group label {
         font-size: 13px;
+        font-weight: 400;
+        white-space: nowrap;
+        width: auto;
     }
     
     .select-group select {
-        flex-grow: 1;
-        max-width: calc(100% - 90px);
+        flex: 1;
+        min-width: 0;
+        max-width: 160px;
+    }
+    
+    .copyall {
+        grid-area: copyall;
+        height: 36px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0 12px;
+        font-size: 13px;
+        font-weight: 500;
+        min-width: 70px;
+        margin-left: auto;
     }
     
     .upload .content .desc {
@@ -568,6 +633,7 @@ body {
     align-items: center;
     gap: 8px;
     transition: all 0.3s ease;
+    flex-wrap: nowrap;
 }
 
 .select-group label {
@@ -644,7 +710,9 @@ body {
     transition: all 0.25s ease;
     background-color: rgba(64, 158, 255, 0.1);
     white-space: nowrap;
-    display: inline-block;
+    display: inline-flex;
+    align-items: center;
+    height: 28px;
 }
 
 .copyall:hover {
@@ -761,6 +829,13 @@ body {
     z-index: 100;
 }
 
+@media (max-width: 900px) {
+    #footer {
+        padding: 8px 5px;
+        font-size: 12px;
+    }
+}
+
 #footer a {
     color: rgba(255, 255, 255, 0.95);
     text-decoration: none;
@@ -792,6 +867,31 @@ body {
 
 /* Add touch specific enhancements for mobile */
 @media (hover: none) and (pointer: coarse) {
+    /* 增加触摸目标尺寸，更容易点击 */
+    .select-group select,
+    .copyall,
+    .copy-btn,
+    .filelist .list .item .file .link {
+        min-height: 40px;
+        min-width: 40px;
+    }
+    
+    /* 增大下拉菜单选项的可点击区域 */
+    .select-group select {
+        font-size: 16px; /* 避免iOS自动缩放 */
+        padding: 10px 12px;
+        padding-right: 30px;
+        background-size: 12px auto;
+        background-position: right 12px top 50%;
+    }
+    
+    /* 增加触摸反馈 */
+    .select-group select:active,
+    .copyall:active,
+    .copy-btn:active {
+        transform: scale(0.96);
+        transition: transform 0.1s;
+    }
     .upload .content:active {
         background-color: #f0f8ff;
         transform: scale(0.98);
@@ -830,5 +930,30 @@ body {
     /* Improved scrolling for touch devices */
     .filelist .list {
         -webkit-overflow-scrolling: touch;
+    }
+}
+
+/* Extra small devices */
+@media (max-width: 360px) {
+    .filelist .title {
+        grid-template-areas: 
+            "title"
+            "select"
+            "copyall";
+        grid-template-columns: 1fr;
+    }
+    
+    .select-group {
+        width: 100%;
+    }
+    
+    .select-group select {
+        max-width: none;
+    }
+    
+    .copyall {
+        margin: 0;
+        width: 100%;
+        justify-content: center;
     }
 }
