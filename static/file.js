@@ -83,9 +83,9 @@ $(document).ready(() => {
             'https://2ipfs.zone.id/api/v0/add?pin=false',
             'https://cdn.ipfsscan.io/api/v0/add?pin=false',
             'https://api.img2ipfs.org/api/v0/add?pin=false',
-            'https://ipfs.io/api/v0/add?pin=false',
-            'https://ipfs.crossbell.io/api/v0/add?pin=false',
-            'https://ipfs.4everland.xyz/api/v0/add?pin=false'
+            // 'https://ipfs.io/api/v0/add?pin=false',
+            // 'https://ipfs.crossbell.io/api/v0/add?pin=false',
+            // 'https://ipfs.4everland.xyz/api/v0/add?pin=false'
         ];
         const formData = new FormData();
         formData.append('file', file);
