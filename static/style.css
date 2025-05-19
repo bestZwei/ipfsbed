@@ -51,6 +51,7 @@ html {
 body {
     height: 100%;
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
     background: linear-gradient(-45deg, rgba(9, 69, 138, 0.2), rgba(68, 155, 255, 0.7), rgba(117, 113, 251, 0.7), rgba(68, 155, 255, 0.7), rgba(9, 69, 138, 0.2));
@@ -63,41 +64,49 @@ body {
     user-select: none;
     font-family: 'Helvetica Neue', Helvetica, 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', '微软雅黑', Arial, sans-serif;
     font-size: 14px;
+    padding: 20px;
 }
 
 .container {
     display: grid;
-    gap: 20px;
-    grid-template-columns: 250px 500px;
-    grid-template-rows: 500px;
+    gap: 24px;
+    grid-template-columns: 300px 550px;
+    grid-template-rows: auto;
+    max-width: 90%;
 }
 
 .upload,
 .filelist {
     background: #fff;
-    border-radius: 8px;
-    box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12);
     overflow: hidden;
+    transition: all 0.3s ease;
 }
 
 .upload .title,
 .filelist .title {
-    height: 45px;
+    height: 50px;
     border-bottom: 1px solid #f2f6fc;
-    color: #606266;
-    font-weight: 500;
-    padding: 0 15px;
+    color: #444;
+    font-weight: 600;
+    padding: 0 20px;
     font-size: 16px;
     display: flex;
     align-items: center;
-    justify-content: center;
-    gap: 20px;
+    justify-content: space-between;
 }
 
 .upload {
     -webkit-animation: slideRight 1.5s;
     animation: slideRight 1.5s;
-    transition: box-shadow 0.35s;
+    transition: all 0.4s ease;
+    height: 520px;
+}
+
+.upload:hover {
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+    transform: translateY(-2px);
 }
 
 .upload .title {
@@ -110,78 +119,106 @@ body {
     display: flex;
     justify-content: center;
     gap: 10px;
-    margin-top: 10px;
+    margin-top: 15px;
 }
 
 .button-group button {
-    width: 70px;
-    height: 28px;
-    border-radius: 14px;
+    width: 80px;
+    height: 32px;
+    border-radius: 16px;
     background-color: #fff;
-    transition: background-color 0.3s, transform 0.3s;
+    border: 1px solid #dcdfe6;
+    transition: all 0.3s ease;
     cursor: pointer;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.08);
+    font-weight: 500;
+    color: #606266;
 }
 
 .button-group button:hover {
-    background-color: #f0f0f0;
+    background-color: #f5f7fa;
     transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.button-group button:active {
+    transform: translateY(0);
 }
 
 .gateway-button {
-    background-color: #d0dbee;
+    background-color: #e6f0ff !important;
+    color: #409eff !important;
 }
 
 .upload .title select {
-    height: 28px;
-    padding: 0 5px;
-    border-radius: 14px;
+    height: 32px;
+    padding: 0 8px;
+    border-radius: 16px;
+    border: 1px solid #dcdfe6;
+    outline: none;
 }
 
 #show {
     width: 475px;
-    height: 28px;
+    height: 32px;
     outline: none;
     border: 1px solid #dcdfe6;
     padding: 0 15px;
-    color: #606266;
-    border-radius: 14px;
-    font-size: 12px;
-    transition: border 0.35s;
+    color: #444;
+    border-radius: 16px;
+    font-size: 13px;
+    transition: all 0.3s ease;
     -webkit-appearance: none;
 }
 
 .upload .title input:focus {
     border-color: #409eff;
+    box-shadow: 0 0 0 2px rgba(64, 158, 255, 0.2);
 }
 
 .upload .content {
     cursor: pointer;
-    height: calc(100% - 45px);
+    height: calc(100% - 50px);
     display: flex;
     align-items: center;
     justify-content: center;
     flex-direction: column;
-    transition: background-color 0.3s;
+    transition: background-color 0.3s, transform 0.3s;
+    padding: 20px;
 }
 
 .upload .content:hover {
-    background-color: #f9f9f9;
+    background-color: #f9fafc;
+}
+
+.upload .content:active {
+    transform: scale(0.98);
 }
 
 .upload .content .icon {
-    width: 80px;
-    height: 80px;
-    margin-bottom: 20px;
+    width: 100px;
+    height: 100px;
+    margin-bottom: 25px;
+    transition: transform 0.3s ease;
+    fill: #909399;
+}
+
+.upload .content:hover .icon {
+    transform: translateY(-5px);
+    fill: #409eff;
 }
 
 .upload .content .desc {
     color: #606266;
+    font-size: 15px;
+    margin-bottom: 8px;
+    text-align: center;
 }
 
 .upload.dragenter {
-    box-shadow: 20px 20px 20px 0 rgba(0, 0, 0, 0.25);
+    box-shadow: 0 8px 30px rgba(64, 158, 255, 0.3);
     background-color: #f0f8ff;
+    transform: scale(1.01);
 }
 
 .upload.dragenter .content>* {
@@ -193,7 +230,7 @@ body {
     animation: slideLeft 1.5s;
     display: flex;
     flex-direction: column;
-    height: 100%;
+    height: 520px;
 }
 
 .filelist .title {
@@ -204,30 +241,44 @@ body {
     flex: 1;
     overflow-y: auto;
     min-height: 0;
-    padding: 10px;
+    padding: 15px;
     padding-bottom: 20px;
     margin-bottom: 10px;
     scroll-behavior: smooth;
 }
 
 .filelist .list .item {
-    margin-bottom: 10px;
+    margin-bottom: 18px;
+    background-color: #f9fafc;
+    border-radius: 10px;
+    padding: 15px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    transition: all 0.3s ease;
+}
+
+.filelist .list .item:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    transform: translateY(-2px);
 }
 
 .filelist .list .item:last-child {
-    margin-bottom: 10px;
+    margin-bottom: 15px;
 }
 
 .filelist .list .item .file {
     display: flex;
     align-items: center;
-    margin-bottom: 5px;
+    margin-bottom: 10px;
 }
 
 .filelist .list .item .file .icon {
-    width: 45px;
-    height: 45px;
-    margin-right: 10px;
+    width: 48px;
+    height: 48px;
+    margin-right: 12px;
+    fill: #909399;
+    background-color: rgba(144, 147, 153, 0.1);
+    padding: 10px;
+    border-radius: 10px;
 }
 
 .filelist .list .item .file .desc {
@@ -241,12 +292,12 @@ body {
     text-overflow: ellipsis;
     overflow: hidden;
     font-weight: 600;
-    color: #606266;
-    margin-bottom: 5px;
+    color: #444;
+    margin-bottom: 6px;
 }
 
 .filelist .list .item .file .desc__size {
-    font-size: 12px;
+    font-size: 13px;
     color: #909399;
 }
 
@@ -258,26 +309,22 @@ body {
     cursor: pointer;
     margin-left: 10px;
     border-radius: 50%;
-    transition: all 0.2s ease;
+    transition: all 0.3s ease;
     background-color: rgba(240, 240, 240, 0.5);
-    width: 34px;
-    height: 34px;
+    width: 36px;
+    height: 36px;
 }
 
 .filelist .list .item .file .link svg {
     width: 18px;
     height: 18px;
-    transition: all 0.2s ease;
+    transition: all 0.3s ease;
 }
 
 .filelist .list .item .file .link:hover {
-    background: rgba(240, 240, 240, 0.95);
+    background: #f0f0f0;
     transform: translateY(-2px);
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-}
-
-.filelist .list .item .file .link:hover svg {
-    fill: #409eff;
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
 }
 
 .filelist .list .item .file .link:active {
@@ -297,19 +344,24 @@ body {
     align-items: center;
     justify-content: space-between;
     font-size: 12px;
+    margin-bottom: 10px;
 }
 
 .filelist .list .item .progress .progress-bar {
     flex: 1;
     min-width: 0;
+    height: 4px;
+    background-color: rgba(0, 0, 0, 0.05);
+    border-radius: 2px;
+    overflow: hidden;
 }
 
 .filelist .list .item .progress .progress-bar .progress-inner {
     width: 0%;
-    height: 2px;
+    height: 100%;
     background: #409eff;
-    border-radius: 1px;
-    transition: width 0.2s;
+    border-radius: 2px;
+    transition: width 0.3s ease;
 }
 
 .filelist .list .item .progress .progress-bar .progress-inner.success {
@@ -321,7 +373,7 @@ body {
 }
 
 .filelist .list .item .progress .progress-status {
-    margin-left: 5px;
+    margin-left: 8px;
 }
 
 .filelist .list .item .progress .progress-status .icon {
@@ -330,120 +382,124 @@ body {
     height: 14px;
 }
 
-@media (max-width: 780px) {
-    body {
-        height: auto;
-        padding: 5vh 0;
-    }
-
+@media (max-width: 900px) {
     .container {
-        grid-template-columns: 350px;
-        grid-template-rows: 150px 400px;
+        grid-template-columns: minmax(300px, 90%);
+        grid-template-rows: auto auto;
+        width: 100%;
     }
+    
+    .upload, .filelist {
+        height: auto;
+        min-height: 200px;
+    }
+    
+    .upload .content {
+        padding: 30px 15px;
+    }
+    
+    .upload .content .icon {
+        width: 70px;
+        height: 70px;
+        margin-bottom: 15px;
+    }
+    
+    #show {
+        width: 100%;
+        max-width: 350px;
+    }
+}
 
+@media (max-width: 480px) {
+    body {
+        padding: 10px;
+    }
+    
+    .container {
+        gap: 15px;
+    }
+    
     .upload .content .icon {
         width: 50px;
         height: 50px;
-        margin-bottom: 5px;
+        margin-bottom: 10px;
     }
-
+    
     .button-group button {
-        width: 50px;
-        margin: 0 4px;
+        width: 60px;
+        height: 28px;
+        font-size: 12px;
     }
-
-    #show {
-        width: 320px;
-        padding: 0 11px;
+    
+    .filelist .list {
+        padding: 10px;
     }
-}
-
-.filelist .title {
-    height: 45px;
-    border-bottom: 1px solid #f2f6fc;
-    color: #606266;
-    font-weight: 500;
-    padding: 0 15px;
-    font-size: 16px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 20px;
-}
-
-span.tooltiptext {
-    visibility: hidden;
-    width: 178px;
-    background-color: black;
-    color: #fff;
-    text-align: center;
-    border-radius: 6px;
-    padding: 5px 0;
-    position: absolute;
-    z-index: 1;
-    margin: -75px -100px;
-}
-
-button:active .tooltiptext {
-    visibility: visible;
+    
+    .filelist .list .item {
+        padding: 10px;
+    }
 }
 
 .select-group {
     display: flex;
     align-items: center;
-    gap: 5px;
+    gap: 8px;
 }
 
 .select-group label {
-    color: #606266;
+    color: #444;
     font-size: 14px;
+    font-weight: 500;
 }
 
 .select-group select {
-    padding: 3px 8px;
-    border-radius: 4px;
+    padding: 5px 10px;
+    border-radius: 8px;
     border: 1px solid #dcdfe6;
-    color: #606266;
+    color: #444;
     font-size: 14px;
     outline: none;
+    transition: all 0.3s ease;
+    background-color: #f5f7fa;
 }
 
 .select-group select:focus {
     border-color: #409eff;
+    box-shadow: 0 0 0 2px rgba(64, 158, 255, 0.2);
 }
 
-/* Add styles for the copy buttons */
+/* Copy buttons styling */
 .copy-buttons-group {
     display: flex;
     justify-content: flex-start;
     gap: 8px;
-    margin-top: 8px;
+    margin-top: 10px;
     flex-wrap: wrap;
 }
 
 .copy-btn {
-    padding: 4px 10px;
+    padding: 5px 12px;
     border-radius: 12px;
-    background-color: #eef2f7;
+    background-color: #f5f7fa;
     color: #606266;
-    border: none;
+    border: 1px solid #e4e7ed;
     font-size: 12px;
     cursor: pointer;
-    transition: all 0.2s ease;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    transition: all 0.25s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    font-weight: 500;
 }
 
 .copy-btn:hover {
-    background-color: #d8e0eb;
-    transform: translateY(-1px);
+    background-color: #ecf5ff;
+    color: #409eff;
+    border-color: #c6e2ff;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08);
 }
 
 .copy-btn:active {
     transform: translateY(0);
-}
-
-.filelist .list .item .progress {
-    margin-bottom: 5px;
 }
 
 /* Style for copy all button */
@@ -451,10 +507,56 @@ button:active .tooltiptext {
     cursor: pointer;
     font-size: 12px;
     color: #409eff;
-    display: none;
-    margin-left: 10px;
+    padding: 3px 8px;
+    border-radius: 4px;
+    transition: all 0.25s ease;
+    background-color: rgba(64, 158, 255, 0.1);
 }
 
 .copyall:hover {
     color: #66b1ff;
+    background-color: rgba(64, 158, 255, 0.2);
+}
+
+/* Add footer styling */
+#footer {
+    margin-top: 20px;
+    color: rgba(255, 255, 255, 0.9);
+    font-size: 13px;
+    text-align: center;
+    padding: 10px;
+    width: 100%;
+    background-color: rgba(0, 0, 0, 0.2);
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+    border-radius: 8px 8px 0 0;
+}
+
+#footer a {
+    color: rgba(255, 255, 255, 0.95);
+    text-decoration: none;
+    transition: color 0.2s;
+    margin: 0 5px;
+}
+
+#footer a:hover {
+    color: #fff;
+    text-decoration: underline;
+}
+
+/* Add loading animations */
+@keyframes pulse {
+    0% {
+        opacity: 0.6;
+    }
+    50% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0.6;
+    }
+}
+
+.filelist .list .item.uploading {
+    animation: pulse 1.5s infinite ease-in-out;
 }
