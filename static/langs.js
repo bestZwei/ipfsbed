@@ -1,7 +1,7 @@
 const translations = {
     'zh-CN': {
         // Meta information
-        'meta-title': 'IPFSBED - 永久的去中心化IPFS图床服务 | ipfsbed.is-an.org',
+        'meta-title': 'IPFSBED - 永久的去中心化IPFS免费图床服务 | ipfsbed.is-an.org',
         'meta-keywords': 'IPFSBED,IPFS图床,IPFS,去中心化图床,永久图床,星际文件系统,图片托管,免费图床,文件上传',
         'meta-description': 'IPFSBED是一个基于IPFS(星际文件系统)的永久性、去中心化的图片托管服务。支持拖拽上传、粘贴上传等多种上传方式,提供多个可靠的访问网关。',
         
