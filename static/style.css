@@ -146,63 +146,7 @@ body {
     align-items: center;
 }
 
-.button-group {
-    display: flex;
-    justify-content: center;
-    gap: 10px;
-    margin-top: 10px;
-}
-
-.button-group button {
-    width: auto;
-    min-width: 70px;
-    height: 32px;
-    border-radius: 16px;
-    background-color: #fff;
-    border: 1px solid var(--border-color);
-    color: var(--text-secondary);
-    font-weight: 500;
-    transition: all var(--transition-speed);
-    cursor: pointer;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    padding: 0 15px;
-}
-
-.dark-mode .button-group button {
-    background-color: #2d2d2d;
-    color: var(--text-secondary);
-}
-
-.button-group button:hover {
-    background-color: var(--primary-color);
-    color: white;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(64, 158, 255, 0.3);
-}
-
-.gateway-button {
-    background-color: #d0dbee;
-}
-
-.dark-mode .gateway-button {
-    background-color: #354151;
-}
-
-.upload .title select {
-    height: 28px;
-    padding: 0 8px;
-    border-radius: 14px;
-    border: 1px solid var(--border-color);
-    background-color: transparent;
-    color: var(--text-secondary);
-    cursor: pointer;
-    transition: border var(--transition-speed);
-}
-
-.dark-mode .upload .title select {
-    color: var(--text-secondary);
-    background-color: #2d2d2d;
-}
+/* Removing the button-group styles since we removed the buttons */
 
 #show {
     width: 475px;
@@ -503,10 +447,7 @@ body {
         margin-bottom: 5px;
     }
 
-    .button-group button {
-        min-width: 50px;
-        padding: 0 10px;
-    }
+    /* Removing the button-group related mobile styles */
 
     #show {
         width: 320px;
@@ -648,4 +589,94 @@ body {
 .copy-all-btn:hover {
     transform: translateY(-3px);
     box-shadow: 0 5px 15px rgba(64, 158, 255, 0.4);
+}
+
+.copy-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 12px;
+}
+
+.copy-btn {
+    padding: 6px 12px;
+    border-radius: 4px;
+    border: 1px solid var(--border-color);
+    background-color: #f5f7fa;
+    color: var(--text-secondary);
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+    min-width: 50px;
+    text-align: center;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.dark-mode .copy-btn {
+    background-color: #2d2d2d;
+    color: var(--text-secondary);
+}
+
+.copy-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    border-color: var(--primary-color);
+    color: var(--primary-color);
+}
+
+.copy-btn.copied {
+    background-color: var(--success-color);
+    color: white;
+    border-color: var(--success-color);
+}
+
+.cid-btn {
+    background-color: #e6f1ff;
+}
+
+.dark-mode .cid-btn {
+    background-color: #143055;
+}
+
+.url-btn {
+    background-color: #eef5fe;
+}
+
+.dark-mode .url-btn {
+    background-color: #1d3557;
+}
+
+.md-btn {
+    background-color: #f0f7ff;
+}
+
+.dark-mode .md-btn {
+    background-color: #1e4258;
+}
+
+.html-btn {
+    background-color: #f3f9ff;
+}
+
+.dark-mode .html-btn {
+    background-color: #1d4d65;
+}
+
+.ubb-btn {
+    background-color: #f5faff;
+}
+
+.dark-mode .ubb-btn {
+    background-color: #1e5373;
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.02); }
+    100% { transform: scale(1); }
+}
+
+.pulse {
+    animation: pulse 0.5s;
 }

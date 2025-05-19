@@ -197,21 +197,13 @@ $(document).ready(() => {
                         </svg>
                     </div>
                 </div>
-                <div class="result" style="display:none">
-                    <input value="" id="Imgs_url" class="tooltip">
-                        <span class="tooltiptext">URL</span>
-                    </input>
-                    <input value="" id="Imgs_html" class="tooltip">
-                        <span class="tooltiptext">HTML</span>
-                    </input>
-                    <input value="" id="Imgs_Ubb" class="tooltip">
-                        <span class="tooltiptext">BBCode</span>
-                    </input>
-                    <input value="" id="Imgs_markdown" class="tooltip">
-                        <span class="tooltiptext">Markdown</span>
-                    </input>
+                <div class="copy-buttons" style="display:none">
+                    <button class="copy-btn cid-btn" onclick="copyFormat(this, 'cid')" data-cid="">CID</button>
+                    <button class="copy-btn url-btn" onclick="copyFormat(this, 'url')" data-url="">URL</button>
+                    <button class="copy-btn md-btn" onclick="copyFormat(this, 'md')" data-md="">MD</button>
+                    <button class="copy-btn html-btn" onclick="copyFormat(this, 'html')" data-html="">HTML</button>
+                    <button class="copy-btn ubb-btn" onclick="copyFormat(this, 'ubb')" data-ubb="">UBB</button>
                 </div>
-                <input id="show" name="show" onclick="copyToClipboard(this)" type="text" value="" readonly style="display:none">
             </div>
         `;
     }
@@ -230,13 +222,15 @@ $(document).ready(() => {
         $(`.${randomClass}`).find('.status-success').show();
         $(`.${randomClass}`).find('#url').attr({ href: imgSrc, target: '_blank' });
         
-        // 更新各种格式的链接
-        $(`.${randomClass}`).find('#Imgs_url').val(imgSrc);
-        $(`.${randomClass}`).find('#Imgs_html').val(`<img src="${imgSrc}"/>`);
-        $(`.${randomClass}`).find('#Imgs_Ubb').val(`[img]${imgSrc}[/img]`);
-        $(`.${randomClass}`).find('#Imgs_markdown').val(`![](${imgSrc})`);
-        $(`.${randomClass}`).find('#show').show().val(imgSrc);
-        $(`.${randomClass}`).find('.result').slideDown(300);
+        // Store data in button data attributes
+        $(`.${randomClass}`).find('.cid-btn').attr('data-cid', res.Hash);
+        $(`.${randomClass}`).find('.url-btn').attr('data-url', imgSrc);
+        $(`.${randomClass}`).find('.md-btn').attr('data-md', `![](${imgSrc})`);
+        $(`.${randomClass}`).find('.html-btn').attr('data-html', `<img src="${imgSrc}"/>`);
+        $(`.${randomClass}`).find('.ubb-btn').attr('data-ubb', `[img]${imgSrc}[/img]`);
+        
+        // Show the copy buttons
+        $(`.${randomClass}`).find('.copy-buttons').slideDown(300);
         
         // Show the copy all button
         $('.copy-all-btn').fadeIn(300);
@@ -272,42 +266,43 @@ function deleteItem(obj) {
     });
 }
 
-function selectFormat(obj) {
-    const format = obj.id.replace('_', '');
-    document.querySelectorAll('.item').forEach(item => {
-        const url = item.querySelector('#Imgs_url').value;
-        let formattedText;
-        switch (format) {
-            case 'url':
-                formattedText = url;
-                break;
-            case 'html':
-                formattedText = `<img src="${url}"/>`;
-                break;
-            case 'Ubb':
-                formattedText = `[img]${url}[/img]`;
-                break;
-            case 'markdown':
-                formattedText = `![](${url})`;
-                break;
-            default:
-                formattedText = url;
-        }
-        item.querySelector('#show').value = formattedText;
+function copyFormat(btn, format) {
+    const text = btn.getAttribute(`data-${format}`);
+    navigator.clipboard.writeText(text).then(() => {
+        // Visual feedback that copy worked
+        const originalText = btn.textContent;
+        const originalClass = btn.className;
+        
+        btn.textContent = '✓';
+        btn.className += ' copied';
+        
+        setTimeout(() => {
+            btn.textContent = originalText;
+            btn.className = originalClass;
+        }, 1000);
+        
+        showToast('Copied to clipboard!');
     });
-    
-    // Add animation feedback
-    $('.filelist').addClass('pulse');
-    setTimeout(() => $('.filelist').removeClass('pulse'), 500);
 }
 
 function changeGateway(obj) {
     const newUrlBase = obj.value;
-    document.querySelectorAll("#show").forEach(input => {
-        const currentUrl = input.value;
-        const newUrl = currentUrl.replace(/https:\/\/[^\/]+/, newUrlBase);
-        input.value = newUrl;
-        input.closest('.item').querySelector(".file #url").href = newUrl;
+    document.querySelectorAll(".item").forEach(item => {
+        const cidBtn = item.querySelector(".cid-btn");
+        const cid = cidBtn.getAttribute("data-cid");
+        
+        if (cid) {
+            const newUrl = `${newUrlBase}/ipfs/${cid}`;
+            
+            // Update all formats with the new URL
+            item.querySelector(".url-btn").setAttribute("data-url", newUrl);
+            item.querySelector(".md-btn").setAttribute("data-md", `![](${newUrl})`);
+            item.querySelector(".html-btn").setAttribute("data-html", `<img src="${newUrl}"/>`);
+            item.querySelector(".ubb-btn").setAttribute("data-ubb", `[img]${newUrl}[/img]`);
+            
+            // Update view link
+            item.querySelector(".file #url").href = newUrl;
+        }
     });
     
     // Add animation feedback
@@ -315,14 +310,11 @@ function changeGateway(obj) {
     setTimeout(() => $('.filelist').removeClass('pulse'), 500);
 }
 
-function copyToClipboard(obj) {
-    obj.select();
-    document.execCommand("Copy");
-    
+function showToast(message) {
     // Show a better notification
     const toast = document.createElement('div');
     toast.className = 'toast';
-    toast.textContent = 'Copied to clipboard!';
+    toast.textContent = message;
     toast.style.position = 'fixed';
     toast.style.bottom = '30px';
     toast.style.left = '50%';
@@ -368,39 +360,11 @@ function seeding(res) {
 
 function copyAllLinks() {
     let allLinks = '';
-    document.querySelectorAll('#show').forEach(input => {
-        allLinks += `${input.value}\n`;
+    document.querySelectorAll('.url-btn').forEach(btn => {
+        allLinks += `${btn.getAttribute('data-url')}\n`;
     });
-    const textarea = document.createElement('textarea');
-    textarea.value = allLinks;
-    document.body.appendChild(textarea);
-    textarea.select();
-    document.execCommand('copy');
-    document.body.removeChild(textarea);
     
-    // Show a better notification
-    const toast = document.createElement('div');
-    toast.className = 'toast';
-    toast.textContent = 'All links copied to clipboard!';
-    toast.style.position = 'fixed';
-    toast.style.bottom = '30px';
-    toast.style.left = '50%';
-    toast.style.transform = 'translateX(-50%)';
-    toast.style.padding = '10px 20px';
-    toast.style.backgroundColor = 'rgba(0, 0, 0, 0.7)';
-    toast.style.color = 'white';
-    toast.style.borderRadius = '20px';
-    toast.style.zIndex = '1000';
-    toast.style.opacity = '0';
-    toast.style.transition = 'opacity 0.3s';
-    
-    document.body.appendChild(toast);
-    
-    setTimeout(() => { toast.style.opacity = '1'; }, 10);
-    setTimeout(() => { 
-        toast.style.opacity = '0';
-        setTimeout(() => {
-            document.body.removeChild(toast);
-        }, 300);
-    }, 2000);
+    navigator.clipboard.writeText(allLinks).then(() => {
+        showToast('All links copied to clipboard!');
+    });
 }
