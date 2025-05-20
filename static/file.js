@@ -206,10 +206,10 @@ $(document).ready(() => {
                         <i class="fas fa-code" style="margin-right: 5px;"></i>HTML
                     </button>
                     <button class="copy-btn" data-type="ubb" onclick="copySpecificFormat(this)">
-                        <i class="fas fa-code" style="margin-right: 5px;"></i>UBB
+                        <i class="fas fa-brackets-square" style="margin-right: 5px;"></i>UBB
                     </button>
                     <button class="copy-btn" data-type="markdown" onclick="copySpecificFormat(this)">
-                        <i class="fas fa-file-alt" style="margin-right: 5px;"></i>MD
+                        <i class="fas fa-markdown" style="margin-right: 5px;"></i>MD
                     </button>
                 </div>
                 <!-- Hidden inputs to store the data -->
@@ -378,16 +378,42 @@ function changeGateway(obj) {
 
 function seeding(res) {
     const gateways = [
-        'https://cdn.ipfsscan.io/ipfs/',
-        'https://ipfs.io/ipfs/',
+        // 主流公共网关
         'https://i0.img2ipfs.com/ipfs/',
+        'https://cdn.ipfsscan.io/ipfs/',
         'https://gateway.ipfsscan.io/ipfs/',
-        'https://ipfs.cyou/ipfs/',
+        'https://ipfs.io/ipfs/',
+        'https://ipfs.crossbell.io/ipfs/',
         'https://gateway.pinata.cloud/ipfs/',
-        'https://hardbin.com/ipfs/',
-        'https://dlunar.net/ipfs/',
         'https://w3s.link/ipfs/',
-        'https://dweb.link/ipfs/'
+        'https://dweb.link/ipfs/',
+        // QuickNode gateways
+        'https://cake-volume-phrase.quicknode-ipfs.com/ipfs/',
+        'https://dswap.quicknode-ipfs.com/ipfs/',
+        'https://daa.quicknode-ipfs.com/ipfs/',
+        'https://hashscan-ipfs.quicknode-ipfs.com/ipfs/',
+        'https://resto.quicknode-ipfs.com/ipfs/',
+        'https://within-herd-pitch.quicknode-ipfs.com/ipfs/',
+        // ETH related gateways
+        'https://eth.sucks/ipfs/',
+        'https://ipfs-01.ethquokkaops.io/ipfs/',
+        'https://ipfs-02.ethquokkaops.io/ipfs/',
+        'https://filebase.truffle.wtf/ipfs/',
+        // Other gateways
+        'https://ipfs-gateway.gifted.art/ipfs/',
+        'https://ipfs.forma.art/ipfs/',
+        'https://i18n.opendreamnet.com/ipfs/',
+        'https://gateway.ipfs.anarchiststickersarchive.org/ipfs/',
+        'https://ipfs.ftso.best/ipfs/',
+        'https://ipfs.distri.ai/ipfs/',
+        'https://ipfs.dekart.io/ipfs/',
+        'https://ipfs.allgram.best/ipfs/',
+        'https://ipfs.yomi.digital/ipfs/',
+        'https://ipfs.metaversis.io/ipfs/',
+        'https://ipfs-internal.xnftdata.com/ipfs/',
+        'https://ipfs-12.yoghourt.cloud/ipfs/',
+        'https://ipfs.fleek.co/ipfs/'
+,
     ];
     gateways.forEach(gateway => {
         fetch(gateway + res.Hash)
