@@ -101,9 +101,8 @@ $(document).ready(() => {
         document.querySelector('.container').classList.add('start');
         const apis = [
             'https://gw.ipfsbed.is-an.org/api/v0/add?pin=false',
-            'https://2ipfs.zone.id/api/v0/add?pin=false',
-            'https://cdn.ipfsscan.io/api/v0/add?pin=false',
-            'https://api.img2ipfs.org/api/v0/add?pin=false',
+            // 'https://2ipfs.zone.id/api/v0/add?pin=false',
+            // 'https://api.img2ipfs.org/api/v0/add?pin=false',
             // 'https://ipfs.io/api/v0/add?pin=false',
             // 'https://ipfs.crossbell.io/api/v0/add?pin=false',
             // 'https://ipfs.4everland.xyz/api/v0/add?pin=false'
@@ -131,7 +130,7 @@ $(document).ready(() => {
                 processData: false,
                 contentType: false,
                 data: formData,
-                timeout: 30000, // 30秒超时
+                timeout: 120000, // 2分钟超时
                 xhr: () => {
                     const xhr = $.ajaxSettings.xhr();
                     if (xhr.upload) {
