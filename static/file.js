@@ -100,6 +100,7 @@ $(document).ready(() => {
     function uploadToImg2IPFS(file) {
         document.querySelector('.container').classList.add('start');
         const apis = [
+            'https://gw.ipfsbed.is-an.org/api/v0/add?pin=false',
             'https://2ipfs.zone.id/api/v0/add?pin=false',
             'https://cdn.ipfsscan.io/api/v0/add?pin=false',
             'https://api.img2ipfs.org/api/v0/add?pin=false',
