@@ -101,8 +101,8 @@ $(document).ready(() => {
         document.querySelector('.container').classList.add('start');
         const apis = [
             'https://gw.ipfsbed.is-an.org/api/v0/add?pin=false',
-            // 'https://2ipfs.zone.id/api/v0/add?pin=false',
-            // 'https://api.img2ipfs.org/api/v0/add?pin=false',
+            'https://2ipfs.zone.id/api/v0/add?pin=false',
+            'https://api.img2ipfs.org/api/v0/add?pin=true',
             // 'https://ipfs.io/api/v0/add?pin=false',
             // 'https://ipfs.crossbell.io/api/v0/add?pin=false',
             // 'https://ipfs.4everland.xyz/api/v0/add?pin=false'
