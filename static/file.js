@@ -206,10 +206,10 @@ $(document).ready(() => {
                         <i class="fas fa-code" style="margin-right: 5px;"></i>HTML
                     </button>
                     <button class="copy-btn" data-type="ubb" onclick="copySpecificFormat(this)">
-                        <i class="fas fa-brackets-square" style="margin-right: 5px;"></i>UBB
+                        <i class="fas fa-code" style="margin-right: 5px;"></i>UBB
                     </button>
                     <button class="copy-btn" data-type="markdown" onclick="copySpecificFormat(this)">
-                        <i class="fas fa-markdown" style="margin-right: 5px;"></i>MD
+                        <i class="fas fa-file-alt" style="margin-right: 5px;"></i>MD
                     </button>
                 </div>
                 <!-- Hidden inputs to store the data -->
