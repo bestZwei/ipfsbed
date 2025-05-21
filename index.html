@@ -386,6 +386,12 @@
             document.querySelector('#langSelect').value = currentLang;
             // Update all UI elements with translations
             updatePageLanguage();
+            
+            // Set initial title for password toggle buttons
+            const passwordToggles = document.querySelectorAll('.password-toggle');
+            passwordToggles.forEach(toggle => {
+                toggle.title = _t('show-password');
+            });
         });
         
         // 添加切换密码可见性的函数
@@ -398,12 +404,12 @@
                 passwordInput.type = 'text';
                 icon.classList.remove('fa-eye');
                 icon.classList.add('fa-eye-slash');
-                toggleButton.title = '隐藏密码';
+                toggleButton.title = _t('hide-password');
             } else {
                 passwordInput.type = 'password';
                 icon.classList.remove('fa-eye-slash');
                 icon.classList.add('fa-eye');
-                toggleButton.title = '显示密码';
+                toggleButton.title = _t('show-password');
             }
         }
     </script>

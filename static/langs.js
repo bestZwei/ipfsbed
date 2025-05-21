@@ -30,7 +30,7 @@ const translations = {
         'file-size': 'SIZE: {size}',
         
         // Passphrase feature
-        'passphrase-placeholder': '设置口令（可选，留空则公开）',
+        'passphrase-placeholder': '口令（可选）',
         'passphrase-prompt-title': '输入口令访问文件',
         'passphrase-prompt-label': '口令：',
         'passphrase-submit': '解锁',
@@ -49,7 +49,7 @@ const translations = {
         'batch-encryption-failed': '批量分享加密失败',
         'batch-share-link-copied': '批量分享链接已复制到剪贴板',
         'batch-share-passphrase-title': '为批量分享设置口令',
-        'batch-share-passphrase-placeholder': '输入口令（可选，留空则公开）',
+        'batch-share-passphrase-placeholder': '口令（可选）',
         'batch-share-confirm-copy': '确认并复制链接',
         'batch-share-cancel': '取消',
         'return-home': '返回主页',
@@ -57,7 +57,15 @@ const translations = {
         // Download and Batch operations
         'download-button': '下载文件',
         'download-progress': '下载文件中',
-        'deselect-all-btn': '取消全选'
+        'deselect-all-btn': '取消全选',
+        
+        // Add any missing keys for password visibility
+        'show-password': '显示密码',
+        'hide-password': '隐藏密码',
+        'meta-title-share-page': 'IPFSBED - 文件分享',
+        'meta-description-share-page': '通过IPFSBED安全访问共享文件 - 基于IPFS的去中心化文件托管服务',
+        'batch-share-title': 'IPFSBED - 批量文件分享',
+        'batch-share-description': '通过IPFSBED访问多个共享文件 - 基于IPFS的去中心化文件托管服务'
     },
     'en': {
         // Meta information
@@ -90,7 +98,7 @@ const translations = {
         'file-size': 'SIZE: {size}',
         
         // Passphrase feature
-        'passphrase-placeholder': 'Set passphrase (optional, public if empty)',
+        'passphrase-placeholder': 'Passphrase (optional)',
         'passphrase-prompt-title': 'Enter Passphrase to Access File',
         'passphrase-prompt-label': 'Passphrase:',
         'passphrase-submit': 'Unlock',
@@ -109,7 +117,7 @@ const translations = {
         'batch-encryption-failed': 'Failed to encrypt batch share',
         'batch-share-link-copied': 'Batch share link copied to clipboard',
         'batch-share-passphrase-title': 'Set Passphrase for Batch Share',
-        'batch-share-passphrase-placeholder': 'Enter passphrase (optional, public if empty)',
+        'batch-share-passphrase-placeholder': 'Passphrase (optional)',
         'batch-share-confirm-copy': 'Confirm & Copy Link',
         'batch-share-cancel': 'Cancel',
         'return-home': 'Return Home',
@@ -117,7 +125,15 @@ const translations = {
         // Download and Batch operations
         'download-button': 'Download File',
         'download-progress': 'Downloading Files',
-        'deselect-all-btn': 'Deselect All'
+        'deselect-all-btn': 'Deselect All',
+        
+        // Add any missing keys:
+        'show-password': 'Show Password',
+        'hide-password': 'Hide Password',
+        'meta-title-share-page': 'IPFSBED - File Share',
+        'meta-description-share-page': 'Access shared files securely via IPFSBED - a decentralized file hosting service based on IPFS',
+        'batch-share-title': 'IPFSBED - Batch File Share',
+        'batch-share-description': 'Access multiple shared files via IPFSBED - a decentralized file hosting service based on IPFS'
     },
     'de': {
         // Meta information
@@ -150,7 +166,7 @@ const translations = {
         'file-size': 'GRÖSSE: {size}',
         
         // Passphrase feature
-        'passphrase-placeholder': 'Passwort festlegen (optional, öffentlich wenn leer)',
+        'passphrase-placeholder': 'Passwort (optional)',
         'passphrase-prompt-title': 'Passwort zum Zugriff auf Datei eingeben',
         'passphrase-prompt-label': 'Passwort:',
         'passphrase-submit': 'Entsperren',
@@ -169,7 +185,7 @@ const translations = {
         'batch-encryption-failed': 'Fehler beim Verschlüsseln der Batch-Freigabe',
         'batch-share-link-copied': 'Batch-Freigabelink in die Zwischenablage kopiert',
         'batch-share-passphrase-title': 'Passwort für Batch-Freigabe festlegen',
-        'batch-share-passphrase-placeholder': 'Passwort eingeben (optional, öffentlich wenn leer)',
+        'batch-share-passphrase-placeholder': 'Passwort (optional)',
         'batch-share-confirm-copy': 'Bestätigen & Link kopieren',
         'batch-share-cancel': 'Abbrechen',
         'return-home': 'Zurück zur Startseite',
@@ -177,7 +193,15 @@ const translations = {
         // Download and Batch operations
         'download-button': 'Datei herunterladen',
         'download-progress': 'Dateien werden heruntergeladen',
-        'deselect-all-btn': 'Alle abwählen'
+        'deselect-all-btn': 'Alle abwählen',
+        
+        // Add missing keys:
+        'show-password': 'Passwort anzeigen',
+        'hide-password': 'Passwort verstecken',
+        'meta-title-share-page': 'IPFSBED - Datei teilen',
+        'meta-description-share-page': 'Greifen Sie sicher auf gemeinsam genutzte Dateien über IPFSBED zu - ein dezentraler Dateihosting-Dienst basierend auf IPFS',
+        'batch-share-title': 'IPFSBED - Batch-Dateifreigabe',
+        'batch-share-description': 'Zugriff auf mehrere freigegebene Dateien über IPFSBED - ein dezentraler Dateihosting-Dienst basierend auf IPFS'
     },
     'ru': {
         // Meta information
@@ -210,7 +234,7 @@ const translations = {
         'file-size': 'РАЗМЕР: {size}',
         
         // Passphrase feature
-        'passphrase-placeholder': 'Установить пароль (необязательно, общедоступно если пусто)',
+        'passphrase-placeholder': 'Пароль (необязательно)',
         'passphrase-prompt-title': 'Введите пароль для доступа к файлу',
         'passphrase-prompt-label': 'Пароль:',
         'passphrase-submit': 'Разблокировать',
@@ -229,7 +253,7 @@ const translations = {
         'batch-encryption-failed': 'Не удалось зашифровать пакетный обмен',
         'batch-share-link-copied': 'Ссылка на пакетный обмен скопирована в буфер обмена',
         'batch-share-passphrase-title': 'Установить пароль для пакетного обмена',
-        'batch-share-passphrase-placeholder': 'Введите пароль (необязательно, общедоступно если пусто)',
+        'batch-share-passphrase-placeholder': 'Пароль (необязательно)',
         'batch-share-confirm-copy': 'Подтвердить и скопировать ссылку',
         'batch-share-cancel': 'Отмена',
         'return-home': 'На главную',
@@ -237,7 +261,15 @@ const translations = {
         // Download and Batch operations
         'download-button': 'Скачать файл',
         'download-progress': 'Загрузка файлов',
-        'deselect-all-btn': 'Отменить все'
+        'deselect-all-btn': 'Отменить все',
+        
+        // Add missing keys:
+        'show-password': 'Показать пароль',
+        'hide-password': 'Скрыть пароль',
+        'meta-title-share-page': 'IPFSBED - Общий доступ к файлу',
+        'meta-description-share-page': 'Безопасный доступ к общим файлам через IPFSBED - децентрализованная служба хостинга файлов на основе IPFS',
+        'batch-share-title': 'IPFSBED - Пакетный общий доступ к файлам',
+        'batch-share-description': 'Доступ к нескольким общим файлам через IPFSBED - децентрализованная служба хостинга файлов на основе IPFS'
     },
     'fr': {
         // Meta information
@@ -270,7 +302,7 @@ const translations = {
         'file-size': 'TAILLE: {size}',
         
         // Passphrase feature
-        'passphrase-placeholder': 'Définir un mot de passe (optionnel, public si vide)',
+        'passphrase-placeholder': 'Mot de passe (optionnel)',
         'passphrase-prompt-title': 'Entrez le mot de passe pour accéder au fichier',
         'passphrase-prompt-label': 'Mot de passe :',
         'passphrase-submit': 'Déverrouiller',
@@ -289,7 +321,7 @@ const translations = {
         'batch-encryption-failed': 'Échec de la cryptographie en masse',
         'batch-share-link-copied': 'Lien de partage en masse copié dans le presse-papiers',
         'batch-share-passphrase-title': 'Définir un mot de passe pour le partage en masse',
-        'batch-share-passphrase-placeholder': 'Entrez le mot de passe (optionnel, public si vide)',
+        'batch-share-passphrase-placeholder': 'Mot de passe (optionnel)',
         'batch-share-confirm-copy': 'Confirmer et copier le lien',
         'batch-share-cancel': 'Annuler',
         'return-home': 'Retour à l\'accueil',
@@ -297,7 +329,15 @@ const translations = {
         // Download and Batch operations
         'download-button': 'Télécharger le fichier',
         'download-progress': 'Téléchargement des fichiers',
-        'deselect-all-btn': 'Tout désélectionner'
+        'deselect-all-btn': 'Tout désélectionner',
+        
+        // Add missing keys:
+        'show-password': 'Afficher le mot de passe',
+        'hide-password': 'Masquer le mot de passe',
+        'meta-title-share-page': 'IPFSBED - Partage de fichiers',
+        'meta-description-share-page': 'Accédez en toute sécurité aux fichiers partagés via IPFSBED - un service d\'hébergement de fichiers décentralisé basé sur IPFS',
+        'batch-share-title': 'IPFSBED - Partage de fichiers par lots',
+        'batch-share-description': 'Accédez à plusieurs fichiers partagés via IPFSBED - un service d\'hébergement de fichiers décentralisé basé sur IPFS'
     },
     'es': {
         // Meta information
@@ -330,7 +370,7 @@ const translations = {
         'file-size': 'TAMAÑO: {size}',
         
         // Passphrase feature
-        'passphrase-placeholder': 'Establecer contraseña (opcional, público si está vacío)',
+        'passphrase-placeholder': 'Contraseña (opcional)',
         'passphrase-prompt-title': 'Ingrese la contraseña para acceder al archivo',
         'passphrase-prompt-label': 'Contraseña:',
         'passphrase-submit': 'Desbloquear',
@@ -349,7 +389,7 @@ const translations = {
         'batch-encryption-failed': 'Error al encriptar el compartir en grupo',
         'batch-share-link-copied': 'Enlace para compartir en grupo copiado al portapapeles',
         'batch-share-passphrase-title': 'Establecer contraseña para compartir en grupo',
-        'batch-share-passphrase-placeholder': 'Ingrese la contraseña (opcional, público si está vacío)',
+        'batch-share-passphrase-placeholder': 'Contraseña (opcional)',
         'batch-share-confirm-copy': 'Confirmar y copiar enlace',
         'batch-share-cancel': 'Cancelar',
         'return-home': 'Volver al inicio',
@@ -357,7 +397,15 @@ const translations = {
         // Download and Batch operations
         'download-button': 'Descargar archivo',
         'download-progress': 'Descargando archivos',
-        'deselect-all-btn': 'Deseleccionar todo'
+        'deselect-all-btn': 'Deseleccionar todo',
+        
+        // Add missing keys:
+        'show-password': 'Mostrar contraseña',
+        'hide-password': 'Ocultar contraseña',
+        'meta-title-share-page': 'IPFSBED - Compartir archivo',
+        'meta-description-share-page': 'Acceda de forma segura a archivos compartidos a través de IPFSBED - un servicio de alojamiento de archivos descentralizado basado en IPFS',
+        'batch-share-title': 'IPFSBED - Compartir archivos por lotes',
+        'batch-share-description': 'Acceda a varios archivos compartidos a través de IPFSBED - un servicio de alojamiento de archivos descentralizado basado en IPFS'
     },
     'ar': {
         // Meta information
@@ -390,7 +438,7 @@ const translations = {
         'file-size': 'الحجم: {size}',
         
         // Passphrase feature
-        'passphrase-placeholder': 'تعيين كلمة مرور (اختياري، عام إذا كان فارغًا)',
+        'passphrase-placeholder': 'كلمة مرور (اختياري)',
         'passphrase-prompt-title': 'أدخل كلمة المرور للوصول إلى الملف',
         'passphrase-prompt-label': 'كلمة المرور:',
         'passphrase-submit': 'فتح',
@@ -409,7 +457,7 @@ const translations = {
         'batch-encryption-failed': 'فشل تشفير المشاركة الجماعية',
         'batch-share-link-copied': 'تم نسخ رابط المشاركة الجماعية إلى الحافظة',
         'batch-share-passphrase-title': 'تعيين كلمة مرور للمشاركة الجماعية',
-        'batch-share-passphrase-placeholder': 'أدخل كلمة المرور (اختياري، عام إذا كان فارغًا)',
+        'batch-share-passphrase-placeholder': 'كلمة مرور (اختياري)',
         'batch-share-confirm-copy': 'تأكيد ونسخ الرابط',
         'batch-share-cancel': 'إلغاء',
         'return-home': 'العودة إلى الصفحة الرئيسية',
@@ -417,7 +465,15 @@ const translations = {
         // Download and Batch operations
         'download-button': 'تنزيل الملف',
         'download-progress': 'جاري تنزيل الملفات',
-        'deselect-all-btn': 'إلغاء تحديد الكل'
+        'deselect-all-btn': 'إلغاء تحديد الكل',
+        
+        // Add missing keys:
+        'show-password': 'إظهار كلمة المرور',
+        'hide-password': 'إخفاء كلمة المرور',
+        'meta-title-share-page': 'IPFSBED - مشاركة الملف',
+        'meta-description-share-page': 'الوصول بأمان إلى الملفات المشتركة عبر IPFSBED - خدمة استضافة ملفات لامركزية تعتمد على IPFS',
+        'batch-share-title': 'IPFSBED - مشاركة الملفات المجمعة',
+        'batch-share-description': 'الوصول إلى ملفات متعددة مشتركة عبر IPFSBED - خدمة استضافة ملفات لامركزية تعتمد على IPFS'
     },
     'fa': {
         // Meta information
@@ -450,7 +506,7 @@ const translations = {
         'file-size': 'اندازه: {size}',
         
         // Passphrase feature
-        'passphrase-placeholder': 'تنظیم گذرواژه (اختیاری، عمومی در صورت خالی بودن)',
+        'passphrase-placeholder': 'گذرواژه (اختیاری)',
         'passphrase-prompt-title': 'برای دسترسی به فایل، گذرواژه را وارد کنید',
         'passphrase-prompt-label': 'گذرواژه:',
         'passphrase-submit': 'باز کردن',
@@ -469,7 +525,7 @@ const translations = {
         'batch-encryption-failed': 'خطا در رمزنگاری اشتراک‌گذاری گروهی',
         'batch-share-link-copied': 'لینک اشتراک‌گذاری گروهی در کلیپ‌بورد کپی شد',
         'batch-share-passphrase-title': 'تنظیم گذرواژه برای اشتراک‌گذاری گروهی',
-        'batch-share-passphrase-placeholder': 'گذرواژه را وارد کنید (اختیاری، عمومی در صورت خالی بودن)',
+        'batch-share-passphrase-placeholder': 'گذرواژه (اختیاری)',
         'batch-share-confirm-copy': 'تأیید و کپی پیوند',
         'batch-share-cancel': 'لغو',
         'return-home': 'بازگشت به خانه',
@@ -477,7 +533,15 @@ const translations = {
         // Download and Batch operations
         'download-button': 'دانلود فایل',
         'download-progress': 'در حال دانلود فایل‌ها',
-        'deselect-all-btn': 'لغو انتخاب همه'
+        'deselect-all-btn': 'لغو انتخاب همه',
+        
+        // Add missing keys:
+        'show-password': 'نمایش گذرواژه',
+        'hide-password': 'پنهان کردن گذرواژه',
+        'meta-title-share-page': 'IPFSBED - اشتراک‌گذاری فایل',
+        'meta-description-share-page': 'دسترسی امن به فایل‌های اشتراک‌گذاری شده از طریق IPFSBED - یک سرویس میزبانی فایل غیرمتمرکز بر اساس IPFS',
+        'batch-share-title': 'IPFSBED - اشتراک‌گذاری گروهی فایل‌ها',
+        'batch-share-description': 'دسترسی به چندین فایل اشتراک‌گذاری شده از طریق IPFSBED - یک سرویس میزبانی فایل غیرمتمرکز بر اساس IPFS'
     },
     'tr': {
         // Meta information
@@ -510,7 +574,7 @@ const translations = {
         'file-size': 'BOYUT: {size}',
         
         // Passphrase feature
-        'passphrase-placeholder': 'Parola ayarla (isteğe bağlı, boşsa herkese açık)',
+        'passphrase-placeholder': 'Parola (isteğe bağlı)',
         'passphrase-prompt-title': 'Dosyaya Erişmek İçin Parolayı Girin',
         'passphrase-prompt-label': 'Parola:',
         'passphrase-submit': 'Kilidi Aç',
@@ -529,7 +593,7 @@ const translations = {
         'batch-encryption-failed': 'Toplu paylaşım şifrelemesi başarısız oldu',
         'batch-share-link-copied': 'Toplu paylaşım bağlantısı panoya kopyalandı',
         'batch-share-passphrase-title': 'Toplu Paylaşım İçin Parola Ayarla',
-        'batch-share-passphrase-placeholder': 'Parola girin (isteğe bağlı, boşsa herkese açık)',
+        'batch-share-passphrase-placeholder': 'Parola (isteğe bağlı)',
         'batch-share-confirm-copy': 'Onayla ve Bağlantıyı Kopyala',
         'batch-share-cancel': 'İptal',
         'return-home': 'Ana Sayfaya Dön',
@@ -537,7 +601,15 @@ const translations = {
         // Download and Batch operations
         'download-button': 'Dosyayı İndir',
         'download-progress': 'Dosyalar İndiriliyor',
-        'deselect-all-btn': 'Tüm Seçimleri Kaldır'
+        'deselect-all-btn': 'Tüm Seçimleri Kaldır',
+        
+        // Add missing keys:
+        'show-password': 'Parolayı Göster',
+        'hide-password': 'Parolayı Gizle',
+        'meta-title-share-page': 'IPFSBED - Dosya Paylaşımı',
+        'meta-description-share-page': 'IPFSBED aracılığıyla paylaşılan dosyalara güvenli bir şekilde erişin - IPFS tabanlı merkeziyetsiz bir dosya barındırma hizmeti',
+        'batch-share-title': 'IPFSBED - Toplu Dosya Paylaşımı',
+        'batch-share-description': 'IPFSBED aracılığıyla birden fazla paylaşılan dosyaya erişin - IPFS tabanlı merkeziyetsiz bir dosya barındırma hizmeti'
     },
     'pt': {
         // Meta information
@@ -570,7 +642,7 @@ const translations = {
         'file-size': 'TAMANHO: {size}',
         
         // Passphrase feature
-        'passphrase-placeholder': 'Definir senha (opcional, público se vazio)',
+        'passphrase-placeholder': 'Senha (opcional)',
         'passphrase-prompt-title': 'Digite a senha para acessar o arquivo',
         'passphrase-prompt-label': 'Senha:',
         'passphrase-submit': 'Desbloquear',
@@ -589,7 +661,7 @@ const translations = {
         'batch-encryption-failed': 'Falha ao criptografar compartilhamento em massa',
         'batch-share-link-copied': 'Link de compartilhamento em massa copiado para a área de transferência',
         'batch-share-passphrase-title': 'Definir Senha para Compartilhamento em Massa',
-        'batch-share-passphrase-placeholder': 'Digite a senha (opcional, público se vazio)',
+        'batch-share-passphrase-placeholder': 'Senha (opcional)',
         'batch-share-confirm-copy': 'Confirmar e Copiar Link',
         'batch-share-cancel': 'Cancelar',
         'return-home': 'Voltar para a página inicial',
@@ -597,7 +669,15 @@ const translations = {
         // Download and Batch operations
         'download-button': 'Baixar Arquivo',
         'download-progress': 'Baixando Arquivos',
-        'deselect-all-btn': 'Desmarcar Tudo'
+        'deselect-all-btn': 'Desmarcar Tudo',
+        
+        // Add missing keys:
+        'show-password': 'Mostrar Senha',
+        'hide-password': 'Ocultar Senha',
+        'meta-title-share-page': 'IPFSBED - Compartilhamento de Arquivo',
+        'meta-description-share-page': 'Acesse arquivos compartilhados com segurança via IPFSBED - um serviço de hospedagem de arquivos descentralizado baseado em IPFS',
+        'batch-share-title': 'IPFSBED - Compartilhamento em Lote',
+        'batch-share-description': 'Acesse múltiplos arquivos compartilhados via IPFSBED - um serviço de hospedagem de arquivos descentralizado baseado em IPFS'
     },
     'ko': {
         // Meta information
@@ -630,7 +710,7 @@ const translations = {
         'file-size': '크기: {size}',
         
         // Passphrase feature
-        'passphrase-placeholder': '암호 설정 (선택 사항, 비워두면 공개)',
+        'passphrase-placeholder': '암호 (선택 사항)',
         'passphrase-prompt-title': '파일에 액세스하려면 암호를 입력하십시오',
         'passphrase-prompt-label': '암호:',
         'passphrase-submit': '잠금 해제',
@@ -649,7 +729,7 @@ const translations = {
         'batch-encryption-failed': '배치 공유 암호화 실패',
         'batch-share-link-copied': '배치 공유 링크가 클립보드에 복사되었습니다',
         'batch-share-passphrase-title': '배치 공유용 암호 설정',
-        'batch-share-passphrase-placeholder': '암호 입력 (선택 사항, 비워두면 공개)',
+        'batch-share-passphrase-placeholder': '암호 (선택 사항)',
         'batch-share-confirm-copy': '확인 및 링크 복사',
         'batch-share-cancel': '취소',
         'return-home': '홈으로 돌아가기',
@@ -657,7 +737,15 @@ const translations = {
         // Download and Batch operations
         'download-button': '파일 다운로드',
         'download-progress': '파일 다운로드 중',
-        'deselect-all-btn': '모두 선택 해제'
+        'deselect-all-btn': '모두 선택 해제',
+        
+        // Add missing keys:
+        'show-password': '비밀번호 표시',
+        'hide-password': '비밀번호 숨기기',
+        'meta-title-share-page': 'IPFSBED - 파일 공유',
+        'meta-description-share-page': 'IPFSBED를 통해 공유 파일에 안전하게 접근하세요 - IPFS 기반 탈중앙화 파일 호스팅 서비스',
+        'batch-share-title': 'IPFSBED - 일괄 파일 공유',
+        'batch-share-description': 'IPFSBED를 통해 여러 공유 파일에 접근하세요 - IPFS 기반 탈중앙화 파일 호스팅 서비스'
     },
     'ja': {
         // Meta information
@@ -690,7 +778,7 @@ const translations = {
         'file-size': 'サイズ: {size}',
         
         // Passphrase feature
-        'passphrase-placeholder': 'パスフレーズを設定 (任意、空の場合は公開)',
+        'passphrase-placeholder': 'パスフレーズ（任意）',
         'passphrase-prompt-title': 'ファイルにアクセスするためのパスフレーズを入力してください',
         'passphrase-prompt-label': 'パスフレーズ:',
         'passphrase-submit': 'ロック解除',
@@ -709,7 +797,7 @@ const translations = {
         'batch-encryption-failed': 'バッチ共有の暗号化に失敗しました',
         'batch-share-link-copied': 'バッチ共有リンクがクリップボードにコピーされました',
         'batch-share-passphrase-title': 'バッチ共有のパスフレーズを設定',
-        'batch-share-passphrase-placeholder': 'パスフレーズを入力 (任意、空の場合は公開)',
+        'batch-share-passphrase-placeholder': 'パスフレーズ（任意）',
         'batch-share-confirm-copy': '確認してリンクをコピー',
         'batch-share-cancel': 'キャンセル',
         'return-home': 'ホームに戻る',
@@ -717,7 +805,15 @@ const translations = {
         // Download and Batch operations
         'download-button': 'ファイルをダウンロード',
         'download-progress': 'ファイルのダウンロード中',
-        'deselect-all-btn': 'すべて選択解除'
+        'deselect-all-btn': 'すべて選択解除',
+        
+        // Add missing keys:
+        'show-password': 'パスワードを表示',
+        'hide-password': 'パスワードを隠す',
+        'meta-title-share-page': 'IPFSBED - ファイル共有',
+        'meta-description-share-page': 'IPFSBEDを通じて共有ファイルに安全にアクセス - IPFSベースの分散型ファイルホスティングサービス',
+        'batch-share-title': 'IPFSBED - バッチファイル共有',
+        'batch-share-description': 'IPFSBEDを通じて複数の共有ファイルにアクセス - IPFSベースの分散型ファイルホスティングサービス'
     }
 };
 
