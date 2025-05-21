@@ -303,12 +303,12 @@ $(document).ready(() => {
     }
 
     function handleUploadSuccess(res, randomClass, file) { // Added file parameter
-        const gateway = $('#gatewaySelect').val() || 'https://cdn.ipfsscan.io';
+        // const gateway = $('#gatewaySelect').val() || 'https://cdn.ipfsscan.io'; // Removed, gateway selection moved to share.html
         const fileName = encodeURIComponent(file.name); // Use original file.name
-        const directIpfsSrc = `${gateway}/ipfs/${res.Hash}?filename=${fileName}`;
+        // const directIpfsSrc = `${gateway}/ipfs/${res.Hash}?filename=${fileName}`; // Removed
         
         const passphrase = $('#passphraseInput').val();
-        let displaySrc = directIpfsSrc;
+        let displaySrc; // Will be the shareUrl
         let shareUrl;
 
         if (passphrase) {
@@ -408,8 +408,9 @@ function copyLinkUrl(button) {
     const textToCopy = item.find('.data-url').val(); // This now holds the share link URL
     
     copyToClipboard(textToCopy);
-    const isProtected = item.find('.data-passphrase-protected').val() === 'true';
-    showToast(isProtected ? _t('copied-format', {format: _t('copy-share-link')}) : _t('copied-format', {format: 'URL'}), 'success');
+    // const isProtected = item.find('.data-passphrase-protected').val() === 'true'; // Redundant, share link is always used
+    // Simplified toast message as it's always a share link
+    showToast(_t('copied-format', {format: _t('copy-share-link')}), 'success');
     
     // Add visual feedback
     $(button).addClass('active');
@@ -452,33 +453,6 @@ function copyShareLink(button) {
     copyLinkUrl(button);
 }
 
-
-function changeGateway(obj) {
-    const newUrlBase = obj.value;
-    document.querySelectorAll('.item').forEach(item => {
-        const dataUrlInput = item.querySelector('.data-url');
-        const currentUrl = dataUrlInput.value;
-
-        // If it's a share link, do not modify it with gateway changes.
-        if (currentUrl.includes('#share=')) {
-            return;
-        }
-
-        // If it's a direct IPFS link, update it.
-        const cid = item.querySelector('.data-cid').value;
-        if (!cid) return;
-        
-        const filename = item.querySelector('.data-filename').value;
-        const filenameParam = filename ? `?filename=${encodeURIComponent(filename)}` : '';
-        
-        const newUrl = `${newUrlBase}/ipfs/${cid}${filenameParam}`;
-        dataUrlInput.value = newUrl;
-        
-        if (item.querySelector('.file-url-input')) {
-            item.querySelector('.file-url-input').value = newUrl;
-        }
-    });
-}
 
 function seeding(res) {
     const gateways = [
