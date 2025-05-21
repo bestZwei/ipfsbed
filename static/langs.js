@@ -438,8 +438,8 @@ function updatePageLanguage() {
     document.querySelector('.upload .content .desc:nth-child(3)').textContent = _t('upload-description');
     document.querySelector('.filelist .title .title-text').textContent = _t('file-list');
     document.querySelector('.copyall').textContent = _t('copy-all');
-    
-    // Gateway selector is handled separately via innerHTML in the DOMContentLoaded event
+    // 修改这里，使用 innerHTML 以支持图标
+    document.querySelector('label[for="gatewaySelect"]').innerHTML = _t('gateway-selector');
     
     // Update footer
     document.querySelector('#footer .info a:nth-child(1)').textContent = _t('footer-project');
