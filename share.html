@@ -40,6 +40,13 @@
         .share-header:hover img {
             transform: scale(1.1);
         }
+
+        .share-header h1 {
+            font-size: 24px;
+            font-weight: 600;
+            color: #303133;
+            margin: 0;
+        }
         
         .share-content {
             padding: 25px;
@@ -365,6 +372,9 @@
                 border-radius: 7px;
                 padding: 8px;
             }
+            .share-header h1 {
+                font-size: 20px;
+            }
         }
         @media (max-width: 480px) {
             .share-container {
@@ -440,26 +450,28 @@
     <div class="share-container">
         <div class="share-header">
             <img src="/img/ipfsbed.png" alt="IPFSBED Logo" width="28" height="28">
-            <span>IPFSBED Shared File</span>
+            <h1 data-translate="share-header-title">IPFSBED Shared File</h1>
         </div>
         
         <div class="share-content">
             <!-- Loading indicator -->
             <div class="loading" id="loadingIndicator">
                 <div class="spinner"></div>
-                <p>Loading file information...</p>
+                <p data-translate="loading-file-info">Loading file information...</p>
             </div>
             
             <!-- Passphrase form (shown for encrypted files) -->
             <div class="passphrase-form" id="passphraseForm" style="display:none;">
                 <div class="passphrase-input-wrapper">
-                    <input type="password" id="passphrase" placeholder="Enter passphrase to access">
+                    <input type="password" id="passphrase" data-translate-placeholder="passphrase-placeholder" placeholder="Enter passphrase to access">
                     <button type="button" class="password-toggle" onclick="togglePasswordVisibility('passphrase')" title="Show/Hide Password">
                         <i class="fas fa-eye"></i>
                     </button>
                 </div>
                 <div class="error-message" id="errorMessage"></div>
-                <button class="unlock-button" id="unlockButton">Unlock</button>
+                <button class="unlock-button" id="unlockButton">
+                    <i class="fas fa-lock-open"></i>Unlock
+                </button>
             </div>
             
             <!-- File details (shown after successful passphrase verification or for public files) -->
@@ -739,6 +751,24 @@
                 // Example: document.title = _t('meta-title-share-page'); // if you add such a key
             }
             processShareUrl();
+        });
+
+        // Initialize language after DOM is ready
+        document.addEventListener('DOMContentLoaded', function() {
+            if (window.initializeLanguage && window.updatePageLanguage) {
+                window.currentLang = window.initializeLanguage();
+                updatePageLanguage();
+
+                // Update static translatable elements
+                document.title = _t('meta-title-share-page');
+                document.querySelector('.share-header h1').textContent = _t('share-header-title');
+                document.querySelector('#loadingIndicator p').textContent = _t('loading-file-info');
+                document.querySelector('#passphrase').placeholder = _t('passphrase-placeholder');
+                document.querySelector('#unlockButton').innerHTML = `<i class="fas fa-lock-open"></i>${_t('passphrase-submit')}`;
+                document.querySelector('#fileUrlDisplay').title = _t('file-access-url');
+                document.querySelector('#downloadButton').innerHTML = `<i class="fas fa-download" style="margin-right: 8px;"></i>${_t('download-file')}`;
+                document.querySelector('.return-home a').innerHTML = `<i class="fas fa-home"></i>${_t('return-home')}`;
+            }
         });
     </script>
 </body>

@@ -606,21 +606,21 @@
     <div class="batch-share-container">
         <div class="batch-share-header">
             <img src="/img/ipfsbed.png" alt="IPFSBED Logo" width="32" height="32">
-            <h1>IPFSBED Batch Shared Files</h1>
+            <h1 data-translate="batch-share-header-title">IPFSBED Batch Shared Files</h1>
         </div>
         
         <div class="batch-share-content">
             <!-- Loading indicator -->
             <div class="loading" id="loadingIndicator">
                 <div class="spinner"></div>
-                <p>Loading shared files...</p>
+                <p data-translate="loading-batch-files">Loading shared files...</p>
             </div>
             
             <!-- Passphrase form (shown for encrypted shares) -->
             <div class="passphrase-form" id="passphraseForm" style="display:none;">
-                <h3>This batch share is password protected</h3>
+                <h3 data-translate="batch-share-passphrase-title">This batch share is password protected</h3>
                 <div class="passphrase-input-wrapper">
-                    <input type="password" id="passphrase" placeholder="Enter passphrase to access files">
+                    <input type="password" id="passphrase" data-translate-placeholder="passphrase-placeholder" placeholder="Enter passphrase to access files">
                     <button type="button" class="password-toggle" onclick="togglePasswordVisibility('passphrase')" title="Show/Hide Password">
                         <i class="fas fa-eye"></i>
                     </button>
@@ -640,7 +640,7 @@
                 <!-- Gateway selector -->
                 <div class="gateway-selector-group">
                     <label for="batchGatewaySelect">Choose Gateway:</label>
-                    <select id="batchGatewaySelect">
+                    <select id="batchGatewaySelect" title="Gateway Selector">
                         <!-- Options will be populated by JavaScript -->
                     </select>
                 </div>
@@ -1137,7 +1137,20 @@
             // Initialize language
             if (window.initializeLanguage && window.updatePageLanguage) {
                 window.currentLang = window.initializeLanguage();
-                // Update any translatable elements if needed
+                updatePageLanguage();
+
+                // Update static translatable elements
+                document.title = _t('meta-title-batch-share-page');
+                document.querySelector('.batch-share-header h1').textContent = _t('batch-share-header-title');
+                document.querySelector('#loadingIndicator p').textContent = _t('loading-batch-files');
+                document.querySelector('#passphrase').placeholder = _t('passphrase-placeholder');
+                document.querySelector('#unlockButton').innerHTML = `<i class="fas fa-lock-open"></i>${_t('passphrase-submit')}`;
+                document.querySelector('#batchGatewaySelect').title = _t('gateway-selector');
+                document.querySelector('#selectAllBtn').innerHTML = `<i class="fas fa-check-square"></i>${_t('select-all')}`;
+                document.querySelector('#deselectAllBtn').innerHTML = `<i class="fas fa-square"></i>${_t('deselect-all')}`;
+                document.querySelector('#downloadAllBtn').innerHTML = `<i class="fas fa-download"></i>${_t('download-selected')}`;
+                document.querySelector('#copyAllBtn').innerHTML = `<i class="fas fa-copy"></i>${_t('copy-all-urls')}`;
+                document.querySelector('.return-home a').innerHTML = `<i class="fas fa-home"></i>${_t('return-home')}`;
             }
             processBatchShare();
         });
