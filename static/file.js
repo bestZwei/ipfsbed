@@ -1,6 +1,8 @@
 $(document).ready(() => {
-    // 直接开始初始化事件监听
+    // Directly start initialization of event listeners
     initEventListeners();
+    // Check if accessing a shared link
+    checkAccessMode();
 
     // Create toast container
     $('body').append('<div class="toast-container"></div>');
@@ -13,6 +15,22 @@ $(document).ready(() => {
                      .on('dragenter', handleDragEnter)
                      .on('dragleave', handleDragLeave)
                      .on('drop', handleDropUpload);
+        // For shared link access
+        $('#submitAccessPassphrase').on('click', () => {
+            const encryptedPayload = $('#shareAccessPrompt').data('payload');
+            const passphrase = $('#accessPassphraseInput').val();
+            handlePassphraseSubmit(encryptedPayload, passphrase);
+        });
+        // Clear passphrase error on input
+        $('#accessPassphraseInput').on('input', () => {
+            $('#passphraseError').text('');
+        });
+        // Allow pressing Enter to submit passphrase
+        $('#accessPassphraseInput').on('keypress', (e) => {
+            if (e.which === 13) { // Enter key
+                $('#submitAccessPassphrase').click();
+            }
+        });
     }
     
     // Enhanced drag and drop visual feedback
@@ -173,7 +191,7 @@ $(document).ready(() => {
                 },
                 success: res => {
                     if (res.Hash) {
-                        handleUploadSuccess(res, randomClass);
+                        handleUploadSuccess(res, randomClass, file); // Pass the file object
                         setTimeout(() => seeding(res), 1000);
                     } else {
                         if (retryCount < 2) {
@@ -201,7 +219,12 @@ $(document).ready(() => {
     function createFileItem(file, randomClass) {
         // Get file icon based on file type
         const fileIcon = getFileTypeIcon(file.name);
+        const passphrase = $('#passphraseInput').val();
         
+        // Determine which copy icon/text to show initially based on passphrase
+        let copyButtonTitle = passphrase ? _t('copy-share-link') : _t('copy-link');
+        let copyFunction = passphrase ? `copyShareLink(this)` : `copyLinkUrl(this)`;
+
         return `
             <div class="item ${randomClass}">
                 <div class="file">
@@ -210,7 +233,7 @@ $(document).ready(() => {
                         <div class="desc__name">${file.name}</div>
                         <div class="desc__size">${_t('file-size', {size: formatBytes(file.size)})}</div>
                     </div>
-                    <a href="javascript:void(0);" class="link" title="复制链接" onclick="copyLinkUrl(this); return false;">
+                    <a href="javascript:void(0);" class="link copy-primary-link" title="${copyButtonTitle}" onclick="${copyFunction}; return false;">
                         <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" class="icon-copy">
                             <path d="M19,21H8V7H19M19,5H8A2,2 0 0,0 6,7V21A2,2 0 0,0 8,23H19A2,2 0 0,0 21,21V7A2,2 0 0,0 19,5M16,1H4A2,2 0 0,0 2,3V17H4V3H16V1Z" fill="#909399"/>
                         </svg>
@@ -239,6 +262,8 @@ $(document).ready(() => {
                 <!-- Hidden inputs to store the data -->
                 <input type="hidden" class="data-url" value="">
                 <input type="hidden" class="data-cid" value="">
+                <input type="hidden" class="data-filename" value="${file.name}">
+                <input type="hidden" class="data-passphrase-protected" value="${passphrase ? 'true' : 'false'}">
             </div>
         `;
     }
@@ -277,10 +302,36 @@ $(document).ready(() => {
         $(`.${randomClass}`).find('.progress-status').text(`${percent}%`);
     }
 
-    function handleUploadSuccess(res, randomClass) {
+    function handleUploadSuccess(res, randomClass, file) { // Added file parameter
         const gateway = $('#gatewaySelect').val() || 'https://cdn.ipfsscan.io';
-        const fileName = encodeURIComponent(res.Name);
-        const imgSrc = `${gateway}/ipfs/${res.Hash}?filename=${fileName}`;
+        const fileName = encodeURIComponent(file.name); // Use original file.name
+        const directIpfsSrc = `${gateway}/ipfs/${res.Hash}?filename=${fileName}`;
+        
+        const passphrase = $('#passphraseInput').val();
+        let displaySrc = directIpfsSrc;
+
+        if (passphrase) {
+            const payloadToEncrypt = { cid: res.Hash, filename: file.name };
+            const encryptedPayload = encryptData(payloadToEncrypt, passphrase);
+            if (encryptedPayload) {
+                displaySrc = `${window.location.origin}${window.location.pathname}#share=${encryptedPayload}`;
+                // Update copy button for this item if it was created before passphrase was known to be used
+                const itemElement = $(`.${randomClass}`);
+                itemElement.find('.copy-primary-link')
+                    .attr('title', _t('copy-share-link'))
+                    .attr('onclick', `copyShareLink(this); return false;`);
+                itemElement.find('.data-passphrase-protected').val('true');
+            } else {
+                // Encryption failed, fallback to direct link and notify user
+                showToast(_t('encryption-failed') + " " + _t('file-will-be-public'), 'error'); // Add 'file-will-be-public' translation
+                // Ensure copy button reflects non-passphrase state
+                 const itemElement = $(`.${randomClass}`);
+                itemElement.find('.copy-primary-link')
+                    .attr('title', _t('copy-link'))
+                    .attr('onclick', `copyLinkUrl(this); return false;`);
+                itemElement.find('.data-passphrase-protected').val('false');
+            }
+        }
         
         $('#file').val(null);
         $(`.${randomClass}`).find('.progress-inner').addClass('success');
@@ -290,13 +341,14 @@ $(document).ready(() => {
             // Show and populate the URL display
             const urlDisplay = $(`.${randomClass}`).find('.url-display');
             const fileUrlInput = $(`.${randomClass}`).find('.file-url-input');
-            fileUrlInput.val(imgSrc);
+            fileUrlInput.val(displaySrc); // Show share link or direct link
             urlDisplay.fadeIn(300);
         });
         
         // Store the URL and CID values in hidden inputs
-        $(`.${randomClass}`).find('.data-url').val(imgSrc);
+        $(`.${randomClass}`).find('.data-url').val(displaySrc); // Store share link or direct link
         $(`.${randomClass}`).find('.data-cid').val(res.Hash);
+        $(`.${randomClass}`).find('.data-filename').val(file.name); // Store original filename
         
         // Make sure the copyall button is visible
         $('.copyall').fadeIn(300);
@@ -335,13 +387,14 @@ function deleteItem(obj) {
     });
 }
 
-// Function to copy the URL link
+// Function to copy the URL link (either direct or share link)
 function copyLinkUrl(button) {
-    const item = button.closest('.item');
-    const textToCopy = item.querySelector('.data-url').value;
+    const item = $(button).closest('.item');
+    const textToCopy = item.find('.data-url').val(); // This now holds the primary link (direct or share)
     
     copyToClipboard(textToCopy);
-    showToast(_t('copied-format', {format: 'URL'}), 'success');
+    const isProtected = item.find('.data-passphrase-protected').val() === 'true';
+    showToast(isProtected ? _t('copied-format', {format: _t('copy-share-link')}) : _t('copied-format', {format: 'URL'}), 'success');
     
     // Add visual feedback
     $(button).addClass('active');
@@ -375,23 +428,37 @@ function copyToClipboard(text) {
     document.body.removeChild(textarea);
 }
 
+// Add this new function specifically for share links if needed, or rely on copyLinkUrl
+function copyShareLink(button) {
+    // This function is now effectively the same as copyLinkUrl when a passphrase is set
+    // because data-url will store the share link.
+    // We can simplify by having copyLinkUrl handle both cases based on what's in data-url.
+    // The button's onclick is already set dynamically in createFileItem and handleUploadSuccess.
+    copyLinkUrl(button);
+}
+
+
 function changeGateway(obj) {
     const newUrlBase = obj.value;
     document.querySelectorAll('.item').forEach(item => {
-        // 获取CID
+        const dataUrlInput = item.querySelector('.data-url');
+        const currentUrl = dataUrlInput.value;
+
+        // If it's a share link, do not modify it with gateway changes.
+        if (currentUrl.includes('#share=')) {
+            return;
+        }
+
+        // If it's a direct IPFS link, update it.
         const cid = item.querySelector('.data-cid').value;
         if (!cid) return;
         
-        // 获取当前URL以提取文件名参数
-        const currentUrl = item.querySelector('.data-url').value;
-        const filenameMatch = currentUrl.match(/[?&]filename=([^&]+)/);
-        const filenameParam = filenameMatch ? `?filename=${filenameMatch[1]}` : '';
+        const filename = item.querySelector('.data-filename').value;
+        const filenameParam = filename ? `?filename=${encodeURIComponent(filename)}` : '';
         
-        // 更新URL
         const newUrl = `${newUrlBase}/ipfs/${cid}${filenameParam}`;
-        item.querySelector('.data-url').value = newUrl;
+        dataUrlInput.value = newUrl;
         
-        // Also update the visible URL input if it exists
         if (item.querySelector('.file-url-input')) {
             item.querySelector('.file-url-input').value = newUrl;
         }
@@ -499,3 +566,98 @@ function showToast(message, type = 'info', duration = 3000) {
         }
     }, duration);
 }
+
+// --- Passphrase Protection Logic ---
+
+function encryptData(data, passphrase) {
+    if (!CryptoJS) {
+        console.error("CryptoJS not loaded!");
+        showToast(_t('encryption-failed'), 'error');
+        return null;
+    }
+    try {
+        const encrypted = CryptoJS.AES.encrypt(JSON.stringify(data), passphrase).toString();
+        return encrypted;
+    } catch (e) {
+        console.error("Encryption failed:", e);
+        showToast(_t('encryption-failed'), 'error');
+        return null;
+    }
+}
+
+function decryptData(encryptedData, passphrase) {
+    if (!CryptoJS) {
+        console.error("CryptoJS not loaded!");
+        showToast(_t('decryption-failed'), 'error');
+        return null;
+    }
+    try {
+        const bytes = CryptoJS.AES.decrypt(encryptedData, passphrase);
+        const decryptedString = bytes.toString(CryptoJS.enc.Utf8);
+        if (!decryptedString) {
+            return null; // Decryption failed (e.g., wrong key)
+        }
+        return JSON.parse(decryptedString);
+    } catch (e) {
+        // This catch is important for invalid JSON after "successful" decryption with wrong key
+        console.error("Decryption resulted in invalid data or failed:", e);
+        return null;
+    }
+}
+
+function checkAccessMode() {
+    if (window.location.hash && window.location.hash.startsWith('#share=')) {
+        const encryptedPayload = window.location.hash.substring('#share='.length);
+        if (encryptedPayload) {
+            displayPassphrasePrompt(encryptedPayload);
+        } else {
+            // Invalid share link, clear hash and show normal UI
+            window.location.hash = '';
+            $('.container').show();
+            $('#shareAccessPrompt').hide().data('payload', '');
+        }
+    } else {
+        $('.container').show();
+        $('#shareAccessPrompt').hide().data('payload', '');
+    }
+}
+
+function displayPassphrasePrompt(encryptedPayload) {
+    $('.container').hide(); // Hide main upload UI
+    $('#shareAccessPrompt').data('payload', encryptedPayload).css('display', 'flex');
+    $('#accessPassphraseInput').val('').focus();
+    $('#passphraseError').text('');
+    // Ensure translations are applied if language changes while prompt is hidden
+    $('#shareAccessPrompt').find('[data-translate]').each(function() {
+        $(this).text(_t($(this).data('translate')));
+    });
+}
+
+function handlePassphraseSubmit(encryptedPayload, enteredPassphrase) {
+    if (!enteredPassphrase) {
+        $('#passphraseError').text(_t('passphrase-incorrect')); // Or a "passphrase cannot be empty" message
+        return;
+    }
+
+    const decrypted = decryptData(encryptedPayload, enteredPassphrase);
+
+    if (decrypted && decrypted.cid && decrypted.filename) {
+        showToast(_t('accessing-file'), 'info', 2000);
+        const gateway = $('#gatewaySelect').val() || 'https://cdn.ipfsscan.io'; // Use current gateway selection
+        const finalUrl = `${gateway}/ipfs/${decrypted.cid}?filename=${encodeURIComponent(decrypted.filename)}`;
+        
+        // Clear the hash to prevent re-prompting if user navigates back
+        // and then redirect.
+        window.location.hash = ''; 
+        // Redirect after a short delay to allow toast to be seen
+        setTimeout(() => {
+            window.location.href = finalUrl;
+        }, 500);
+    } else {
+        $('#passphraseError').text(_t('passphrase-incorrect'));
+        $('#accessPassphraseInput').val(''); // Clear input on failure
+    }
+}
+
+// Listen for hash changes to re-evaluate access mode (e.g., if user manually changes hash)
+$(window).on('hashchange', checkAccessMode);

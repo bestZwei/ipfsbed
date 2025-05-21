@@ -27,7 +27,18 @@ const translations = {
         'all-apis-failed': '所有API尝试失败',
         
         // File info
-        'file-size': 'SIZE: {size}'
+        'file-size': 'SIZE: {size}',
+        
+        // Passphrase feature
+        'passphrase-placeholder': '设置口令（可选，留空则公开）',
+        'passphrase-prompt-title': '输入口令访问文件',
+        'passphrase-prompt-label': '口令：',
+        'passphrase-submit': '解锁',
+        'passphrase-incorrect': '口令错误。',
+        'copy-share-link': '复制分享链接',
+        'encryption-failed': '加密失败，请重试。',
+        'decryption-failed': '解密失败。链接可能已损坏或口令错误。',
+        'accessing-file': '正在访问文件...'
     },
     'en': {
         // Meta information
@@ -57,7 +68,18 @@ const translations = {
         'all-apis-failed': 'All API attempts failed',
         
         // File info
-        'file-size': 'SIZE: {size}'
+        'file-size': 'SIZE: {size}',
+        
+        // Passphrase feature
+        'passphrase-placeholder': 'Set passphrase (optional, public if empty)',
+        'passphrase-prompt-title': 'Enter Passphrase to Access File',
+        'passphrase-prompt-label': 'Passphrase:',
+        'passphrase-submit': 'Unlock',
+        'passphrase-incorrect': 'Incorrect passphrase.',
+        'copy-share-link': 'Copy Share Link',
+        'encryption-failed': 'Encryption failed. Please try again.',
+        'decryption-failed': 'Decryption failed. Link might be corrupted or passphrase incorrect.',
+        'accessing-file': 'Accessing file...'
     },
     'de': {
         // Meta information
@@ -87,7 +109,18 @@ const translations = {
         'all-apis-failed': 'Alle API-Versuche fehlgeschlagen',
         
         // File info
-        'file-size': 'GRÖSSE: {size}'
+        'file-size': 'GRÖSSE: {size}',
+        
+        // Passphrase feature
+        'passphrase-placeholder': 'Passwort festlegen (optional, öffentlich wenn leer)',
+        'passphrase-prompt-title': 'Passwort zum Zugriff auf Datei eingeben',
+        'passphrase-prompt-label': 'Passwort:',
+        'passphrase-submit': 'Entsperren',
+        'passphrase-incorrect': 'Falsches Passwort.',
+        'copy-share-link': 'Share-Link kopieren',
+        'encryption-failed': 'Verschlüsselung fehlgeschlagen. Bitte versuchen Sie es erneut.',
+        'decryption-failed': 'Entschlüsselung fehlgeschlagen. Link könnte beschädigt sein oder Passwort falsch.',
+        'accessing-file': 'Datei wird aufgerufen...'
     },
     'ru': {
         // Meta information
@@ -117,7 +150,18 @@ const translations = {
         'all-apis-failed': 'Все попытки API не удались',
         
         // File info
-        'file-size': 'РАЗМЕР: {size}'
+        'file-size': 'РАЗМЕР: {size}',
+        
+        // Passphrase feature
+        'passphrase-placeholder': 'Установить пароль (необязательно, общедоступно если пусто)',
+        'passphrase-prompt-title': 'Введите пароль для доступа к файлу',
+        'passphrase-prompt-label': 'Пароль:',
+        'passphrase-submit': 'Разблокировать',
+        'passphrase-incorrect': 'Неверный пароль.',
+        'copy-share-link': 'Копировать ссылку для обмена',
+        'encryption-failed': 'Ошибка шифрования. Пожалуйста, попробуйте еще раз.',
+        'decryption-failed': 'Ошибка расшифровки. Ссылка может быть повреждена или пароль неверен.',
+        'accessing-file': 'Доступ к файлу...'
     },
     'fr': {
         // Meta information
@@ -147,7 +191,18 @@ const translations = {
         'all-apis-failed': 'Toutes les tentatives d\'API ont échoué',
         
         // File info
-        'file-size': 'TAILLE: {size}'
+        'file-size': 'TAILLE: {size}',
+        
+        // Passphrase feature
+        'passphrase-placeholder': 'Définir un mot de passe (optionnel, public si vide)',
+        'passphrase-prompt-title': 'Entrez le mot de passe pour accéder au fichier',
+        'passphrase-prompt-label': 'Mot de passe :',
+        'passphrase-submit': 'Déverrouiller',
+        'passphrase-incorrect': 'Mot de passe incorrect.',
+        'copy-share-link': 'Copier le lien de partage',
+        'encryption-failed': 'Échec du chiffrement. Veuillez réessayer.',
+        'decryption-failed': 'Échec du déchiffrement. Le lien est peut-être corrompu ou le mot de passe incorrect.',
+        'accessing-file': 'Accès au fichier...'
     },
     'es': {
         // Meta information
@@ -177,7 +232,18 @@ const translations = {
         'all-apis-failed': 'Todos los intentos de API fallaron',
         
         // File info
-        'file-size': 'TAMAÑO: {size}'
+        'file-size': 'TAMAÑO: {size}',
+        
+        // Passphrase feature
+        'passphrase-placeholder': 'Establecer contraseña (opcional, público si está vacío)',
+        'passphrase-prompt-title': 'Ingrese la contraseña para acceder al archivo',
+        'passphrase-prompt-label': 'Contraseña:',
+        'passphrase-submit': 'Desbloquear',
+        'passphrase-incorrect': 'Contraseña incorrecta.',
+        'copy-share-link': 'Copiar enlace para compartir',
+        'encryption-failed': 'Falló el cifrado. Por favor, inténtelo de nuevo.',
+        'decryption-failed': 'Falló el descifrado. El enlace podría estar dañado o la contraseña incorrecta.',
+        'accessing-file': 'Accediendo al archivo...'
     },
     'ar': {
         // Meta information
@@ -207,7 +273,18 @@ const translations = {
         'all-apis-failed': 'فشلت جميع محاولات API',
         
         // File info
-        'file-size': 'الحجم: {size}'
+        'file-size': 'الحجم: {size}',
+        
+        // Passphrase feature
+        'passphrase-placeholder': 'تعيين كلمة مرور (اختياري، عام إذا كان فارغًا)',
+        'passphrase-prompt-title': 'أدخل كلمة المرور للوصول إلى الملف',
+        'passphrase-prompt-label': 'كلمة المرور:',
+        'passphrase-submit': 'فتح',
+        'passphrase-incorrect': 'كلمة مرور خاطئة.',
+        'copy-share-link': 'نسخ رابط المشاركة',
+        'encryption-failed': 'فشل التشفير. يرجى المحاولة مرة أخرى.',
+        'decryption-failed': 'فشل فك التشفير. قد يكون الرابط تالفًا أو كلمة المرور غير صحيحة.',
+        'accessing-file': 'جار الوصول إلى الملف...'
     },
     'fa': {
         // Meta information
@@ -237,7 +314,18 @@ const translations = {
         'all-apis-failed': 'همه تلاش‌های API ناموفق بودند',
         
         // File info
-        'file-size': 'اندازه: {size}'
+        'file-size': 'اندازه: {size}',
+        
+        // Passphrase feature
+        'passphrase-placeholder': 'تنظیم گذرواژه (اختیاری، عمومی در صورت خالی بودن)',
+        'passphrase-prompt-title': 'برای دسترسی به فایل، گذرواژه را وارد کنید',
+        'passphrase-prompt-label': 'گذرواژه:',
+        'passphrase-submit': 'باز کردن',
+        'passphrase-incorrect': 'گذرواژه نادرست است.',
+        'copy-share-link': 'کپی پیوند اشتراک‌گذاری',
+        'encryption-failed': 'رمزگذاری ناموفق بود. لطفاً دوباره امتحان کنید.',
+        'decryption-failed': 'رمزگشایی ناموفق بود. پیوند ممکن است خراب باشد یا گذرواژه نادرست باشد.',
+        'accessing-file': 'درحال دسترسی به فایل...'
     },
     'tr': {
         // Meta information
@@ -267,7 +355,18 @@ const translations = {
         'all-apis-failed': 'Tüm API denemeleri başarısız oldu',
         
         // File info
-        'file-size': 'BOYUT: {size}'
+        'file-size': 'BOYUT: {size}',
+        
+        // Passphrase feature
+        'passphrase-placeholder': 'Parola ayarla (isteğe bağlı, boşsa herkese açık)',
+        'passphrase-prompt-title': 'Dosyaya Erişmek İçin Parolayı Girin',
+        'passphrase-prompt-label': 'Parola:',
+        'passphrase-submit': 'Kilidi Aç',
+        'passphrase-incorrect': 'Yanlış parola.',
+        'copy-share-link': 'Paylaşım Bağlantısını Kopyala',
+        'encryption-failed': 'Şifreleme başarısız oldu. Lütfen tekrar deneyin.',
+        'decryption-failed': 'Şifre çözme başarısız oldu. Bağlantı bozuk olabilir veya parola yanlış olabilir.',
+        'accessing-file': 'Dosyaya erişiliyor...'
     },
     'pt': {
         // Meta information
@@ -297,7 +396,18 @@ const translations = {
         'all-apis-failed': 'Todas as tentativas de API falharam',
         
         // File info
-        'file-size': 'TAMANHO: {size}'
+        'file-size': 'TAMANHO: {size}',
+        
+        // Passphrase feature
+        'passphrase-placeholder': 'Definir senha (opcional, público se vazio)',
+        'passphrase-prompt-title': 'Digite a senha para acessar o arquivo',
+        'passphrase-prompt-label': 'Senha:',
+        'passphrase-submit': 'Desbloquear',
+        'passphrase-incorrect': 'Senha incorreta.',
+        'copy-share-link': 'Copiar Link de Compartilhamento',
+        'encryption-failed': 'A criptografia falhou. Por favor, tente novamente.',
+        'decryption-failed': 'A descriptografia falhou. O link pode estar corrompido ou a senha incorreta.',
+        'accessing-file': 'Acessando arquivo...'
     },
     'ko': {
         // Meta information
@@ -327,7 +437,18 @@ const translations = {
         'all-apis-failed': '모든 API 시도가 실패했습니다',
         
         // File info
-        'file-size': '크기: {size}'
+        'file-size': '크기: {size}',
+        
+        // Passphrase feature
+        'passphrase-placeholder': '암호 설정 (선택 사항, 비워두면 공개)',
+        'passphrase-prompt-title': '파일에 액세스하려면 암호를 입력하십시오',
+        'passphrase-prompt-label': '암호:',
+        'passphrase-submit': '잠금 해제',
+        'passphrase-incorrect': '잘못된 암호입니다.',
+        'copy-share-link': '공유 링크 복사',
+        'encryption-failed': '암호화에 실패했습니다. 다시 시도하십시오.',
+        'decryption-failed': '복호화에 실패했습니다. 링크가 손상되었거나 암호가 잘못되었을 수 있습니다.',
+        'accessing-file': '파일에 액세스하는 중...'
     },
     'ja': {
         // Meta information
@@ -357,7 +478,18 @@ const translations = {
         'all-apis-failed': 'すべてのAPIの試行が失敗しました',
         
         // File info
-        'file-size': 'サイズ: {size}'
+        'file-size': 'サイズ: {size}',
+        
+        // Passphrase feature
+        'passphrase-placeholder': 'パスフレーズを設定 (任意、空の場合は公開)',
+        'passphrase-prompt-title': 'ファイルにアクセスするためのパスフレーズを入力してください',
+        'passphrase-prompt-label': 'パスフレーズ:',
+        'passphrase-submit': 'ロック解除',
+        'passphrase-incorrect': 'パスフレーズが正しくありません。',
+        'copy-share-link': '共有リンクをコピー',
+        'encryption-failed': '暗号化に失敗しました。もう一度お試しください。',
+        'decryption-failed': '復号に失敗しました。リンクが破損しているか、パスフレーズが間違っている可能性があります。',
+        'accessing-file': 'ファイルにアクセスしています...'
     }
 };
 
@@ -448,6 +580,18 @@ function updatePageLanguage() {
     
     // Update language selector to show current language
     document.querySelector('#langSelect').value = currentLang;
+
+    // Update dynamic placeholders and elements
+    const passphraseInput = document.getElementById('passphraseInput');
+    if (passphraseInput) {
+        passphraseInput.placeholder = _t(passphraseInput.dataset.translatePlaceholder);
+    }
+    document.querySelectorAll('[data-translate]').forEach(el => {
+        const key = el.dataset.translate;
+        if (key) {
+            el.textContent = _t(key);
+        }
+    });
 }
 
 // Export functions and data
