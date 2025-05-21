@@ -237,6 +237,13 @@ body {
     z-index: 1;
 }
 
+/* 优化上传描述字体和间距 */
+.upload .content .desc {
+    font-size: 15px;
+    margin-bottom: 8px;
+    line-height: 1.5;
+}
+
 .upload .content:hover .desc {
     color: #333;
 }
@@ -283,6 +290,14 @@ body {
     position: relative;
     overflow: hidden;
     border: 1px solid rgba(0, 0, 0, 0.03);
+}
+
+/* 优化 filelist 列表项在不同屏幕的圆角和阴影 */
+.filelist .list .item {
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+    margin-bottom: 12px;
+    padding: 11px;
 }
 
 .filelist .list .item:hover {
@@ -675,44 +690,31 @@ body {
     }
 }
 
-.select-group {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    transition: all 0.3s ease;
-    flex-wrap: nowrap;
-    justify-content: center;
+/* 优化 container 在超小屏幕下的布局 */
+@media (max-width: 360px) {
+    .container {
+        max-width: 100%;
+        gap: 8px;
+        margin-top: 8px;
+        margin-bottom: 30px;
+    }
+    .upload, .filelist {
+        border-radius: 8px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    }
 }
 
-.select-group label {
-    color: #444;
-    font-size: 14px;
-    font-weight: 500;
-    white-space: nowrap;
-}
-
-.select-group select {
-    padding: 8px 15px;
-    border-radius: 10px;
-    border: 1px solid #e4e7ed;
-    color: #444;
-    font-size: 14px;
-    outline: none;
-    transition: all 0.3s ease;
-    background-color: #fff;
-    -webkit-appearance: none;
-    appearance: none;
-    background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23444%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E");
-    background-repeat: no-repeat;
-    background-position: right 10px top 50%;
-    background-size: 10px auto;
-    padding-right: 28px;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
-}
-
-.select-group select:focus {
-    border-color: #409eff;
-    box-shadow: 0 0 0 3px rgba(64,158,255,0.2);
+/* 优化 upload 和 filelist 在中小屏幕下的间距和圆角 */
+@media (max-width: 900px) {
+    .container {
+        gap: 18px;
+        margin-top: 12px;
+        margin-bottom: 30px;
+    }
+    .upload, .filelist {
+        border-radius: 12px;
+        box-shadow: 0 6px 18px rgba(0,0,0,0.09);
+    }
 }
 
 /* Toast notification styling */

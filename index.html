@@ -152,6 +152,124 @@
             display: flex;
             justify-content: space-between;
         }
+
+        /* 优化 file-select-checkbox 在小屏幕下的尺寸 */
+        @media (max-width: 480px) {
+            .file-select-checkbox, #toggleAllFiles {
+                width: 14px;
+                height: 14px;
+            }
+            .toggle-all-label {
+                font-size: 12px;
+            }
+        }
+        /* 优化 batch-actions 在小屏幕下的间距 */
+        @media (max-width: 480px) {
+            .batch-actions {
+                gap: 4px;
+            }
+            .toggle-all-wrapper {
+                margin-right: 4px;
+            }
+        }
+        /* 优化 modal 在小屏幕下的宽度和圆角 */
+        @media (max-width: 480px) {
+            #batchSharePassphraseModal .modal-content {
+                padding: 10px 3vw;
+                max-width: 98vw;
+                border-radius: 8px;
+            }
+            #batchSharePassphraseModal input[type="password"],
+            #batchSharePassphraseModal input[type="text"] {
+                font-size: 13px;
+                border-radius: 6px;
+                padding: 8px 28px 8px 8px;
+            }
+            #batchSharePassphraseModal .modal-actions button {
+                font-size: 13px;
+                padding: 7px 12px;
+                border-radius: 6px;
+            }
+        }
+        /* 优化 action-button 和 copyall 在小屏幕下的尺寸 */
+        @media (max-width: 480px) {
+            .action-button, .copyall {
+                font-size: 12px;
+                padding: 4px 8px;
+                border-radius: 8px;
+                min-width: 48px;
+                margin-left: 4px;
+            }
+        }
+        /* 优化 lang-selector 在小屏幕下的位置 */
+        @media (max-width: 480px) {
+            .lang-selector {
+                right: 6px;
+            }
+            #langSelect {
+                font-size: 12px;
+                padding: 3px 6px;
+                border-radius: 6px;
+            }
+        }
+        /* 优化 passphrase-bar 在小屏幕下的布局 */
+        @media (max-width: 480px) {
+            .passphrase-bar {
+                padding: 7px 6px 3px 6px;
+                min-height: 28px;
+                border-radius: 8px 8px 0 0;
+            }
+            .passphrase-input-wrapper {
+                gap: 4px;
+            }
+            #passphraseInput {
+                font-size: 13px;
+                border-radius: 8px;
+                padding: 6px 10px;
+            }
+            .password-toggle {
+                padding: 4px 7px;
+                font-size: 13px;
+                border-radius: 6px;
+            }
+        }
+        /* 优化 footer 在小屏幕下的显示 */
+        @media (max-width: 480px) {
+            #footer {
+                font-size: 12px;
+                padding: 10px 4px;
+                border-radius: 8px 8px 0 0;
+            }
+            #footer .info {
+                margin-bottom: 6px;
+            }
+            #footer a {
+                margin: 0 4px;
+            }
+        }
+        /* 优化 toast 在小屏幕下的圆角和字体 */
+        @media (max-width: 480px) {
+            .toast {
+                border-radius: 8px;
+                font-size: 13px;
+                padding: 10px 12px;
+            }
+        }
+        /* 优化 select-group 在小屏幕下的间距 */
+        @media (max-width: 480px) {
+            .select-group {
+                gap: 5px;
+            }
+            .select-group label {
+                font-size: 12px;
+            }
+            .select-group select {
+                font-size: 13px;
+                border-radius: 8px;
+                padding: 6px 10px;
+                padding-right: 20px;
+            }
+        }
     </style>
 </head>
 <body>
