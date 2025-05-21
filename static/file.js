@@ -258,7 +258,8 @@ $(document).ready(() => {
 
     function handleUploadSuccess(res, randomClass) {
         const gateway = $('#gatewaySelect').val() || 'https://cdn.ipfsscan.io';
-        const imgSrc = `${gateway}/ipfs/${res.Hash}`;
+        const fileName = encodeURIComponent(res.Name);
+        const imgSrc = `${gateway}/ipfs/${res.Hash}?filename=${fileName}`;
         
         $('#file').val(null);
         $(`.${randomClass}`).find('.progress-inner').addClass('success');
@@ -364,8 +365,13 @@ function changeGateway(obj) {
         const cid = item.querySelector('.data-cid').value;
         if (!cid) return;
         
+        // 获取当前URL以提取文件名参数
+        const currentUrl = item.querySelector('.data-url').value;
+        const filenameMatch = currentUrl.match(/[?&]filename=([^&]+)/);
+        const filenameParam = filenameMatch ? `?filename=${filenameMatch[1]}` : '';
+        
         // 更新URL
-        const newUrl = `${newUrlBase}/ipfs/${cid}`;
+        const newUrl = `${newUrlBase}/ipfs/${cid}${filenameParam}`;
         item.querySelector('.data-url').value = newUrl;
         item.querySelector('.data-html').value = `<img src="${newUrl}"/>`;
         item.querySelector('.data-ubb').value = `[img]${newUrl}[/img]`;
@@ -408,7 +414,6 @@ function seeding(res) {
         'https://ipfs.distri.ai/ipfs/',
         'https://ipfs.dekart.io/ipfs/',
         'https://ipfs.allgram.best/ipfs/',
-        'https://ipfs.yomi.digital/ipfs/',
         'https://ipfs.metaversis.io/ipfs/',
         'https://ipfs-internal.xnftdata.com/ipfs/',
         'https://ipfs-12.yoghourt.cloud/ipfs/',
