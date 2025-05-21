@@ -52,7 +52,12 @@ const translations = {
         'batch-share-passphrase-placeholder': '输入口令（可选，留空则公开）',
         'batch-share-confirm-copy': '确认并复制链接',
         'batch-share-cancel': '取消',
-        'return-home': '返回主页'
+        'return-home': '返回主页',
+        
+        // Download and Batch operations
+        'download-button': '下载文件',
+        'download-progress': '下载文件中',
+        'deselect-all-btn': '取消全选'
     },
     'en': {
         // Meta information
@@ -107,7 +112,12 @@ const translations = {
         'batch-share-passphrase-placeholder': 'Enter passphrase (optional, public if empty)',
         'batch-share-confirm-copy': 'Confirm & Copy Link',
         'batch-share-cancel': 'Cancel',
-        'return-home': 'Return Home'
+        'return-home': 'Return Home',
+        
+        // Download and Batch operations
+        'download-button': 'Download File',
+        'download-progress': 'Downloading Files',
+        'deselect-all-btn': 'Deselect All'
     },
     'de': {
         // Meta information
@@ -162,7 +172,12 @@ const translations = {
         'batch-share-passphrase-placeholder': 'Passwort eingeben (optional, öffentlich wenn leer)',
         'batch-share-confirm-copy': 'Bestätigen & Link kopieren',
         'batch-share-cancel': 'Abbrechen',
-        'return-home': 'Zurück zur Startseite'
+        'return-home': 'Zurück zur Startseite',
+        
+        // Download and Batch operations
+        'download-button': 'Datei herunterladen',
+        'download-progress': 'Dateien werden heruntergeladen',
+        'deselect-all-btn': 'Alle abwählen'
     },
     'ru': {
         // Meta information
@@ -217,7 +232,12 @@ const translations = {
         'batch-share-passphrase-placeholder': 'Введите пароль (необязательно, общедоступно если пусто)',
         'batch-share-confirm-copy': 'Подтвердить и скопировать ссылку',
         'batch-share-cancel': 'Отмена',
-        'return-home': 'На главную'
+        'return-home': 'На главную',
+        
+        // Download and Batch operations
+        'download-button': 'Скачать файл',
+        'download-progress': 'Загрузка файлов',
+        'deselect-all-btn': 'Отменить все'
     },
     'fr': {
         // Meta information
@@ -272,7 +292,12 @@ const translations = {
         'batch-share-passphrase-placeholder': 'Entrez le mot de passe (optionnel, public si vide)',
         'batch-share-confirm-copy': 'Confirmer et copier le lien',
         'batch-share-cancel': 'Annuler',
-        'return-home': 'Retour à l\'accueil'
+        'return-home': 'Retour à l\'accueil',
+        
+        // Download and Batch operations
+        'download-button': 'Télécharger le fichier',
+        'download-progress': 'Téléchargement des fichiers',
+        'deselect-all-btn': 'Tout désélectionner'
     },
     'es': {
         // Meta information
@@ -327,7 +352,12 @@ const translations = {
         'batch-share-passphrase-placeholder': 'Ingrese la contraseña (opcional, público si está vacío)',
         'batch-share-confirm-copy': 'Confirmar y copiar enlace',
         'batch-share-cancel': 'Cancelar',
-        'return-home': 'Volver al inicio'
+        'return-home': 'Volver al inicio',
+        
+        // Download and Batch operations
+        'download-button': 'Descargar archivo',
+        'download-progress': 'Descargando archivos',
+        'deselect-all-btn': 'Deseleccionar todo'
     },
     'ar': {
         // Meta information
@@ -382,7 +412,12 @@ const translations = {
         'batch-share-passphrase-placeholder': 'أدخل كلمة المرور (اختياري، عام إذا كان فارغًا)',
         'batch-share-confirm-copy': 'تأكيد ونسخ الرابط',
         'batch-share-cancel': 'إلغاء',
-        'return-home': 'العودة إلى الصفحة الرئيسية'
+        'return-home': 'العودة إلى الصفحة الرئيسية',
+        
+        // Download and Batch operations
+        'download-button': 'تنزيل الملف',
+        'download-progress': 'جاري تنزيل الملفات',
+        'deselect-all-btn': 'إلغاء تحديد الكل'
     },
     'fa': {
         // Meta information
@@ -437,7 +472,12 @@ const translations = {
         'batch-share-passphrase-placeholder': 'گذرواژه را وارد کنید (اختیاری، عمومی در صورت خالی بودن)',
         'batch-share-confirm-copy': 'تأیید و کپی پیوند',
         'batch-share-cancel': 'لغو',
-        'return-home': 'بازگشت به خانه'
+        'return-home': 'بازگشت به خانه',
+        
+        // Download and Batch operations
+        'download-button': 'دانلود فایل',
+        'download-progress': 'در حال دانلود فایل‌ها',
+        'deselect-all-btn': 'لغو انتخاب همه'
     },
     'tr': {
         // Meta information
@@ -492,7 +532,12 @@ const translations = {
         'batch-share-passphrase-placeholder': 'Parola girin (isteğe bağlı, boşsa herkese açık)',
         'batch-share-confirm-copy': 'Onayla ve Bağlantıyı Kopyala',
         'batch-share-cancel': 'İptal',
-        'return-home': 'Ana Sayfaya Dön'
+        'return-home': 'Ana Sayfaya Dön',
+        
+        // Download and Batch operations
+        'download-button': 'Dosyayı İndir',
+        'download-progress': 'Dosyalar İndiriliyor',
+        'deselect-all-btn': 'Tüm Seçimleri Kaldır'
     },
     'pt': {
         // Meta information
@@ -547,7 +592,12 @@ const translations = {
         'batch-share-passphrase-placeholder': 'Digite a senha (opcional, público se vazio)',
         'batch-share-confirm-copy': 'Confirmar e Copiar Link',
         'batch-share-cancel': 'Cancelar',
-        'return-home': 'Voltar para a página inicial'
+        'return-home': 'Voltar para a página inicial',
+        
+        // Download and Batch operations
+        'download-button': 'Baixar Arquivo',
+        'download-progress': 'Baixando Arquivos',
+        'deselect-all-btn': 'Desmarcar Tudo'
     },
     'ko': {
         // Meta information
@@ -602,7 +652,12 @@ const translations = {
         'batch-share-passphrase-placeholder': '암호 입력 (선택 사항, 비워두면 공개)',
         'batch-share-confirm-copy': '확인 및 링크 복사',
         'batch-share-cancel': '취소',
-        'return-home': '홈으로 돌아가기'
+        'return-home': '홈으로 돌아가기',
+        
+        // Download and Batch operations
+        'download-button': '파일 다운로드',
+        'download-progress': '파일 다운로드 중',
+        'deselect-all-btn': '모두 선택 해제'
     },
     'ja': {
         // Meta information
@@ -657,7 +712,12 @@ const translations = {
         'batch-share-passphrase-placeholder': 'パスフレーズを入力 (任意、空の場合は公開)',
         'batch-share-confirm-copy': '確認してリンクをコピー',
         'batch-share-cancel': 'キャンセル',
-        'return-home': 'ホームに戻る'
+        'return-home': 'ホームに戻る',
+        
+        // Download and Batch operations
+        'download-button': 'ファイルをダウンロード',
+        'download-progress': 'ファイルのダウンロード中',
+        'deselect-all-btn': 'すべて選択解除'
     }
 };
 
