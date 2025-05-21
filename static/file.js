@@ -32,9 +32,10 @@ $(document).ready(() => {
             }
         });
         
-        // New: Batch sharing button functionality
+        // Batch sharing button functionality
         $('#shareSelected').on('click', () => {
-            shareBatchFiles();
+            // shareBatchFiles(); // Old direct call
+            promptBatchSharePassphrase(); // New call to show modal first
         });
         
         // New: Toggle all checkbox functionality
@@ -673,10 +674,58 @@ function handlePassphraseSubmit(encryptedPayload, enteredPassphrase) {
 // Listen for hash changes to re-evaluate access mode (e.g., if user manually changes hash)
 $(window).on('hashchange', checkAccessMode);
 
-// New function to create a batch share
-function shareBatchFiles() {
+// --- Batch Share Passphrase Modal Logic ---
+function promptBatchSharePassphrase() {
+    const selectedItems = $('.file-select-checkbox:checked').closest('.item');
+    if (selectedItems.length === 0) {
+        showToast(_t('no-files-selected'), 'error');
+        return;
+    }
+
+    // Show the modal
+    $('#batchSharePassphraseModal').css('display', 'flex');
+    $('#batchPassphraseInput').val(''); // Clear previous input
+    $('#batchPassphraseInput').focus();
+
+    // Translate modal elements
+    $('#batchSharePassphraseModal h3').text(_t('batch-share-passphrase-title'));
+    $('#batchPassphraseInput').attr('placeholder', _t('batch-share-passphrase-placeholder'));
+    $('#confirmBatchSharePassphrase').text(_t('batch-share-confirm-copy'));
+    $('#cancelBatchSharePassphrase').text(_t('batch-share-cancel'));
+}
+
+function closeBatchSharePassphraseModal() {
+    $('#batchSharePassphraseModal').hide();
+}
+
+// Attach event listeners for the batch share passphrase modal
+$(document).ready(() => {
+    // ... existing ready listeners ...
+
+    $('#confirmBatchSharePassphrase').on('click', () => {
+        const passphrase = $('#batchPassphraseInput').val();
+        shareBatchFiles(passphrase); // Pass the passphrase to the main function
+        closeBatchSharePassphraseModal();
+    });
+
+    $('#cancelBatchSharePassphrase').on('click', () => {
+        closeBatchSharePassphraseModal();
+    });
+
+    // Allow pressing Enter to submit batch passphrase
+    $('#batchPassphraseInput').on('keypress', (e) => {
+        if (e.which === 13) { // Enter key
+            $('#confirmBatchSharePassphrase').click();
+        }
+    });
+});
+
+// Modified function to accept passphrase as an argument
+function shareBatchFiles(passphrase) { // passphrase is now an argument
     const selectedItems = $('.file-select-checkbox:checked').closest('.item');
     
+    // This check is technically redundant if promptBatchSharePassphrase already checks,
+    // but good for safety if shareBatchFiles is ever called directly.
     if (selectedItems.length === 0) {
         showToast(_t('no-files-selected'), 'error');
         return;
@@ -706,8 +755,8 @@ function shareBatchFiles() {
         return;
     }
     
-    // Get the passphrase if set
-    const passphrase = $('#passphraseInput').val();
+    // Get the passphrase if set - Now passed as an argument
+    // const passphrase = $('#passphraseInput').val(); // OLD: Read from global input
     
     // Create batch share
     if (passphrase) {
@@ -753,53 +802,3 @@ function updateShareSelectedButtonState() {
         }
     }
 }
-
-// Add this function to your code to handle batch share button updates
-function updateBatchShareButton() {
-    const checkboxes = document.querySelectorAll('.file-select-checkbox:checked');
-    const shareSelectedBtn = document.getElementById('shareSelected');
-    
-    if (checkboxes.length > 0) {
-        shareSelectedBtn.classList.remove('disabled');
-        shareSelectedBtn.style.display = 'inline-block';
-    } else {
-        shareSelectedBtn.classList.add('disabled');
-    }
-}
-
-// Modify the existing createUploadedFileElement function to add event listeners for checkboxes
-function createUploadedFileElement(file) {
-    // ...existing code...
-    
-    // Add a checkbox for batch selection
-    const checkbox = document.createElement('input');
-    checkbox.type = 'checkbox';
-    checkbox.className = 'file-select-checkbox';
-    checkbox.addEventListener('change', function() {
-        updateBatchShareButton();
-    });
-    
-    // Add the checkbox to the file item
-    fileItem.prepend(checkbox);
-    
-    // ...existing code...
-    
-    return fileItem;
-}
-
-// Handle the toggle all checkbox
-document.addEventListener('DOMContentLoaded', function() {
-    const toggleAllCheckbox = document.getElementById('toggleAllFiles');
-    if (toggleAllCheckbox) {
-        toggleAllCheckbox.addEventListener('change', function() {
-            const isChecked = this.checked;
-            document.querySelectorAll('.file-select-checkbox').forEach(checkbox => {
-                checkbox.checked = isChecked;
-            });
-            updateBatchShareButton();
-        });
-    }
-    
-    // Initialize the share selected button
-    updateBatchShareButton();
-});

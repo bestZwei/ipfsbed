@@ -48,16 +48,10 @@ const translations = {
         'selected-files-invalid': '所选文件包含无效数据',
         'batch-encryption-failed': '批量分享加密失败',
         'batch-share-link-copied': '批量分享链接已复制到剪贴板',
-        'batch-share-dialog-title': '批量分享文件',
-        'batch-share-dialog-desc': '创建一个链接一次分享多个文件。',
-        'batch-share-files-selected': '个文件已选择',
-        'batch-share-passphrase-label': '访问密码（可选）：',
-        'batch-share-passphrase-placeholder': '留空则为公开分享',
-        'batch-share-link-label': '分享链接：',
-        'generate-link': '生成分享链接',
-        'copy': '复制',
-        'copied': '已复制',
-        'no-files-selected': '请先选择要分享的文件'
+        'batch-share-passphrase-title': '为批量分享设置口令',
+        'batch-share-passphrase-placeholder': '输入口令（可选，留空则公开）',
+        'batch-share-confirm-copy': '确认并复制链接',
+        'batch-share-cancel': '取消'
     },
     'en': {
         // Meta information
@@ -108,16 +102,10 @@ const translations = {
         'selected-files-invalid': 'Selected files have invalid data',
         'batch-encryption-failed': 'Failed to encrypt batch share',
         'batch-share-link-copied': 'Batch share link copied to clipboard',
-        'batch-share-dialog-title': 'Batch Share Files',
-        'batch-share-dialog-desc': 'Create a link to share multiple files at once.',
-        'batch-share-files-selected': 'files selected',
-        'batch-share-passphrase-label': 'Passphrase (optional):',
-        'batch-share-passphrase-placeholder': 'Leave empty for public sharing',
-        'batch-share-link-label': 'Share Link:',
-        'generate-link': 'Generate Share Link',
-        'copy': 'Copy',
-        'copied': 'Copied',
-        'no-files-selected': 'Please select files to share first'
+        'batch-share-passphrase-title': 'Set Passphrase for Batch Share',
+        'batch-share-passphrase-placeholder': 'Enter passphrase (optional, public if empty)',
+        'batch-share-confirm-copy': 'Confirm & Copy Link',
+        'batch-share-cancel': 'Cancel'
     },
     'de': {
         // Meta information
@@ -168,16 +156,10 @@ const translations = {
         'selected-files-invalid': 'Ausgewählte Dateien enthalten ungültige Daten',
         'batch-encryption-failed': 'Fehler beim Verschlüsseln der Batch-Freigabe',
         'batch-share-link-copied': 'Batch-Freigabelink in die Zwischenablage kopiert',
-        'batch-share-dialog-title': 'Batch Share Files',
-        'batch-share-dialog-desc': 'Create a link to share multiple files at once.',
-        'batch-share-files-selected': 'files selected',
-        'batch-share-passphrase-label': 'Passphrase (optional):',
-        'batch-share-passphrase-placeholder': 'Leave empty for public sharing',
-        'batch-share-link-label': 'Share Link:',
-        'generate-link': 'Generate Share Link',
-        'copy': 'Copy',
-        'copied': 'Copied',
-        'no-files-selected': 'Please select files to share first'
+        'batch-share-passphrase-title': 'Passwort für Batch-Freigabe festlegen',
+        'batch-share-passphrase-placeholder': 'Passwort eingeben (optional, öffentlich wenn leer)',
+        'batch-share-confirm-copy': 'Bestätigen & Link kopieren',
+        'batch-share-cancel': 'Abbrechen'
     },
     'ru': {
         // Meta information
@@ -228,16 +210,10 @@ const translations = {
         'selected-files-invalid': 'Выбранные файлы имеют недопустимые данные',
         'batch-encryption-failed': 'Не удалось зашифровать пакетный обмен',
         'batch-share-link-copied': 'Ссылка на пакетный обмен скопирована в буфер обмена',
-        'batch-share-dialog-title': 'Batch Share Files',
-        'batch-share-dialog-desc': 'Create a link to share multiple files at once.',
-        'batch-share-files-selected': 'files selected',
-        'batch-share-passphrase-label': 'Passphrase (optional):',
-        'batch-share-passphrase-placeholder': 'Leave empty for public sharing',
-        'batch-share-link-label': 'Share Link:',
-        'generate-link': 'Generate Share Link',
-        'copy': 'Copy',
-        'copied': 'Copied',
-        'no-files-selected': 'Please select files to share first'
+        'batch-share-passphrase-title': 'Установить пароль для пакетного обмена',
+        'batch-share-passphrase-placeholder': 'Введите пароль (необязательно, общедоступно если пусто)',
+        'batch-share-confirm-copy': 'Подтвердить и скопировать ссылку',
+        'batch-share-cancel': 'Отмена'
     },
     'fr': {
         // Meta information
@@ -288,16 +264,10 @@ const translations = {
         'selected-files-invalid': 'Les fichiers sélectionnés contiennent des données invalides',
         'batch-encryption-failed': 'Échec de la cryptographie en masse',
         'batch-share-link-copied': 'Lien de partage en masse copié dans le presse-papiers',
-        'batch-share-dialog-title': 'Batch Share Files',
-        'batch-share-dialog-desc': 'Create a link to share multiple files at once.',
-        'batch-share-files-selected': 'files selected',
-        'batch-share-passphrase-label': 'Passphrase (optional):',
-        'batch-share-passphrase-placeholder': 'Leave empty for public sharing',
-        'batch-share-link-label': 'Share Link:',
-        'generate-link': 'Generate Share Link',
-        'copy': 'Copy',
-        'copied': 'Copied',
-        'no-files-selected': 'Please select files to share first'
+        'batch-share-passphrase-title': 'Définir un mot de passe pour le partage en masse',
+        'batch-share-passphrase-placeholder': 'Entrez le mot de passe (optionnel, public si vide)',
+        'batch-share-confirm-copy': 'Confirmer et copier le lien',
+        'batch-share-cancel': 'Annuler'
     },
     'es': {
         // Meta information
@@ -348,16 +318,10 @@ const translations = {
         'selected-files-invalid': 'Los archivos seleccionados tienen datos inválidos',
         'batch-encryption-failed': 'Error al encriptar el compartir en grupo',
         'batch-share-link-copied': 'Enlace para compartir en grupo copiado al portapapeles',
-        'batch-share-dialog-title': 'Batch Share Files',
-        'batch-share-dialog-desc': 'Create a link to share multiple files at once.',
-        'batch-share-files-selected': 'files selected',
-        'batch-share-passphrase-label': 'Passphrase (optional):',
-        'batch-share-passphrase-placeholder': 'Leave empty for public sharing',
-        'batch-share-link-label': 'Share Link:',
-        'generate-link': 'Generate Share Link',
-        'copy': 'Copy',
-        'copied': 'Copied',
-        'no-files-selected': 'Please select files to share first'
+        'batch-share-passphrase-title': 'Establecer contraseña para compartir en grupo',
+        'batch-share-passphrase-placeholder': 'Ingrese la contraseña (opcional, público si está vacío)',
+        'batch-share-confirm-copy': 'Confirmar y copiar enlace',
+        'batch-share-cancel': 'Cancelar'
     },
     'ar': {
         // Meta information
@@ -408,16 +372,10 @@ const translations = {
         'selected-files-invalid': 'تحتوي الملفات المحددة على بيانات غير صالحة',
         'batch-encryption-failed': 'فشل تشفير المشاركة الجماعية',
         'batch-share-link-copied': 'تم نسخ رابط المشاركة الجماعية إلى الحافظة',
-        'batch-share-dialog-title': 'Batch Share Files',
-        'batch-share-dialog-desc': 'Create a link to share multiple files at once.',
-        'batch-share-files-selected': 'files selected',
-        'batch-share-passphrase-label': 'Passphrase (optional):',
-        'batch-share-passphrase-placeholder': 'Leave empty for public sharing',
-        'batch-share-link-label': 'Share Link:',
-        'generate-link': 'Generate Share Link',
-        'copy': 'Copy',
-        'copied': 'Copied',
-        'no-files-selected': 'Please select files to share first'
+        'batch-share-passphrase-title': 'تعيين كلمة مرور للمشاركة الجماعية',
+        'batch-share-passphrase-placeholder': 'أدخل كلمة المرور (اختياري، عام إذا كان فارغًا)',
+        'batch-share-confirm-copy': 'تأكيد ونسخ الرابط',
+        'batch-share-cancel': 'إلغاء'
     },
     'fa': {
         // Meta information
@@ -468,16 +426,10 @@ const translations = {
         'selected-files-invalid': 'فایل‌های انتخاب شده دارای داده‌های نامعتبر هستند',
         'batch-encryption-failed': 'خطا در رمزنگاری اشتراک‌گذاری گروهی',
         'batch-share-link-copied': 'لینک اشتراک‌گذاری گروهی در کلیپ‌بورد کپی شد',
-        'batch-share-dialog-title': 'Batch Share Files',
-        'batch-share-dialog-desc': 'Create a link to share multiple files at once.',
-        'batch-share-files-selected': 'files selected',
-        'batch-share-passphrase-label': 'Passphrase (optional):',
-        'batch-share-passphrase-placeholder': 'Leave empty for public sharing',
-        'batch-share-link-label': 'Share Link:',
-        'generate-link': 'Generate Share Link',
-        'copy': 'Copy',
-        'copied': 'Copied',
-        'no-files-selected': 'Please select files to share first'
+        'batch-share-passphrase-title': 'تنظیم گذرواژه برای اشتراک‌گذاری گروهی',
+        'batch-share-passphrase-placeholder': 'گذرواژه را وارد کنید (اختیاری، عمومی در صورت خالی بودن)',
+        'batch-share-confirm-copy': 'تأیید و کپی پیوند',
+        'batch-share-cancel': 'لغو'
     },
     'tr': {
         // Meta information
@@ -528,16 +480,10 @@ const translations = {
         'selected-files-invalid': 'Seçilen dosyalar geçersiz verilere sahip',
         'batch-encryption-failed': 'Toplu paylaşım şifrelemesi başarısız oldu',
         'batch-share-link-copied': 'Toplu paylaşım bağlantısı panoya kopyalandı',
-        'batch-share-dialog-title': 'Batch Share Files',
-        'batch-share-dialog-desc': 'Create a link to share multiple files at once.',
-        'batch-share-files-selected': 'files selected',
-        'batch-share-passphrase-label': 'Passphrase (optional):',
-        'batch-share-passphrase-placeholder': 'Leave empty for public sharing',
-        'batch-share-link-label': 'Share Link:',
-        'generate-link': 'Generate Share Link',
-        'copy': 'Copy',
-        'copied': 'Copied',
-        'no-files-selected': 'Please select files to share first'
+        'batch-share-passphrase-title': 'Toplu Paylaşım İçin Parola Ayarla',
+        'batch-share-passphrase-placeholder': 'Parola girin (isteğe bağlı, boşsa herkese açık)',
+        'batch-share-confirm-copy': 'Onayla ve Bağlantıyı Kopyala',
+        'batch-share-cancel': 'İptal'
     },
     'pt': {
         // Meta information
@@ -587,7 +533,11 @@ const translations = {
         'no-files-selected': 'Nenhum arquivo selecionado',
         'selected-files-invalid': 'Os arquivos selecionados têm dados inválidos',
         'batch-encryption-failed': 'Falha ao criptografar compartilhamento em massa',
-        'batch-share-link-copied': 'Link de compartilhamento em massa copiado para a área de transferência'
+        'batch-share-link-copied': 'Link de compartilhamento em massa copiado para a área de transferência',
+        'batch-share-passphrase-title': 'Definir Senha para Compartilhamento em Massa',
+        'batch-share-passphrase-placeholder': 'Digite a senha (opcional, público se vazio)',
+        'batch-share-confirm-copy': 'Confirmar e Copiar Link',
+        'batch-share-cancel': 'Cancelar'
     },
     'ko': {
         // Meta information
@@ -638,16 +588,10 @@ const translations = {
         'selected-files-invalid': '선택한 파일에 잘못된 데이터가 있습니다',
         'batch-encryption-failed': '배치 공유 암호화 실패',
         'batch-share-link-copied': '배치 공유 링크가 클립보드에 복사되었습니다',
-        'batch-share-dialog-title': 'Batch Share Files',
-        'batch-share-dialog-desc': 'Create a link to share multiple files at once.',
-        'batch-share-files-selected': 'files selected',
-        'batch-share-passphrase-label': 'Passphrase (optional):',
-        'batch-share-passphrase-placeholder': 'Leave empty for public sharing',
-        'batch-share-link-label': 'Share Link:',
-        'generate-link': 'Generate Share Link',
-        'copy': 'Copy',
-        'copied': 'Copied',
-        'no-files-selected': 'Please select files to share first'
+        'batch-share-passphrase-title': '배치 공유용 암호 설정',
+        'batch-share-passphrase-placeholder': '암호 입력 (선택 사항, 비워두면 공개)',
+        'batch-share-confirm-copy': '확인 및 링크 복사',
+        'batch-share-cancel': '취소'
     },
     'ja': {
         // Meta information
@@ -698,16 +642,10 @@ const translations = {
         'selected-files-invalid': '選択したファイルに無効なデータがあります',
         'batch-encryption-failed': 'バッチ共有の暗号化に失敗しました',
         'batch-share-link-copied': 'バッチ共有リンクがクリップボードにコピーされました',
-        'batch-share-dialog-title': 'Batch Share Files',
-        'batch-share-dialog-desc': 'Create a link to share multiple files at once.',
-        'batch-share-files-selected': 'files selected',
-        'batch-share-passphrase-label': 'Passphrase (optional):',
-        'batch-share-passphrase-placeholder': 'Leave empty for public sharing',
-        'batch-share-link-label': 'Share Link:',
-        'generate-link': 'Generate Share Link',
-        'copy': 'Copy',
-        'copied': 'Copied',
-        'no-files-selected': 'Please select files to share first'
+        'batch-share-passphrase-title': 'バッチ共有のパスフレーズを設定',
+        'batch-share-passphrase-placeholder': 'パスフレーズを入力 (任意、空の場合は公開)',
+        'batch-share-confirm-copy': '確認してリンクをコピー',
+        'batch-share-cancel': 'キャンセル'
     }
 };
 

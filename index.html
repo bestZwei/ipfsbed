@@ -104,10 +104,10 @@
             font-size: 14px;
             color: #606266;
         }
-        
-        /* Modal dialog styles */
-        .modal-dialog {
-            display: none;
+
+        /* Modal styles */
+        #batchSharePassphraseModal {
+            display: none; /* Hidden by default */
             position: fixed;
             z-index: 1000;
             left: 0;
@@ -115,103 +115,31 @@
             width: 100%;
             height: 100%;
             overflow: auto;
-            background-color: rgba(0, 0, 0, 0.7);
-            justify-content: center;
-            align-items: center;
+            background-color: rgb(0,0,0);
+            background-color: rgba(0,0,0,0.4);
         }
-        
-        .modal-content {
-            background-color: #fff;
-            border-radius: 8px;
+
+        #batchSharePassphraseModal .modal-content {
+            background-color: #fefefe;
+            margin: 15% auto;
             padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
             max-width: 500px;
-            width: 100%;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            border-radius: 8px;
         }
-        
-        .modal-header {
+
+        #batchSharePassphraseModal h3 {
+            margin-top: 0;
+        }
+
+        #batchSharePassphraseModal .input-wrapper {
+            margin-bottom: 15px;
+        }
+
+        #batchSharePassphraseModal .modal-actions {
             display: flex;
             justify-content: space-between;
-            align-items: center;
-            margin-bottom: 15px;
-        }
-        
-        .modal-header h3 {
-            margin: 0;
-            font-size: 18px;
-            color: #333;
-        }
-        
-        .close-button {
-            background: none;
-            border: none;
-            font-size: 18px;
-            color: #aaa;
-            cursor: pointer;
-        }
-        
-        .close-button:hover {
-            color: #333;
-        }
-        
-        .modal-body {
-            color: #333;
-            font-size: 14px;
-        }
-        
-        .batch-share-files-info {
-            margin-bottom: 15px;
-            font-weight: bold;
-        }
-        
-        .batch-share-passphrase {
-            margin-bottom: 15px;
-        }
-        
-        .link-field-wrapper {
-            display: flex;
-            align-items: center;
-            margin-top: 5px;
-        }
-        
-        #batchShareLink {
-            flex: 1;
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            font-size: 14px;
-        }
-        
-        .copy-button {
-            background-color: #409eff;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            padding: 10px 15px;
-            cursor: pointer;
-            font-size: 14px;
-            margin-left: 10px;
-            transition: all 0.3s;
-        }
-        
-        .copy-button:hover {
-            background-color: #66b1ff;
-        }
-        
-        .primary-button {
-            background-color: #409eff;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            padding: 10px 15px;
-            cursor: pointer;
-            font-size: 14px;
-            width: 100%;
-            transition: all 0.3s;
-        }
-        
-        .primary-button:hover {
-            background-color: #66b1ff;
         }
     </style>
 </head>
@@ -225,7 +153,7 @@
                     IPFSBED
                 </div>
                 <div class="lang-selector">
-                    <select id="langSelect" onchange="changeLanguage(this.value)"></select>
+                    <select id="langSelect" onchange="changeLanguage(this.value)">
                         <option value="zh-CN">中文</option>
                         <option value="en">English</option>
                         <option value="de">Deutsch</option>
@@ -304,46 +232,24 @@
             <p id="passphraseError"></p>
         </div>
     </div>
-    
-    <!-- Batch Share Dialog -->
-    <div id="batchShareDialog" class="modal-dialog">
+
+    <!-- New Modal for Batch Share Passphrase -->
+    <div id="batchSharePassphraseModal">
         <div class="modal-content">
-            <div class="modal-header">
-                <h3 data-translate="batch-share-dialog-title">Batch Share Files</h3>
-                <button class="close-button" onclick="closeBatchShareDialog()">&times;</button>
+            <h3 data-translate="batch-share-passphrase-title">Set Passphrase for Batch Share</h3>
+            <div class="input-wrapper">
+                <input type="password" id="batchPassphraseInput" data-translate-placeholder="batch-share-passphrase-placeholder" placeholder="Enter passphrase (optional, public if empty)">
+                <button type="button" class="password-toggle" onclick="togglePasswordVisibility('batchPassphraseInput')" title="Show/Hide Password">
+                    <i class="fas fa-eye"></i>
+                </button>
             </div>
-            <div class="modal-body">
-                <p data-translate="batch-share-dialog-desc">Create a link to share multiple files at once.</p>
-                
-                <div class="batch-share-files-info">
-                    <span id="batchShareCount">0</span> <span data-translate="batch-share-files-selected">files selected</span>
-                </div>
-                
-                <div class="batch-share-passphrase">
-                    <label for="batchSharePassphrase" data-translate="batch-share-passphrase-label">Passphrase (optional):</label>
-                    <div class="passphrase-input-wrapper" style="display: flex; align-items: center; width: 100%;">
-                        <input type="password" id="batchSharePassphrase" data-translate-placeholder="batch-share-passphrase-placeholder" placeholder="Leave empty for public sharing">
-                        <button type="button" class="password-toggle" onclick="togglePasswordVisibility('batchSharePassphrase')" title="Show/Hide Password">
-                            <i class="fas fa-eye"></i>
-                        </button>
-                    </div>
-                </div>
-                
-                <div class="batch-share-link-area" style="display: none;">
-                    <label for="batchShareLink" data-translate="batch-share-link-label">Share Link:</label>
-                    <div class="link-field-wrapper">
-                        <input type="text" id="batchShareLink" readonly>
-                        <button class="copy-button" onclick="copyBatchShareLink()" data-translate="copy">Copy</button>
-                    </div>
-                </div>
-                
-                <div class="batch-share-actions">
-                    <button class="primary-button" onclick="generateBatchShareLink()" data-translate="generate-link">Generate Share Link</button>
-                </div>
+            <div class="modal-actions">
+                <button id="cancelBatchSharePassphrase" data-translate="batch-share-cancel">Cancel</button>
+                <button id="confirmBatchSharePassphrase" data-translate="batch-share-confirm-copy">Confirm & Copy Link</button>
             </div>
         </div>
     </div>
-    
+
     <script>
         // Initialize language after DOM is ready
         document.addEventListener('DOMContentLoaded', function() {
@@ -371,108 +277,6 @@
                 toggleButton.title = '显示密码';
             }
         }
-        
-        // Batch share dialog functions
-        function openBatchShareDialog() {
-            const selectedFiles = getSelectedFiles();
-            if (selectedFiles.length === 0) {
-                alert(_t('no-files-selected'));
-                return;
-            }
-            
-            // Update selected files count
-            document.getElementById('batchShareCount').textContent = selectedFiles.length;
-            
-            // Hide link area (if previously shown)
-            document.querySelector('.batch-share-link-area').style.display = 'none';
-            
-            // Clear previous passphrase
-            document.getElementById('batchSharePassphrase').value = '';
-            
-            // Show the dialog
-            document.getElementById('batchShareDialog').style.display = 'flex';
-        }
-        
-        function closeBatchShareDialog() {
-            document.getElementById('batchShareDialog').style.display = 'none';
-        }
-        
-        function generateBatchShareLink() {
-            const selectedFiles = getSelectedFiles();
-            if (selectedFiles.length === 0) {
-                alert(_t('no-files-selected'));
-                return;
-            }
-            
-            const passphrase = document.getElementById('batchSharePassphrase').value;
-            let shareLink = '';
-            
-            // Create the file data array
-            const filesData = selectedFiles.map(file => {
-                return {
-                    cid: file.cid,
-                    filename: file.name,
-                    size: file.size
-                };
-            });
-            
-            // Generate base URL
-            const baseUrl = window.location.origin + window.location.pathname.replace('index.html', '') + 'batch-share.html';
-            
-            if (passphrase) {
-                // Encrypt the data with the provided passphrase
-                const encrypted = CryptoJS.AES.encrypt(JSON.stringify(filesData), passphrase).toString();
-                shareLink = `${baseUrl}?share=${encodeURIComponent(encrypted)}`;
-            } else {
-                // No encryption, just encode the data
-                shareLink = `${baseUrl}?files=${encodeURIComponent(JSON.stringify(filesData))}`;
-            }
-            
-            // Update and show the link field
-            document.getElementById('batchShareLink').value = shareLink;
-            document.querySelector('.batch-share-link-area').style.display = 'block';
-        }
-        
-        function copyBatchShareLink() {
-            const linkField = document.getElementById('batchShareLink');
-            linkField.select();
-            document.execCommand('copy');
-            
-            // Show feedback
-            const copyButton = document.querySelector('.copy-button');
-            const originalText = copyButton.textContent;
-            copyButton.textContent = _t('copied');
-            
-            setTimeout(() => {
-                copyButton.textContent = originalText;
-            }, 2000);
-        }
-        
-        // Helper function to get selected files
-        function getSelectedFiles() {
-            const selectedFiles = [];
-            document.querySelectorAll('.file-select-checkbox:checked').forEach(checkbox => {
-                const fileItem = checkbox.closest('.item');
-                if (fileItem) {
-                    const fileData = {
-                        cid: fileItem.dataset.cid,
-                        name: fileItem.dataset.filename,
-                        size: parseInt(fileItem.dataset.size) || 0
-                    };
-                    selectedFiles.push(fileData);
-                }
-            });
-            return selectedFiles;
-        }
-        
-        // Update the event listener for the "Share Selected" button
-        document.addEventListener('DOMContentLoaded', function() {
-            // Update the share selected button click handler
-            const shareSelectedBtn = document.getElementById('shareSelected');
-            if (shareSelectedBtn) {
-                shareSelectedBtn.addEventListener('click', openBatchShareDialog);
-            }
-        });
     </script>
 </body>
 </html>
