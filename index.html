@@ -51,6 +51,60 @@
       }
     }
     </script>
+    <style>
+        /* Add styles for batch sharing functionality */
+        .file-select-checkbox {
+            margin-right: 8px;
+            width: 16px;
+            height: 16px;
+            cursor: pointer;
+        }
+        
+        #shareSelected {
+            display: none;
+            margin-left: 10px;
+            background-color: #409eff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 5px 10px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+        
+        #shareSelected:hover {
+            background-color: #66b1ff;
+        }
+        
+        #shareSelected.disabled {
+            background-color: #c0c4cc;
+            cursor: not-allowed;
+        }
+        
+        .batch-actions {
+            display: flex;
+            align-items: center;
+        }
+        
+        .toggle-all-wrapper {
+            display: flex;
+            align-items: center;
+            margin-right: 10px;
+        }
+        
+        #toggleAllFiles {
+            width: 16px;
+            height: 16px;
+            cursor: pointer;
+        }
+        
+        .toggle-all-label {
+            margin-left: 5px;
+            font-size: 14px;
+            color: #606266;
+        }
+    </style>
 </head>
 <body>
     <input id="file" type="file" multiple style="display: none;">
@@ -102,10 +156,17 @@
                     <i class="fas fa-list-ul" style="margin-right: 8px;"></i>
                     上传列表
                 </span>
-                <a href="javascript:void(0);" class="copyall" onclick="copyAllLinks()" title="复制所有链接">
-                    <i class="fas fa-copy"></i>
-                    复制全部
-                </a>
+                <div class="batch-actions">
+                    <div class="toggle-all-wrapper">
+                        <input type="checkbox" id="toggleAllFiles" disabled>
+                        <span class="toggle-all-label" data-translate="select-all">全选</span>
+                    </div>
+                    <button id="shareSelected" class="disabled" data-translate="share-selected">批量分享</button>
+                    <a href="javascript:void(0);" class="copyall" onclick="copyAllLinks()" title="复制所有链接">
+                        <i class="fas fa-copy"></i>
+                        复制全部
+                    </a>
+                </div>
             </div>
             <div class="list"></div>
         </div>

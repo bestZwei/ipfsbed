@@ -1,0 +1,916 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IPFSBED - Batch Shared Files</title>
+    <meta name="description" content="Access multiple shared files via IPFSBED - a decentralized file hosting service based on IPFS">
+    <link rel="shortcut icon" href="/img/ipfsbed.png">
+    <link rel="stylesheet" href="./static/style.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/file-saver@2.0.5/dist/FileSaver.min.js"></script>
+    <script src="./static/langs.js"></script>
+    <style>
+        .batch-share-container {
+            width: 800px;
+            max-width: 95%;
+            margin: 50px auto;
+            padding: 30px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+        }
+        
+        .batch-share-header {
+            text-align: center;
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .batch-share-header img {
+            vertical-align: middle;
+            margin-right: 10px;
+        }
+        
+        .batch-share-content {
+            padding: 20px;
+            border-radius: 8px;
+            background-color: #f8f9fa;
+        }
+        
+        .passphrase-form {
+            text-align: center;
+            position: relative;
+            margin-bottom: 30px;
+        }
+        
+        .passphrase-input-wrapper {
+            position: relative;
+            display: inline-block;
+            width: 70%;
+            margin-bottom: 15px;
+        }
+        
+        .passphrase-form input {
+            width: 100%;
+            padding: 12px;
+            padding-right: 40px;
+            border: 1px solid #dcdfe6;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        
+        .password-toggle {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: transparent;
+            border: none;
+            color: #909399;
+            cursor: pointer;
+            padding: 5px;
+            z-index: 2;
+        }
+        
+        .password-toggle:hover {
+            color: #409eff;
+        }
+        
+        .error-message {
+            color: #f56c6c;
+            margin: 10px 0;
+        }
+        
+        .loading {
+            display: none;
+            text-align: center;
+            margin: 20px 0;
+        }
+        
+        .spinner {
+            border: 4px solid rgba(0, 0, 0, 0.1);
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            border-left-color: #09f;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 10px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .files-info {
+            margin-bottom: 20px;
+            text-align: center;
+            font-size: 16px;
+        }
+
+        .gateway-selector-group {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .gateway-selector-group label {
+            margin-right: 10px;
+            font-size: 14px;
+            color: #303133;
+        }
+
+        .gateway-selector-group select {
+            padding: 8px 12px;
+            border: 1px solid #dcdfe6;
+            border-radius: 4px;
+            font-size: 14px;
+            flex-grow: 1;
+            min-width: 150px;
+        }
+        
+        .file-list {
+            max-height: 400px;
+            overflow-y: auto;
+            margin-bottom: 20px;
+            border: 1px solid #ebeef5;
+            border-radius: 4px;
+        }
+        
+        .file-item {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            border-bottom: 1px solid #ebeef5;
+            transition: background-color 0.3s;
+        }
+        
+        .file-item:last-child {
+            border-bottom: none;
+        }
+        
+        .file-item:hover {
+            background-color: #f5f7fa;
+        }
+        
+        .file-checkbox {
+            margin-right: 10px;
+        }
+        
+        .file-icon {
+            margin-right: 15px;
+            width: 24px;
+            height: 24px;
+        }
+        
+        .file-details {
+            flex: 1;
+        }
+        
+        .file-name {
+            font-weight: 500;
+            margin-bottom: 3px;
+            word-break: break-word;
+        }
+        
+        .file-size {
+            font-size: 12px;
+            color: #909399;
+        }
+        
+        .file-actions {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .file-action-btn {
+            padding: 4px 8px;
+            border-radius: 4px;
+            border: 1px solid #dcdfe6;
+            background-color: white;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+        }
+        
+        .file-action-btn:hover {
+            border-color: #409eff;
+            color: #409eff;
+        }
+        
+        .batch-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+        }
+        
+        .batch-button {
+            padding: 10px 20px;
+            border-radius: 4px;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+        }
+        
+        .batch-button i {
+            margin-right: 8px;
+        }
+        
+        .download-all-btn {
+            background-color: #409eff;
+            color: white;
+        }
+        
+        .download-all-btn:hover {
+            background-color: #66b1ff;
+            transform: translateY(-2px);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        .select-all-btn {
+            background-color: #67c23a;
+            color: white;
+        }
+        
+        .select-all-btn:hover {
+            background-color: #85ce61;
+        }
+        
+        .deselect-all-btn {
+            background-color: #909399;
+            color: white;
+        }
+        
+        .deselect-all-btn:hover {
+            background-color: #a6a9ad;
+        }
+        
+        .copy-all-btn {
+            background-color: #e6a23c;
+            color: white;
+        }
+        
+        .copy-all-btn:hover {
+            background-color: #ebb563;
+        }
+        
+        .return-home {
+            text-align: center;
+            margin-top: 20px;
+        }
+        
+        .return-home a {
+            color: #909399;
+            text-decoration: none;
+        }
+        
+        .return-home a:hover {
+            color: #409eff;
+        }
+        
+        /* Dialog for download progress */
+        .download-dialog {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .dialog-content {
+            background-color: white;
+            padding: 30px;
+            border-radius: 8px;
+            width: 400px;
+            max-width: 90%;
+            text-align: center;
+        }
+        
+        .download-progress {
+            margin: 20px 0;
+            height: 20px;
+            background-color: #f5f7fa;
+            border-radius: 10px;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .download-progress-inner {
+            height: 100%;
+            background-color: #409eff;
+            width: 0;
+            transition: width 0.3s;
+        }
+        
+        .download-status {
+            margin: 10px 0;
+            font-size: 14px;
+        }
+        
+        .download-cancel {
+            padding: 8px 16px;
+            background-color: #f56c6c;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        
+        .download-cancel:hover {
+            background-color: #f78989;
+        }
+        
+        /* Responsive adjustments */
+        @media (max-width: 767px) {
+            .batch-share-container {
+                padding: 20px 15px;
+                margin: 20px auto;
+            }
+            
+            .batch-actions {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .batch-button {
+                width: 100%;
+            }
+            
+            .file-item {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .file-details {
+                margin-bottom: 10px;
+            }
+            
+            .file-actions {
+                width: 100%;
+                justify-content: space-between;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="batch-share-container">
+        <div class="batch-share-header">
+            <img src="/img/ipfsbed.png" alt="IPFSBED Logo" width="28" height="28">
+            <h1>IPFSBED Batch Shared Files</h1>
+        </div>
+        
+        <div class="batch-share-content">
+            <!-- Loading indicator -->
+            <div class="loading" id="loadingIndicator">
+                <div class="spinner"></div>
+                <p>Loading shared files...</p>
+            </div>
+            
+            <!-- Passphrase form (shown for encrypted shares) -->
+            <div class="passphrase-form" id="passphraseForm" style="display:none;">
+                <h3>This batch share is password protected</h3>
+                <div class="passphrase-input-wrapper">
+                    <input type="password" id="passphrase" placeholder="Enter passphrase to access files">
+                    <button type="button" class="password-toggle" onclick="togglePasswordVisibility('passphrase')" title="Show/Hide Password">
+                        <i class="fas fa-eye"></i>
+                    </button>
+                </div>
+                <div class="error-message" id="errorMessage"></div>
+                <button class="batch-button select-all-btn" id="unlockButton">
+                    <i class="fas fa-lock-open"></i>Unlock Files
+                </button>
+            </div>
+            
+            <!-- Batch file details -->
+            <div id="batchFilesContainer" style="display:none;">
+                <div class="files-info">
+                    <span id="filesCount">0 files shared</span>
+                </div>
+                
+                <!-- Gateway selector -->
+                <div class="gateway-selector-group">
+                    <label for="batchGatewaySelect">Choose Gateway:</label>
+                    <select id="batchGatewaySelect">
+                        <!-- Options will be populated by JavaScript -->
+                    </select>
+                </div>
+                
+                <!-- File list -->
+                <div class="file-list" id="filesList"></div>
+                
+                <!-- Batch actions -->
+                <div class="batch-actions">
+                    <button class="batch-button select-all-btn" id="selectAllBtn">
+                        <i class="fas fa-check-square"></i>Select All
+                    </button>
+                    <button class="batch-button deselect-all-btn" id="deselectAllBtn">
+                        <i class="fas fa-square"></i>Deselect All
+                    </button>
+                    <button class="batch-button download-all-btn" id="downloadAllBtn">
+                        <i class="fas fa-download"></i>Download Selected
+                    </button>
+                    <button class="batch-button copy-all-btn" id="copyAllBtn">
+                        <i class="fas fa-copy"></i>Copy All URLs
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="return-home">
+            <a href="./index.html"><i class="fas fa-home" style="margin-right: 5px;"></i>Return to IPFSBED</a>
+        </div>
+    </div>
+    
+    <!-- Download Progress Dialog -->
+    <div class="download-dialog" id="downloadDialog">
+        <div class="dialog-content">
+            <h3>Downloading Files</h3>
+            <div class="download-progress">
+                <div class="download-progress-inner" id="downloadProgressBar"></div>
+            </div>
+            <div class="download-status" id="downloadStatus">Preparing download...</div>
+            <button class="download-cancel" id="downloadCancel">Cancel</button>
+        </div>
+    </div>
+    
+    <script>
+        // File type icons mapping
+        const fileTypeIcons = {
+            image: '<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M8.5,13.5L11,16.5L14.5,12L19,18H5M21,19V5C21,3.89 20.1,3 19,3H5A2,2 0 0,0 3,5V19A2,2 0 0,0 5,21H19A2,2 0 0,0 21,19Z" fill="#409eff"/></svg>',
+            document: '<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M6,2A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2H6M6,4H13V9H18V20H6V4M8,12V14H16V12H8M8,16V18H13V16H8Z" fill="#409eff"/></svg>',
+            video: '<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M18,4L20,8H17L15,4H13L15,8H12L10,4H8L10,8H7L5,4H4A2,2 0 0,0 2,6V18A2,2 0 0,0 4,20H20A2,2 0 0,0 22,18V4H18M13,16V10H21V16H13Z" fill="#409eff"/></svg>',
+            audio: '<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M14,3.23V5.29C16.89,6.15 19,8.83 19,12C19,15.17 16.89,17.84 14,18.7V20.77C18,19.86 21,16.28 21,12C21,7.72 18,4.14 14,3.23M16.5,12C16.5,10.23 15.5,8.71 14,7.97V16C15.5,15.29 16.5,13.76 16.5,12M3,9V15H7L12,20V4L7,9H3Z" fill="#409eff"/></svg>',
+            archive: '<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M20,6H12L10,4H4A2,2 0 0,0 2,6V18A2,2 0 0,0 4,20H20A2,2 0 0,0 22,18V8A2,2 0 0,0 20,6M15,16H6V14H15V16M18,12H6V10H18V12Z" fill="#409eff"/></svg>',
+            default: '<svg viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg"><path d="M961.536 531.251c-0.614-3.481-1.843-7.168-3.891-10.445L827.392 306.79v-28.876c0-10.445 0-20.276 0.205-29.901 0.819-89.703 1.433-174.285-101.376-179.2H303.923c-33.587 0-58.368 8.601-76.185 26.624-30.72 30.925-30.31 79.257-29.696 140.288 0 8.601 0.204 17.408 0.204 26.419v38.093c-2.867 2.253-5.324 4.915-7.168 8.192L64.717 523.879c-1.639 2.867-2.663 5.734-3.277 8.806-6.144 12.288-9.626 26.01-9.626 40.345v290.407c0 50.585 41.984 91.75 93.594 91.75h733.184c51.61 0 93.594-41.165 93.594-91.75V573.03c-0.205-14.95-4.096-29.286-10.65-41.779zM861.389 481.28h-33.997v-55.91l33.997 55.91zM271.565 138.65c5.53-5.53 16.384-8.397 32.358-8.397h420.045c36.25 1.843 42.803 11.264 41.78 117.145 0 9.83-0.206 19.866-0.206 30.516V481.28H664.576c-16.998 0-30.925 13.722-30.925 30.925 0 64.307-54.681 116.736-122.06 116.736S389.53 576.512 389.53 512.205c0-16.999-13.722-30.925-30.925-30.925H259.89V262.144c0-9.42 0-18.432-0.205-27.034-0.41-43.008-0.819-83.558 11.879-96.46z m-73.523 279.552v63.078h-36.864l36.864-63.078z m712.294 445.44c0 16.179-14.54 30.105-31.949 30.105H145.203c-17.203 0-31.949-13.721-31.949-30.105V573.03c0-16.179 14.541-30.105 31.95-30.105h185.548c15.155 83.763 90.522 147.456 181.043 147.456s165.888-63.898 181.043-147.456h185.55c17.202 0 31.948 13.721 31.948 30.105v290.612z" fill="#409eff"></path><path d="M385.638 278.528H655.77c16.998 0 30.924-13.722 30.924-30.925s-13.721-30.925-30.924-30.925H385.638c-16.998 0-30.924 13.722-30.924 30.925s13.926 30.925 30.924 30.925z m-30.924 70.451c0 16.999 13.721 30.925 30.924 30.925H655.77c16.998 0 30.924-13.722 30.924-30.925 0-17.203-13.721-30.925-30.924-30.925H385.638c-16.998 0-30.924 13.927-30.924 30.925z" fill="#409eff"></path></svg>'
+        };
+
+        const gateways = [
+            { value: "https://i0.img2ipfs.com", text: "img2ipfs" },
+            { value: "https://cdn.ipfsscan.io", text: "cdn-ipfsscan" },
+            { value: "https://gateway.ipfsscan.io", text: "ipfsscan" },
+            { value: "https://ipfs.io", text: "ipfs.io" },
+            { value: "https://ipfs.crossbell.io", text: "crossbell" },
+            { value: "https://gateway.pinata.cloud", text: "pinata" },
+            { value: "https://w3s.link", text: "w3s" },
+            { value: "https://dweb.link", text: "dweb" },
+            { value: "https://cake-volume-phrase.quicknode-ipfs.com", text: "quicknode-cake" },
+            { value: "https://dswap.quicknode-ipfs.com", text: "quicknode-dswap" },
+            { value: "https://daa.quicknode-ipfs.com", text: "quicknode-daa" },
+            { value: "https://hashscan-ipfs.quicknode-ipfs.com", text: "quicknode-hashscan" },
+            { value: "https://resto.quicknode-ipfs.com", text: "quicknode-resto" },
+            { value: "https://within-herd-pitch.quicknode-ipfs.com", text: "quicknode-within" }
+        ];
+
+        let batchFiles = [];
+        let downloadCancelled = false;
+
+        // Helper function to format bytes
+        function formatBytes(bytes, decimals = 2) {
+            if (bytes === 0) return '0 Bytes';
+            const k = 1024;
+            const dm = decimals < 0 ? 0 : decimals;
+            const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
+        }
+
+        // Get file type icon based on extension
+        function getFileTypeIcon(filename) {
+            const extension = filename.split('.').pop().toLowerCase();
+            const imageTypes = ['jpg', 'jpeg', 'png', 'gif', 'webp', 'svg', 'bmp', 'ico', 'tiff', 'tif', 'heic', 'avif'];
+            const docTypes = ['doc', 'docx', 'pdf', 'xls', 'xlsx', 'ppt', 'pptx', 'odf', 'ods', 'odt', 'txt', 'md', 'rtf'];
+            const videoTypes = ['mp4', 'webm', 'ogv', 'mkv', 'avi', 'mov', 'wmv', 'flv', 'm4v', 'mpg', 'mpeg'];
+            const audioTypes = ['mp3', 'wav', 'ogg', 'm4a', 'aac', 'wma', 'flac', 'opus'];
+            const archiveTypes = ['zip', 'rar', '7z', 'tar', 'gz', 'bz2'];
+            
+            if (imageTypes.includes(extension)) {
+                return fileTypeIcons.image;
+            } else if (docTypes.includes(extension)) {
+                return fileTypeIcons.document;
+            } else if (videoTypes.includes(extension)) {
+                return fileTypeIcons.video;
+            } else if (audioTypes.includes(extension)) {
+                return fileTypeIcons.audio;
+            } else if (archiveTypes.includes(extension)) {
+                return fileTypeIcons.archive;
+            } else {
+                return fileTypeIcons.default;
+            }
+        }
+
+        // Function to decrypt data
+        function decryptData(encryptedData, passphrase) {
+            try {
+                const bytes = CryptoJS.AES.decrypt(encryptedData, passphrase);
+                const decryptedString = bytes.toString(CryptoJS.enc.Utf8);
+                if (!decryptedString) {
+                    return null; // Decryption failed (e.g., wrong key)
+                }
+                return JSON.parse(decryptedString);
+            } catch (e) {
+                console.error("Decryption failed:", e);
+                return null;
+            }
+        }
+
+        // Function to parse URL parameters and process the batch share
+        function processBatchShare() {
+            const urlParams = new URLSearchParams(window.location.search);
+            
+            // Show loading indicator
+            document.getElementById('loadingIndicator').style.display = 'block';
+            
+            if (urlParams.has('share')) {
+                // This is an encrypted batch share
+                const encryptedPayload = urlParams.get('share');
+                
+                // Show passphrase form
+                document.getElementById('passphraseForm').style.display = 'block';
+                document.getElementById('loadingIndicator').style.display = 'none';
+                
+                // Handle unlock button click
+                document.getElementById('unlockButton').addEventListener('click', function() {
+                    const passphrase = document.getElementById('passphrase').value;
+                    if (!passphrase) {
+                        document.getElementById('errorMessage').textContent = 'Please enter a passphrase';
+                        return;
+                    }
+                    
+                    const decrypted = decryptData(encryptedPayload, passphrase);
+                    if (decrypted && Array.isArray(decrypted)) {
+                        // Successfully decrypted
+                        document.getElementById('errorMessage').textContent = '';
+                        document.getElementById('passphraseForm').style.display = 'none';
+                        
+                        // Display batch files
+                        displayBatchFiles(decrypted);
+                    } else {
+                        document.getElementById('errorMessage').textContent = 'Incorrect passphrase';
+                        document.getElementById('passphrase').value = '';
+                    }
+                });
+                
+                // Allow entering passphrase with Enter key
+                document.getElementById('passphrase').addEventListener('keypress', function(e) {
+                    if (e.key === 'Enter') {
+                        document.getElementById('unlockButton').click();
+                    }
+                });
+                
+            } else if (urlParams.has('files')) {
+                try {
+                    // This is a non-encrypted batch share
+                    const filesData = JSON.parse(decodeURIComponent(urlParams.get('files')));
+                    
+                    if (Array.isArray(filesData) && filesData.length > 0) {
+                        // Display batch files
+                        displayBatchFiles(filesData);
+                    } else {
+                        showError('Invalid batch share data');
+                    }
+                } catch (e) {
+                    showError('Error parsing batch share data');
+                    console.error(e);
+                }
+            } else {
+                showError('Invalid batch share URL');
+            }
+        }
+        
+        // Display error message when batch share is invalid
+        function showError(message) {
+            document.getElementById('loadingIndicator').style.display = 'none';
+            document.getElementById('passphraseForm').style.display = 'none';
+            
+            const batchFilesContainer = document.getElementById('batchFilesContainer');
+            batchFilesContainer.innerHTML = `
+                <div style="text-align:center; padding: 30px;">
+                    <i class="fas fa-exclamation-circle" style="font-size: 48px; color: #f56c6c; margin-bottom: 15px;"></i>
+                    <h3>${message}</h3>
+                    <p>The batch share link is invalid or corrupted.</p>
+                </div>
+            `;
+            batchFilesContainer.style.display = 'block';
+        }
+        
+        // Display the batch files in the UI
+        function displayBatchFiles(files) {
+            batchFiles = files;
+            
+            // Hide loading indicator
+            document.getElementById('loadingIndicator').style.display = 'none';
+            
+            // Update file count
+            document.getElementById('filesCount').textContent = `${files.length} files shared`;
+            
+            // Populate gateway selector
+            const gatewaySelect = document.getElementById('batchGatewaySelect');
+            gatewaySelect.innerHTML = ''; // Clear existing options
+            gateways.forEach(gw => {
+                const option = document.createElement('option');
+                option.value = gw.value;
+                option.textContent = gw.text;
+                gatewaySelect.appendChild(option);
+            });
+            
+            // Set default gateway
+            gatewaySelect.value = gateways[1].value; // cdn.ipfsscan.io as default
+            
+            // Generate file list
+            const filesList = document.getElementById('filesList');
+            filesList.innerHTML = ''; // Clear existing list
+            
+            files.forEach((file, index) => {
+                const fileIcon = getFileTypeIcon(file.filename);
+                const fileSize = file.size ? formatBytes(file.size) : 'Unknown size';
+                
+                const fileItem = document.createElement('div');
+                fileItem.className = 'file-item';
+                fileItem.innerHTML = `
+                    <input type="checkbox" class="file-checkbox" data-index="${index}" checked>
+                    <div class="file-icon">${fileIcon}</div>
+                    <div class="file-details">
+                        <div class="file-name">${file.filename}</div>
+                        <div class="file-size">${fileSize}</div>
+                    </div>
+                    <div class="file-actions">
+                        <button class="file-action-btn" onclick="copyFileUrl(${index})">
+                            <i class="fas fa-copy"></i>
+                        </button>
+                        <button class="file-action-btn" onclick="downloadSingleFile(${index})">
+                            <i class="fas fa-download"></i>
+                        </button>
+                    </div>
+                `;
+                
+                filesList.appendChild(fileItem);
+            });
+            
+            // Set up event listeners for batch actions
+            document.getElementById('selectAllBtn').addEventListener('click', selectAllFiles);
+            document.getElementById('deselectAllBtn').addEventListener('click', deselectAllFiles);
+            document.getElementById('downloadAllBtn').addEventListener('click', downloadSelectedFiles);
+            document.getElementById('copyAllBtn').addEventListener('click', copyAllFileUrls);
+            
+            // Gateway change handler
+            document.getElementById('batchGatewaySelect').addEventListener('change', function() {
+                // If user changes gateway, no action needed immediately
+                // URLs will be generated with the new gateway when needed
+            });
+            
+            // Show the files container
+            document.getElementById('batchFilesContainer').style.display = 'block';
+            
+            // Set up download dialog cancel button
+            document.getElementById('downloadCancel').addEventListener('click', function() {
+                downloadCancelled = true;
+                document.getElementById('downloadStatus').textContent = 'Cancelling download...';
+            });
+        }
+
+        // Toggle password visibility
+        function togglePasswordVisibility(inputId) {
+            const passwordInput = document.getElementById(inputId);
+            const toggleButton = passwordInput.nextElementSibling;
+            const icon = toggleButton.querySelector('i');
+            
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                icon.classList.remove('fa-eye');
+                icon.classList.add('fa-eye-slash');
+                toggleButton.title = 'Hide Password';
+            } else {
+                passwordInput.type = 'password';
+                icon.classList.remove('fa-eye-slash');
+                icon.classList.add('fa-eye');
+                toggleButton.title = 'Show Password';
+            }
+        }
+
+        // Get file URL based on selected gateway
+        function getFileUrl(file) {
+            const gateway = document.getElementById('batchGatewaySelect').value;
+            return `${gateway}/ipfs/${file.cid}?filename=${encodeURIComponent(file.filename)}`;
+        }
+
+        // Copy a single file URL
+        function copyFileUrl(index) {
+            if (index < 0 || index >= batchFiles.length) return;
+            
+            const fileUrl = getFileUrl(batchFiles[index]);
+            navigator.clipboard.writeText(fileUrl)
+                .then(() => {
+                    alert(`URL for "${batchFiles[index].filename}" copied to clipboard!`);
+                })
+                .catch(err => {
+                    console.error('Failed to copy URL: ', err);
+                    // Fallback for browsers that don't support clipboard API
+                    const textarea = document.createElement('textarea');
+                    textarea.value = fileUrl;
+                    document.body.appendChild(textarea);
+                    textarea.select();
+                    document.execCommand('copy');
+                    document.body.removeChild(textarea);
+                    alert(`URL for "${batchFiles[index].filename}" copied to clipboard!`);
+                });
+        }
+
+        // Copy all selected file URLs
+        function copyAllFileUrls() {
+            const selectedFiles = getSelectedFiles();
+            if (selectedFiles.length === 0) {
+                alert('No files selected!');
+                return;
+            }
+            
+            const urls = selectedFiles.map(file => getFileUrl(file));
+            navigator.clipboard.writeText(urls.join('\n'))
+                .then(() => {
+                    alert(`URLs for ${selectedFiles.length} files copied to clipboard!`);
+                })
+                .catch(err => {
+                    console.error('Failed to copy URLs: ', err);
+                    // Fallback
+                    const textarea = document.createElement('textarea');
+                    textarea.value = urls.join('\n');
+                    document.body.appendChild(textarea);
+                    textarea.select();
+                    document.execCommand('copy');
+                    document.body.removeChild(textarea);
+                    alert(`URLs for ${selectedFiles.length} files copied to clipboard!`);
+                });
+        }
+
+        // Select all files
+        function selectAllFiles() {
+            document.querySelectorAll('.file-checkbox').forEach(checkbox => {
+                checkbox.checked = true;
+            });
+        }
+
+        // Deselect all files
+        function deselectAllFiles() {
+            document.querySelectorAll('.file-checkbox').forEach(checkbox => {
+                checkbox.checked = false;
+            });
+        }
+
+        // Get all selected files
+        function getSelectedFiles() {
+            const selected = [];
+            document.querySelectorAll('.file-checkbox:checked').forEach(checkbox => {
+                const index = parseInt(checkbox.dataset.index);
+                if (!isNaN(index) && index >= 0 && index < batchFiles.length) {
+                    selected.push(batchFiles[index]);
+                }
+            });
+            return selected;
+        }
+
+        // Download a single file
+        function downloadSingleFile(index) {
+            if (index < 0 || index >= batchFiles.length) return;
+            
+            const file = batchFiles[index];
+            const fileUrl = getFileUrl(file);
+            
+            // Create a temporary link and click it to start download
+            const a = document.createElement('a');
+            a.href = fileUrl;
+            a.download = file.filename;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+        }
+
+        // Download all selected files as zip
+        async function downloadSelectedFiles() {
+            const selectedFiles = getSelectedFiles();
+            if (selectedFiles.length === 0) {
+                alert('No files selected!');
+                return;
+            }
+            
+            // Reset download cancelled flag
+            downloadCancelled = false;
+            
+            // Show download dialog
+            const downloadDialog = document.getElementById('downloadDialog');
+            const progressBar = document.getElementById('downloadProgressBar');
+            const statusText = document.getElementById('downloadStatus');
+            downloadDialog.style.display = 'flex';
+            progressBar.style.width = '0%';
+            statusText.textContent = 'Preparing download...';
+            
+            // Create a new zip file
+            const zip = new JSZip();
+            let completedFiles = 0;
+            
+            // Set up progress tracking
+            const updateProgress = () => {
+                completedFiles++;
+                const percentage = Math.round((completedFiles / selectedFiles.length) * 100);
+                progressBar.style.width = `${percentage}%`;
+                statusText.textContent = `Downloaded ${completedFiles} of ${selectedFiles.length} files (${percentage}%)`;
+            };
+            
+            try {
+                // Download each file and add to zip
+                for (let i = 0; i < selectedFiles.length; i++) {
+                    if (downloadCancelled) {
+                        throw new Error('Download cancelled by user');
+                    }
+                    
+                    const file = selectedFiles[i];
+                    const fileUrl = getFileUrl(file);
+                    
+                    statusText.textContent = `Downloading ${i + 1}/${selectedFiles.length}: ${file.filename}`;
+                    
+                    try {
+                        const response = await fetch(fileUrl);
+                        if (!response.ok) {
+                            throw new Error(`HTTP error! status: ${response.status}`);
+                        }
+                        
+                        const blob = await response.blob();
+                        zip.file(file.filename, blob);
+                        updateProgress();
+                        
+                    } catch (error) {
+                        console.error(`Error downloading ${file.filename}:`, error);
+                        // Continue with the next file even if one fails
+                        updateProgress();
+                    }
+                }
+                
+                if (downloadCancelled) {
+                    throw new Error('Download cancelled by user');
+                }
+                
+                // Generate zip file
+                statusText.textContent = 'Creating zip file...';
+                const zipBlob = await zip.generateAsync({
+                    type: 'blob',
+                    compression: 'DEFLATE',
+                    compressionOptions: { level: 6 }
+                }, metadata => {
+                    progressBar.style.width = `${metadata.percent}%`;
+                    statusText.textContent = `Creating zip file: ${Math.round(metadata.percent)}%`;
+                });
+                
+                // Download the zip file
+                saveAs(zipBlob, 'ipfsbed_files.zip');
+                
+                // Hide dialog after successful download
+                setTimeout(() => {
+                    downloadDialog.style.display = 'none';
+                }, 1000);
+                
+            } catch (error) {
+                console.error('Error creating zip file:', error);
+                
+                if (downloadCancelled) {
+                    statusText.textContent = 'Download cancelled.';
+                } else {
+                    statusText.textContent = `Error: ${error.message || 'Failed to download files'}`;
+                }
+                
+                // Hide dialog after a few seconds on error
+                setTimeout(() => {
+                    downloadDialog.style.display = 'none';
+                }, 3000);
+            }
+        }
+
+        // Initialize when DOM is ready
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize language
+            if (window.initializeLanguage && window.updatePageLanguage) {
+                window.currentLang = window.initializeLanguage();
+                // Update any translatable elements if needed
+            }
+            processBatchShare();
+        });
+    </script>
+</body>
+</html>

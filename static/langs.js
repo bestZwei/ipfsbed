@@ -39,7 +39,15 @@ const translations = {
         'encryption-failed': '加密失败，请重试。',
         'decryption-failed': '解密失败。链接可能已损坏或口令错误。',
         'accessing-file': '正在访问文件...',
-        'file-will-be-public': '文件将公开。'
+        'file-will-be-public': '文件将公开。',
+        // Batch sharing
+        'select-for-batch-sharing': '选择批量分享',
+        'share-selected': '批量分享',
+        'select-all': '全选',
+        'no-files-selected': '未选择文件',
+        'selected-files-invalid': '所选文件包含无效数据',
+        'batch-encryption-failed': '批量分享加密失败',
+        'batch-share-link-copied': '批量分享链接已复制到剪贴板'
     },
     'en': {
         // Meta information
@@ -81,7 +89,15 @@ const translations = {
         'encryption-failed': 'Encryption failed. Please try again.',
         'decryption-failed': 'Decryption failed. Link might be corrupted or passphrase incorrect.',
         'accessing-file': 'Accessing file...',
-        'file-will-be-public': 'File will be public.'
+        'file-will-be-public': 'File will be public.',
+        // Batch sharing
+        'select-for-batch-sharing': 'Select for batch sharing',
+        'share-selected': 'Share Selected',
+        'select-all': 'Select All',
+        'no-files-selected': 'No files selected',
+        'selected-files-invalid': 'Selected files have invalid data',
+        'batch-encryption-failed': 'Failed to encrypt batch share',
+        'batch-share-link-copied': 'Batch share link copied to clipboard'
     },
     'de': {
         // Meta information
@@ -123,7 +139,15 @@ const translations = {
         'encryption-failed': 'Verschlüsselung fehlgeschlagen. Bitte versuchen Sie es erneut.',
         'decryption-failed': 'Entschlüsselung fehlgeschlagen. Link könnte beschädigt sein oder Passwort falsch.',
         'accessing-file': 'Datei wird aufgerufen...',
-        'file-will-be-public': 'Datei wird öffentlich sein.'
+        'file-will-be-public': 'Datei wird öffentlich sein.',
+        // Batch sharing
+        'select-for-batch-sharing': 'Wählen Sie für die Batch-Freigabe',
+        'share-selected': 'Ausgewählte teilen',
+        'select-all': 'Alle auswählen',
+        'no-files-selected': 'Keine Dateien ausgewählt',
+        'selected-files-invalid': 'Ausgewählte Dateien enthalten ungültige Daten',
+        'batch-encryption-failed': 'Fehler beim Verschlüsseln der Batch-Freigabe',
+        'batch-share-link-copied': 'Batch-Freigabelink in die Zwischenablage kopiert'
     },
     'ru': {
         // Meta information
@@ -165,7 +189,15 @@ const translations = {
         'encryption-failed': 'Ошибка шифрования. Пожалуйста, попробуйте еще раз.',
         'decryption-failed': 'Ошибка расшифровки. Ссылка может быть повреждена или пароль неверен.',
         'accessing-file': 'Доступ к файлу...',
-        'file-will-be-public': 'Файл будет общедоступным.'
+        'file-will-be-public': 'Файл будет общедоступным.',
+        // Batch sharing
+        'select-for-batch-sharing': 'Выбрать для пакетного обмена',
+        'share-selected': 'Поделиться выбранным',
+        'select-all': 'Выбрать все',
+        'no-files-selected': 'Нет выбранных файлов',
+        'selected-files-invalid': 'Выбранные файлы имеют недопустимые данные',
+        'batch-encryption-failed': 'Не удалось зашифровать пакетный обмен',
+        'batch-share-link-copied': 'Ссылка на пакетный обмен скопирована в буфер обмена'
     },
     'fr': {
         // Meta information
@@ -207,7 +239,15 @@ const translations = {
         'encryption-failed': 'Échec du chiffrement. Veuillez réessayer.',
         'decryption-failed': 'Échec du déchiffrement. Le lien est peut-être corrompu ou le mot de passe incorrect.',
         'accessing-file': 'Accès au fichier...',
-        'file-will-be-public': 'Le fichier sera public.'
+        'file-will-be-public': 'Le fichier sera public.',
+        // Batch sharing
+        'select-for-batch-sharing': 'Sélectionner pour le partage en masse',
+        'share-selected': 'Partager la sélection',
+        'select-all': 'Tout sélectionner',
+        'no-files-selected': 'Aucun fichier sélectionné',
+        'selected-files-invalid': 'Les fichiers sélectionnés contiennent des données invalides',
+        'batch-encryption-failed': 'Échec de la cryptographie en masse',
+        'batch-share-link-copied': 'Lien de partage en masse copié dans le presse-papiers'
     },
     'es': {
         // Meta information
@@ -249,7 +289,15 @@ const translations = {
         'encryption-failed': 'Falló el cifrado. Por favor, inténtelo de nuevo.',
         'decryption-failed': 'Falló el descifrado. El enlace podría estar dañado o la contraseña incorrecta.',
         'accessing-file': 'Accediendo al archivo...',
-        'file-will-be-public': 'El archivo será público.'
+        'file-will-be-public': 'El archivo será público.',
+        // Batch sharing
+        'select-for-batch-sharing': 'Seleccionar para compartir en grupo',
+        'share-selected': 'Compartir seleccionado',
+        'select-all': 'Seleccionar todo',
+        'no-files-selected': 'No se seleccionaron archivos',
+        'selected-files-invalid': 'Los archivos seleccionados tienen datos inválidos',
+        'batch-encryption-failed': 'Error al encriptar el compartir en grupo',
+        'batch-share-link-copied': 'Enlace para compartir en grupo copiado al portapapeles'
     },
     'ar': {
         // Meta information
@@ -291,7 +339,15 @@ const translations = {
         'encryption-failed': 'فشل التشفير. يرجى المحاولة مرة أخرى.',
         'decryption-failed': 'فشل فك التشفير. قد يكون الرابط تالفًا أو كلمة المرور غير صحيحة.',
         'accessing-file': 'جار الوصول إلى الملف...',
-        'file-will-be-public': 'سيكون الملف عامًا.'
+        'file-will-be-public': 'سيكون الملف عامًا.',
+        // Batch sharing
+        'select-for-batch-sharing': 'اختر للمشاركة الجماعية',
+        'share-selected': 'شارك المحدد',
+        'select-all': 'حدد الكل',
+        'no-files-selected': 'لا توجد ملفات محددة',
+        'selected-files-invalid': 'تحتوي الملفات المحددة على بيانات غير صالحة',
+        'batch-encryption-failed': 'فشل تشفير المشاركة الجماعية',
+        'batch-share-link-copied': 'تم نسخ رابط المشاركة الجماعية إلى الحافظة'
     },
     'fa': {
         // Meta information
@@ -333,7 +389,15 @@ const translations = {
         'encryption-failed': 'رمزگذاری ناموفق بود. لطفاً دوباره امتحان کنید.',
         'decryption-failed': 'رمزگشایی ناموفق بود. پیوند ممکن است خراب باشد یا گذرواژه نادرست باشد.',
         'accessing-file': 'درحال دسترسی به فایل...',
-        'file-will-be-public': 'فایل عمومی خواهد بود.'
+        'file-will-be-public': 'فایل عمومی خواهد بود.',
+        // Batch sharing
+        'select-for-batch-sharing': 'انتخاب برای اشتراک‌گذاری گروهی',
+        'share-selected': 'اشتراک‌گذاری انتخاب شده',
+        'select-all': 'انتخاب همه',
+        'no-files-selected': 'هیچ فایلی انتخاب نشده است',
+        'selected-files-invalid': 'فایل‌های انتخاب شده دارای داده‌های نامعتبر هستند',
+        'batch-encryption-failed': 'خطا در رمزنگاری اشتراک‌گذاری گروهی',
+        'batch-share-link-copied': 'لینک اشتراک‌گذاری گروهی در کلیپ‌بورد کپی شد'
     },
     'tr': {
         // Meta information
@@ -375,7 +439,15 @@ const translations = {
         'encryption-failed': 'Şifreleme başarısız oldu. Lütfen tekrar deneyin.',
         'decryption-failed': 'Şifre çözme başarısız oldu. Bağlantı bozuk olabilir veya parola yanlış olabilir.',
         'accessing-file': 'Dosyaya erişiliyor...',
-        'file-will-be-public': 'Dosya herkese açık olacak.'
+        'file-will-be-public': 'Dosya herkese açık olacak.',
+        // Batch sharing
+        'select-for-batch-sharing': 'Toplu paylaşım için seçin',
+        'share-selected': 'Seçilenleri Paylaş',
+        'select-all': 'Tümünü Seç',
+        'no-files-selected': 'Hiçbir dosya seçilmedi',
+        'selected-files-invalid': 'Seçilen dosyalar geçersiz verilere sahip',
+        'batch-encryption-failed': 'Toplu paylaşım şifrelemesi başarısız oldu',
+        'batch-share-link-copied': 'Toplu paylaşım bağlantısı panoya kopyalandı'
     },
     'pt': {
         // Meta information
@@ -417,7 +489,15 @@ const translations = {
         'encryption-failed': 'A criptografia falhou. Por favor, tente novamente.',
         'decryption-failed': 'A descriptografia falhou. O link pode estar corrompido ou a senha incorreta.',
         'accessing-file': 'Acessando arquivo...',
-        'file-will-be-public': 'O arquivo será público.'
+        'file-will-be-public': 'O arquivo será público.',
+        // Batch sharing
+        'select-for-batch-sharing': 'Selecionar para compartilhamento em massa',
+        'share-selected': 'Compartilhar Selecionado',
+        'select-all': 'Selecionar Tudo',
+        'no-files-selected': 'Nenhum arquivo selecionado',
+        'selected-files-invalid': 'Os arquivos selecionados têm dados inválidos',
+        'batch-encryption-failed': 'Falha ao criptografar compartilhamento em massa',
+        'batch-share-link-copied': 'Link de compartilhamento em massa copiado para a área de transferência'
     },
     'ko': {
         // Meta information
@@ -459,7 +539,15 @@ const translations = {
         'encryption-failed': '암호화에 실패했습니다. 다시 시도하십시오.',
         'decryption-failed': '복호화에 실패했습니다. 링크가 손상되었거나 암호가 잘못되었을 수 있습니다.',
         'accessing-file': '파일에 액세스하는 중...',
-        'file-will-be-public': '파일이 공개됩니다.'
+        'file-will-be-public': '파일이 공개됩니다.',
+        // Batch sharing
+        'select-for-batch-sharing': '배치 공유를 위해 선택',
+        'share-selected': '선택한 항목 공유',
+        'select-all': '모두 선택',
+        'no-files-selected': '선택된 파일이 없습니다',
+        'selected-files-invalid': '선택한 파일에 잘못된 데이터가 있습니다',
+        'batch-encryption-failed': '배치 공유 암호화 실패',
+        'batch-share-link-copied': '배치 공유 링크가 클립보드에 복사되었습니다'
     },
     'ja': {
         // Meta information
@@ -501,7 +589,15 @@ const translations = {
         'encryption-failed': '暗号化に失敗しました。もう一度お試しください。',
         'decryption-failed': '復号に失敗しました。リンクが破損しているか、パスフレーズが間違っている可能性があります。',
         'accessing-file': 'ファイルにアクセスしています...',
-        'file-will-be-public': 'ファイルは公開されます。'
+        'file-will-be-public': 'ファイルは公開されます。',
+        // Batch sharing
+        'select-for-batch-sharing': 'バッチ共有のために選択',
+        'share-selected': '選択したものを共有',
+        'select-all': 'すべて選択',
+        'no-files-selected': '選択されたファイルはありません',
+        'selected-files-invalid': '選択したファイルに無効なデータがあります',
+        'batch-encryption-failed': 'バッチ共有の暗号化に失敗しました',
+        'batch-share-link-copied': 'バッチ共有リンクがクリップボードにコピーされました'
     }
 };
 

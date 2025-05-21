@@ -31,6 +31,31 @@ $(document).ready(() => {
                 $('#submitAccessPassphrase').click();
             }
         });
+        
+        // New: Batch sharing button functionality
+        $('#shareSelected').on('click', () => {
+            shareBatchFiles();
+        });
+        
+        // New: Toggle all checkbox functionality
+        $('#toggleAllFiles').on('click', function() {
+            const isChecked = $(this).prop('checked');
+            $('.file-select-checkbox').prop('checked', isChecked);
+            updateShareSelectedButtonState();
+        });
+        
+        // New: Listen for changes on individual file checkboxes
+        $(document).on('change', '.file-select-checkbox', function() {
+            updateShareSelectedButtonState();
+            
+            // If any checkbox is unchecked, uncheck the "toggle all" checkbox
+            if (!$(this).prop('checked')) {
+                $('#toggleAllFiles').prop('checked', false);
+            } else if ($('.file-select-checkbox:checked').length === $('.file-select-checkbox').length) {
+                // If all checkboxes are checked, check the "toggle all" checkbox
+                $('#toggleAllFiles').prop('checked', true);
+            }
+        });
     }
     
     // Enhanced drag and drop visual feedback
@@ -228,6 +253,7 @@ $(document).ready(() => {
         return `
             <div class="item ${randomClass}">
                 <div class="file">
+                    <input type="checkbox" class="file-select-checkbox" title="${_t('select-for-batch-sharing')}">
                     ${fileIcon}
                     <div class="desc">
                         <div class="desc__name">${file.name}</div>
@@ -367,9 +393,13 @@ $(document).ready(() => {
         
         // Make sure the copyall button is visible
         $('.copyall').fadeIn(300);
+        $('#shareSelected').fadeIn(300);
         
         // Success notification
         showToast(_t('upload-success'), 'success');
+        
+        // Enable batch sharing functionality once files are uploaded
+        updateShareSelectedButtonState();
     }
 
     function handleError(randomClass, message = _t('upload-error')) {
@@ -399,6 +429,8 @@ function deleteItem(obj) {
     const item = $(obj).closest('.item');
     item.css('opacity', 0.5).slideUp(300, function() {
         $(this).remove();
+        // Check if there are any items left
+        updateShareSelectedButtonState();
     });
 }
 
@@ -640,3 +672,84 @@ function handlePassphraseSubmit(encryptedPayload, enteredPassphrase) {
 
 // Listen for hash changes to re-evaluate access mode (e.g., if user manually changes hash)
 $(window).on('hashchange', checkAccessMode);
+
+// New function to create a batch share
+function shareBatchFiles() {
+    const selectedItems = $('.file-select-checkbox:checked').closest('.item');
+    
+    if (selectedItems.length === 0) {
+        showToast(_t('no-files-selected'), 'error');
+        return;
+    }
+    
+    // Collect file data
+    const files = [];
+    selectedItems.each(function() {
+        const item = $(this);
+        const cid = item.find('.data-cid').val();
+        const filename = item.find('.data-filename').val();
+        const size = parseInt(item.find('.desc__size').text().match(/\d+/g)[0]) || 0; // Extract size as number
+        const isProtected = item.find('.data-passphrase-protected').val() === 'true';
+        
+        if (cid && filename) {
+            files.push({
+                cid: cid,
+                filename: filename,
+                size: size,
+                isProtected: isProtected
+            });
+        }
+    });
+    
+    if (files.length === 0) {
+        showToast(_t('selected-files-invalid'), 'error');
+        return;
+    }
+    
+    // Get the passphrase if set
+    const passphrase = $('#passphraseInput').val();
+    
+    // Create batch share
+    if (passphrase) {
+        // Encrypt the batch data with passphrase
+        const encryptedBatch = encryptData(files, passphrase);
+        if (encryptedBatch) {
+            const batchShareUrl = `${window.location.origin}${window.location.pathname.replace('index.html', '')}batch-share.html?share=${encodeURIComponent(encryptedBatch)}`;
+            copyToClipboard(batchShareUrl);
+            showToast(_t('batch-share-link-copied'), 'success');
+            
+            // Open the batch share page in a new tab
+            window.open(batchShareUrl, '_blank');
+        } else {
+            showToast(_t('batch-encryption-failed'), 'error');
+        }
+    } else {
+        // Create a non-encrypted batch share URL
+        const batchData = encodeURIComponent(JSON.stringify(files));
+        const batchShareUrl = `${window.location.origin}${window.location.pathname.replace('index.html', '')}batch-share.html?files=${batchData}`;
+        
+        copyToClipboard(batchShareUrl);
+        showToast(_t('batch-share-link-copied'), 'success');
+        
+        // Open the batch share page in a new tab
+        window.open(batchShareUrl, '_blank');
+    }
+}
+
+// New function to update the state of the "Share Selected" button
+function updateShareSelectedButtonState() {
+    const anyFilesUploaded = $('.item').length > 0;
+    const anyFilesSelected = $('.file-select-checkbox:checked').length > 0;
+    
+    if (!anyFilesUploaded) {
+        $('#shareSelected').hide();
+        $('#toggleAllFiles').prop('disabled', true);
+    } else {
+        $('#toggleAllFiles').prop('disabled', false);
+        if (anyFilesSelected) {
+            $('#shareSelected').fadeIn(300).removeClass('disabled');
+        } else {
+            $('#shareSelected').addClass('disabled');
+        }
+    }
+}
