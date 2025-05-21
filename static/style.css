@@ -94,12 +94,11 @@ body {
 
 .upload .title,
 .filelist .title {
-    min-height: 60px;
-    border-bottom: 1px solid #f0f4f9;
+    min-height: 44px; /* 原60px，缩小高度 */
+    padding: 0 16px;  /* 原24px，缩小内边距 */
     color: #333;
     font-weight: 600;
-    padding: 0 24px;
-    font-size: 16px;
+    font-size: 15px;  /* 原16px，略缩小字体 */
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -109,10 +108,11 @@ body {
 
 /* 网关选择器样式 */
 .gateway-selector {
-    padding: 14px 24px;
+    padding: 8px 16px; /* 原14px 24px，缩小内边距 */
     border-bottom: 1px solid #f0f4f9;
     background-color: rgba(249, 250, 252, 0.7);
     text-align: center;
+    min-height: 36px;  /* 增加最小高度限制，适当缩小 */
 }
 
 .title-text {
@@ -1054,11 +1054,12 @@ body {
 .passphrase-bar {
     display: flex;
     align-items: center;
-    gap: 16px;
-    padding: 16px 24px 8px 24px;
+    gap: 10px;                  /* 原16px，缩小间距 */
+    padding: 8px 16px 4px 16px; /* 原16px 24px 8px 24px，缩小内边距 */
     background: rgba(249,250,252,0.7);
     border-bottom: 1px solid #f0f4f9;
     position: relative;
+    min-height: 36px;           /* 增加最小高度限制 */
 }
 
 .passphrase-bar label {
@@ -1136,14 +1137,16 @@ body {
 
 /* 响应式调整 */
 @media (max-width: 900px) {
-    .passphrase-bar {
-        padding: 12px 15px 6px 15px;
-        gap: 10px;
+    .upload .title,
+    .filelist .title {
+        min-height: 38px; /* 更小屏幕进一步缩小 */
+        padding: 0 10px;
+        font-size: 14px;
     }
-    #passphraseInput {
-        min-width: 80px;
-        max-width: 140px;
-        font-size: 13px;
+    .gateway-selector,
+    .passphrase-bar {
+        padding: 6px 10px 3px 10px;
+        min-height: 30px;
     }
 }
 @media (max-width: 480px) {
