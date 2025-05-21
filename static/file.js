@@ -76,7 +76,40 @@ $(document).ready(() => {
             '.EPUB', '.MOBI', '.AZW3', '.FB2', '.LIT', '.LRF', '.PDB', '.PRC',
             
             // 压缩文件
-            '.ZIP', '.RAR', '.7Z', '.TAR', '.GZ'
+            '.ZIP', '.RAR', '.7Z', '.TAR', '.GZ', '.BZ2', '.XZ', '.TGZ', '.TBZ', '.TXZ',
+            
+            // 编程和开发文件
+            '.HTML', '.HTM', '.CSS', '.JS', '.TS', '.PHP', '.ASP', '.ASPX', '.JSP', '.PY', '.RB', '.GO', '.JAVA', '.C', '.CPP', '.CS', '.H', '.M', '.SWIFT', '.VB', '.PL', '.LUA', '.R', '.DART', '.SQL', '.SH', '.BAT', '.PS1', '.CMD',
+            
+            // 3D模型和设计文件
+            '.OBJ', '.STL', '.3DS', '.FBX', '.BLEND', '.SKP', '.STEP', '.STP', '.IGES', '.IGS',
+            
+            // 字体文件
+            '.TTF', '.OTF', '.WOFF', '.WOFF2', '.EOT',
+            
+            // 图表和图形文件
+            '.AI', '.EPS', '.PS', '.PSD', '.XCF', '.CDR', '.FIG',
+            
+            // 科学和研究数据
+            '.MAT', '.HDF5', '.HDF', '.H5', '.FIT', '.FITS',
+            
+            // 演示和发布文件
+            '.KEY', '.ODP', '.PPS', '.PPSX',
+            
+            // 地理数据
+            '.KML', '.KMZ', '.SHP', '.DBF', '.SHX', '.GPX', '.OSM',
+            
+            // 数据库文件
+            '.DB', '.SQLITE', '.SQLITE3', '.MDB', '.ACCDB',
+            
+            // 游戏和模拟器文件
+            '.ROM', '.SAV', '.NES', '.GBA', '.N64', '.ISO', '.CUE', '.BIN',
+            
+            // CAD和工程文件
+            '.DWG', '.DXF', '.DGN',
+            
+            // 其他常用文件
+            '.TORRENT', '.ICS', '.VCF'
         ];
 
         Array.from(files).forEach(file => {
