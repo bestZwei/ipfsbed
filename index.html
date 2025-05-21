@@ -78,9 +78,14 @@
                     </select>
                 </div>
             </div>
-            <!-- 新增：设置口令栏 -->
+            <!-- 新增：设置口令栏，添加了切换密码可见性的按钮 -->
             <div class="passphrase-bar">
-                <input type="password" id="passphraseInput" data-translate-placeholder="passphrase-placeholder" placeholder="设置口令（可选，留空则公开）">
+                <div class="passphrase-input-wrapper" style="display: flex; align-items: center; width: 100%;">
+                    <input type="password" id="passphraseInput" data-translate-placeholder="passphrase-placeholder" placeholder="设置口令（可选，留空则公开）">
+                    <button type="button" class="password-toggle" onclick="togglePasswordVisibility('passphraseInput')" title="显示/隐藏密码">
+                        <i class="fas fa-eye"></i>
+                    </button>
+                </div>
             </div>
             <div class="content" id="dragbox">
                 <svg class="icon" viewBox="0 0 1335 1024" xmlns="http://www.w3.org/2000/svg" aria-label="上传文件图标">
@@ -160,9 +165,12 @@
     <div id="shareAccessPrompt">
         <div>
             <h3 data-translate="passphrase-prompt-title">Enter Passphrase</h3>
-            <div>
+            <div class="input-wrapper">
                 <label for="accessPassphraseInput" data-translate="passphrase-prompt-label">Passphrase:</label>
                 <input type="password" id="accessPassphraseInput">
+                <button type="button" class="password-toggle" onclick="togglePasswordVisibility('accessPassphraseInput')" title="显示/隐藏密码">
+                    <i class="fas fa-eye"></i>
+                </button>
             </div>
             <button id="submitAccessPassphrase" data-translate="passphrase-submit">Unlock</button>
             <p id="passphraseError"></p>
@@ -176,6 +184,25 @@
             // Update all UI elements with translations
             updatePageLanguage();
         });
+        
+        // 添加切换密码可见性的函数
+        function togglePasswordVisibility(inputId) {
+            const passwordInput = document.getElementById(inputId);
+            const toggleButton = passwordInput.nextElementSibling;
+            const icon = toggleButton.querySelector('i');
+            
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                icon.classList.remove('fa-eye');
+                icon.classList.add('fa-eye-slash');
+                toggleButton.title = '隐藏密码';
+            } else {
+                passwordInput.type = 'password';
+                icon.classList.remove('fa-eye-slash');
+                icon.classList.add('fa-eye');
+                toggleButton.title = '显示密码';
+            }
+        }
     </script>
 </body>
 </html>

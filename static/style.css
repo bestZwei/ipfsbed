@@ -1091,6 +1091,46 @@ body {
     box-shadow: 0 0 0 2px rgba(64,158,255,0.15);
 }
 
+/* 新增：密码显示切换按钮样式 */
+.password-toggle {
+    margin-left: 8px;
+    background: transparent;
+    border: none;
+    color: #909399;
+    cursor: pointer;
+    padding: 5px 10px;
+    border-radius: 4px;
+    transition: all 0.3s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.password-toggle:hover {
+    color: #409eff;
+    background-color: rgba(64, 158, 255, 0.1);
+}
+
+.password-toggle:active {
+    transform: scale(0.95);
+}
+
+.password-toggle i {
+    font-size: 16px;
+}
+
+/* 确保密码输入区域处于相对定位 */
+.passphrase-bar {
+    display: flex;
+    align-items: center;
+    gap: 10px;                  /* 原16px，缩小间距 */
+    padding: 8px 16px 4px 16px; /* 原16px 24px 8px 24px，缩小内边距 */
+    background: rgba(249,250,252,0.7);
+    border-bottom: 1px solid #f0f4f9;
+    position: relative;
+    min-height: 36px;           /* 增加最小高度限制 */
+}
+
 /* 响应式调整 */
 @media (max-width: 900px) {
     .upload .title,
@@ -1112,9 +1152,50 @@ body {
         gap: 8px;
         padding: 10px 10px 4px 10px;
     }
+    
+    .passphrase-input-wrapper {
+        display: flex;
+        align-items: center;
+        width: 100%;
+    }
+    
     #passphraseInput {
         width: 100%;
         min-width: 0;
         max-width: none;
+        flex: 1;
     }
+    
+    .password-toggle {
+        margin-left: 8px;
+        flex-shrink: 0;
+    }
+}
+
+/* 密码提示框中的密码切换样式 */
+#shareAccessPrompt .password-toggle {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: transparent;
+    border: none;
+    color: #909399;
+    cursor: pointer;
+    padding: 5px;
+}
+
+#shareAccessPrompt .input-wrapper {
+    position: relative;
+    display: flex;
+    margin-bottom: 15px;
+    margin-top: 10px;
+}
+
+#accessPassphraseInput {
+    width: 100%;
+    padding: 10px;
+    padding-right: 40px; /* 为图标留出空间 */
+    border: 1px solid #dcdfe6;
+    border-radius: 4px;
 }
