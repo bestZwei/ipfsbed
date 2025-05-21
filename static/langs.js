@@ -2,12 +2,12 @@ const translations = {
     'zh-CN': {
         // Meta information
         'meta-title': 'IPFSBED - 去中心化IPFS免费图床服务 | ipfsbed.is-an.org',
-        'meta-keywords': 'IPFSBED,IPFS图床,IPFS,去中心化图床,永久图床,星际文件系统,图片托管,免费图床,文件上传',
-        'meta-description': 'IPFSBED是一个基于IPFS(星际文件系统)的永久性、去中心化的图片托管服务。支持拖拽上传、粘贴上传等多种上传方式,提供多个可靠的访问网关。',
+        'meta-keywords': 'IPFSBED,IPFS图床,IPFS,去中心化图床,星际文件系统,图片托管,免费图床,文件上传',
+        'meta-description': 'IPFSBED是一个基于IPFS(星际文件系统)的去中心化的图片托管服务。支持拖拽上传、粘贴上传等多种上传方式,提供多个可靠的访问网关。',
         
         // UI elements
         'upload-text': '点击上传 / 粘贴上传 / 拖拽上传',
-        'upload-description': '永久的、去中心化保存和共享文件',
+        'upload-description': '去中心化保存和共享文件',
         'file-list': '上传列表',
         'copy-all': '复制全部',
         'gateway-selector': '访问网关：',
@@ -31,13 +31,13 @@ const translations = {
     },
     'en': {
         // Meta information
-        'meta-title': 'IPFSBED - Permanent Decentralized IPFS Image Hosting | ipfsbed.is-an.org',
-        'meta-keywords': 'IPFSBED,IPFS image hosting,IPFS,decentralized image hosting,permanent image hosting,InterPlanetary File System,image hosting,free image hosting,file upload',
-        'meta-description': 'IPFSBED is a permanent, decentralized image hosting service based on IPFS (InterPlanetary File System). It supports multiple upload methods including drag-and-drop and paste, and provides multiple reliable access gateways.',
+        'meta-title': 'IPFSBED - Decentralized IPFS Image Hosting | ipfsbed.is-an.org',
+        'meta-keywords': 'IPFSBED,IPFS image hosting,IPFS,decentralized image hosting,InterPlanetary File System,image hosting,free image hosting,file upload',
+        'meta-description': 'IPFSBED is a decentralized image hosting service based on IPFS (InterPlanetary File System). It supports multiple upload methods including drag-and-drop and paste, and provides multiple reliable access gateways.',
         
         // UI elements
         'upload-text': 'Click to Upload / Paste / Drag and Drop',
-        'upload-description': 'Permanently and decentralized store and share files',
+        'upload-description': 'Decentralized store and share files',
         'file-list': 'Upload List',
         'copy-all': 'Copy All',
         'gateway-selector': 'Access Gateway:',
@@ -61,13 +61,13 @@ const translations = {
     },
     'de': {
         // Meta information
-        'meta-title': 'IPFSBED - Permanentes dezentralisiertes IPFS-Bildhosting | ipfsbed.is-an.org',
-        'meta-keywords': 'IPFSBED,IPFS-Bildhosting,IPFS,dezentralisiertes Bildhosting,dauerhaftes Bildhosting,InterPlanetary File System,Bildhosting,kostenloses Bildhosting,Datei-Upload',
-        'meta-description': 'IPFSBED ist ein permanenter, dezentralisierter Bildhosting-Dienst, der auf IPFS (InterPlanetary File System) basiert. Es unterstützt mehrere Upload-Methoden, einschließlich Drag-and-Drop und Einfügen, und bietet mehrere zuverlässige Zugangs-Gateways.',
+        'meta-title': 'IPFSBED - Dezentralisiertes IPFS-Bildhosting | ipfsbed.is-an.org',
+        'meta-keywords': 'IPFSBED,IPFS-Bildhosting,IPFS,dezentralisiertes Bildhosting,InterPlanetary File System,Bildhosting,kostenloses Bildhosting,Datei-Upload',
+        'meta-description': 'IPFSBED ist ein dezentraler Bildhosting-Dienst, der auf IPFS (InterPlanetary File System) basiert. Es unterstützt mehrere Upload-Methoden, einschließlich Drag-and-Drop und Einfügen, und bietet mehrere zuverlässige Zugangs-Gateways.',
         
         // UI elements
         'upload-text': 'Zum Hochladen klicken / Einfügen / Drag and Drop',
-        'upload-description': 'Dateien permanent und dezentralisiert speichern und teilen',
+        'upload-description': 'Dateien dezentralisiert speichern und teilen',
         'file-list': 'Upload-Liste',
         'copy-all': 'Alle kopieren',
         'gateway-selector': 'Zugangs-Gateway:',
@@ -91,13 +91,13 @@ const translations = {
     },
     'ru': {
         // Meta information
-        'meta-title': 'IPFSBED - Постоянный децентрализованный хостинг изображений IPFS | ipfsbed.is-an.org',
-        'meta-keywords': 'IPFSBED,хостинг изображений IPFS,IPFS,децентрализованный хостинг изображений,постоянный хостинг изображений,межпланетная файловая система,хостинг изображений,бесплатный хостинг изображений,загрузка файлов',
-        'meta-description': 'IPFSBED - это постоянная, децентрализованная служба хостинга изображений на основе IPFS (межпланетная файловая система). Она поддерживает несколько методов загрузки, включая перетаскивание и вставку, и предоставляет несколько надежных шлюзов доступа.',
+        'meta-title': 'IPFSBED - Децентрализованный хостинг изображений IPFS | ipfsbed.is-an.org',
+        'meta-keywords': 'IPFSBED,хостинг изображений IPFS,IPFS,децентрализованный хостинг изображений,межпланетная файловая система,хостинг изображений,бесплатный хостинг изображений,загрузка файлов',
+        'meta-description': 'IPFSBED - это децентрализованная служба хостинга изображений на основе IPFS (межпланетная файловая система). Она поддерживает несколько методов загрузки, включая перетаскивание и вставку, и предоставляет несколько надежных шлюзов доступа.',
         
         // UI elements
         'upload-text': 'Нажмите для загрузки / Вставьте / Перетащите',
-        'upload-description': 'Постоянно и децентрализованно храните и делитесь файлами',
+        'upload-description': 'Децентрализованно храните и делитесь файлами',
         'file-list': 'Список загрузок',
         'copy-all': 'Копировать все',
         'gateway-selector': 'Шлюз доступа:',
@@ -121,13 +121,13 @@ const translations = {
     },
     'fr': {
         // Meta information
-        'meta-title': 'IPFSBED - Hébergement d\'images IPFS décentralisé permanent | ipfsbed.is-an.org',
-        'meta-keywords': 'IPFSBED,hébergement d\'images IPFS,IPFS,hébergement d\'images décentralisé,hébergement d\'images permanent,système de fichiers interplanétaire,hébergement d\'images,hébergement d\'images gratuit,téléchargement de fichiers',
-        'meta-description': 'IPFSBED est un service d\'hébergement d\'images permanent et décentralisé basé sur IPFS (système de fichiers interplanétaire). Il prend en charge plusieurs méthodes de téléchargement, y compris le glisser-déposer et le collage, et fournit plusieurs passerelles d\'accès fiables.',
+        'meta-title': 'IPFSBED - Hébergement d\'images IPFS décentralisé | ipfsbed.is-an.org',
+        'meta-keywords': 'IPFSBED,hébergement d\'images IPFS,IPFS,hébergement d\'images décentralisé,système de fichiers interplanétaire,hébergement d\'images,hébergement d\'images gratuit,téléchargement de fichiers',
+        'meta-description': 'IPFSBED est un service d\'hébergement d\'images décentralisé basé sur IPFS (système de fichiers interplanétaire). Il prend en charge plusieurs méthodes de téléchargement, y compris le glisser-déposer et le collage, et fournit plusieurs passerelles d\'accès fiables.',
         
         // UI elements
         'upload-text': 'Cliquez pour télécharger / Collez / Glissez-déposez',
-        'upload-description': 'Stockez et partagez des fichiers de manière permanente et décentralisée',
+        'upload-description': 'Stockez et partagez des fichiers de manière décentralisée',
         'file-list': 'Liste des téléchargements',
         'copy-all': 'Tout copier',
         'gateway-selector': 'Passerelle d\'accès :',
@@ -151,13 +151,13 @@ const translations = {
     },
     'es': {
         // Meta information
-        'meta-title': 'IPFSBED - Alojamiento de imágenes IPFS descentralizado permanente | ipfsbed.is-an.org',
-        'meta-keywords': 'IPFSBED,alojamiento de imágenes IPFS,IPFS,alojamiento de imágenes descentralizado,alojamiento de imágenes permanente,sistema de archivos interplanetario,alojamiento de imágenes,alojamiento de imágenes gratuito,carga de archivos',
-        'meta-description': 'IPFSBED es un servicio de alojamiento de imágenes permanente y descentralizado basado en IPFS (sistema de archivos interplanetario). Admite múltiples métodos de carga, incluido arrastrar y soltar y pegar, y proporciona múltiples puertas de enlace de acceso confiables.',
+        'meta-title': 'IPFSBED - Alojamiento de imágenes IPFS descentralizado | ipfsbed.is-an.org',
+        'meta-keywords': 'IPFSBED,alojamiento de imágenes IPFS,IPFS,alojamiento de imágenes descentralizado,sistema de archivos interplanetario,alojamiento de imágenes,alojamiento de imágenes gratuito,carga de archivos',
+        'meta-description': 'IPFSBED es un servicio de alojamiento de imágenes descentralizado basado en IPFS (sistema de archivos interplanetario). Admite múltiples métodos de carga, incluido arrastrar y soltar y pegar, y proporciona múltiples puertas de enlace de acceso confiables.',
         
         // UI elements
         'upload-text': 'Haga clic para cargar / Pegar / Arrastrar y soltar',
-        'upload-description': 'Almacene y comparta archivos de forma permanente y descentralizada',
+        'upload-description': 'Almacene y comparta archivos de forma descentralizada',
         'file-list': 'Lista de cargas',
         'copy-all': 'Copiar todo',
         'gateway-selector': 'Puerta de enlace de acceso:',
@@ -181,13 +181,13 @@ const translations = {
     },
     'ar': {
         // Meta information
-        'meta-title': 'IPFSBED - خدمة استضافة صور IPFS اللامركزية الدائمة | ipfsbed.is-an.org',
-        'meta-keywords': 'IPFSBED,استضافة صور IPFS,IPFS,استضافة صور لامركزية,استضافة صور دائمة,نظام الملفات بين الكواكب,استضافة الصور,استضافة صور مجانية,تحميل الملفات',
-        'meta-description': 'IPFSBED هي خدمة استضافة صور دائمة ولامركزية تعتمد على IPFS (نظام الملفات بين الكواكب). تدعم طرق تحميل متعددة بما في ذلك السحب والإفلات واللصق، وتوفر بوابات وصول موثوقة متعددة.',
+        'meta-title': 'IPFSBED - خدمة استضافة صور IPFS اللامركزية | ipfsbed.is-an.org',
+        'meta-keywords': 'IPFSBED,استضافة صور IPFS,IPFS,استضافة صور لامركزية,نظام الملفات بين الكواكب,استضافة الصور,استضافة صور مجانية,تحميل الملفات',
+        'meta-description': 'IPFSBED هي خدمة استضافة صور لامركزية تعتمد على IPFS (نظام الملفات بين الكواكب). تدعم طرق تحميل متعددة بما في ذلك السحب والإفلات واللصق، وتوفر بوابات وصول موثوقة متعددة.',
         
         // UI elements
         'upload-text': 'انقر للتحميل / لصق / سحب وإفلات',
-        'upload-description': 'تخزين ومشاركة الملفات بشكل دائم ولامركزي',
+        'upload-description': 'تخزين ومشاركة الملفات بشكل لامركزي',
         'file-list': 'قائمة التحميل',
         'copy-all': 'نسخ الكل',
         'gateway-selector': 'بوابة الوصول:',
@@ -211,13 +211,13 @@ const translations = {
     },
     'fa': {
         // Meta information
-        'meta-title': 'IPFSBED - سرویس میزبانی تصاویر غیرمتمرکز و دائمی IPFS | ipfsbed.is-an.org',
-        'meta-keywords': 'IPFSBED,میزبانی تصاویر IPFS,IPFS,میزبانی تصاویر غیرمتمرکز,میزبانی تصاویر دائمی,سیستم فایل بین سیاره‌ای,میزبانی تصاویر,میزبانی تصاویر رایگان,آپلود فایل',
-        'meta-description': 'IPFSBED یک سرویس میزبانی تصاویر دائمی و غیرمتمرکز بر اساس IPFS (سیستم فایل بین سیاره‌ای) است. از روش‌های آپلود متعدد از جمله کشیدن و رها کردن و چسباندن پشتیبانی می‌کند و دروازه‌های دسترسی قابل اعتماد متعددی ارائه می‌دهد.',
+        'meta-title': 'IPFSBED - سرویس میزبانی تصاویر غیرمتمرکز IPFS | ipfsbed.is-an.org',
+        'meta-keywords': 'IPFSBED,میزبانی تصاویر IPFS,IPFS,میزبانی تصاویر غیرمتمرکز,سیستم فایل بین سیاره‌ای,میزبانی تصاویر,میزبانی تصاویر رایگان,آپلود فایل',
+        'meta-description': 'IPFSBED یک سرویس میزبانی تصاویر غیرمتمرکز بر اساس IPFS (سیستم فایل بین سیاره‌ای) است. از روش‌های آپلود متعدد از جمله کشیدن و رها کردن و چسباندن پشتیبانی می‌کند و دروازه‌های دسترسی قابل اعتماد متعددی ارائه می‌دهد.',
         
         // UI elements
         'upload-text': 'برای آپلود کلیک کنید / بچسبانید / بکشید و رها کنید',
-        'upload-description': 'ذخیره و اشتراک‌گذاری فایل‌ها به صورت دائمی و غیرمتمرکز',
+        'upload-description': 'ذخیره و اشتراک‌گذاری فایل‌ها به صورت غیرمتمرکز',
         'file-list': 'لیست آپلود',
         'copy-all': 'کپی همه',
         'gateway-selector': 'دروازه دسترسی:',
@@ -241,13 +241,13 @@ const translations = {
     },
     'tr': {
         // Meta information
-        'meta-title': 'IPFSBED - Kalıcı Merkeziyetsiz IPFS Resim Barındırma | ipfsbed.is-an.org',
-        'meta-keywords': 'IPFSBED,IPFS resim barındırma,IPFS,merkeziyetsiz resim barındırma,kalıcı resim barındırma,Gezegenler Arası Dosya Sistemi,resim barındırma,ücretsiz resim barındırma,dosya yükleme',
-        'meta-description': 'IPFSBED, IPFS (Gezegenler Arası Dosya Sistemi) tabanlı kalıcı, merkeziyetsiz bir resim barındırma hizmetidir. Sürükle-bırak ve yapıştırma dahil çoklu yükleme yöntemlerini destekler ve birden fazla güvenilir erişim ağ geçidi sağlar.',
+        'meta-title': 'IPFSBED - Merkeziyetsiz IPFS Resim Barındırma | ipfsbed.is-an.org',
+        'meta-keywords': 'IPFSBED,IPFS resim barındırma,IPFS,merkeziyetsiz resim barındırma,Gezegenler Arası Dosya Sistemi,resim barındırma,ücretsiz resim barındırma,dosya yükleme',
+        'meta-description': 'IPFSBED, IPFS (Gezegenler Arası Dosya Sistemi) tabanlı merkeziyetsiz bir resim barındırma hizmetidir. Sürükle-bırak ve yapıştırma dahil çoklu yükleme yöntemlerini destekler ve birden fazla güvenilir erişim ağ geçidi sağlar.',
         
         // UI elements
         'upload-text': 'Yüklemek için Tıklayın / Yapıştırın / Sürükleyip Bırakın',
-        'upload-description': 'Dosyaları kalıcı ve merkeziyetsiz olarak depolayın ve paylaşın',
+        'upload-description': 'Dosyaları merkeziyetsiz olarak depolayın ve paylaşın',
         'file-list': 'Yükleme Listesi',
         'copy-all': 'Tümünü Kopyala',
         'gateway-selector': 'Erişim Ağ Geçidi:',
@@ -271,13 +271,13 @@ const translations = {
     },
     'pt': {
         // Meta information
-        'meta-title': 'IPFSBED - Hospedagem de Imagens IPFS Descentralizada e Permanente | ipfsbed.is-an.org',
-        'meta-keywords': 'IPFSBED,hospedagem de imagens IPFS,IPFS,hospedagem de imagens descentralizada,hospedagem de imagens permanente,Sistema de Arquivos Interplanetário,hospedagem de imagens,hospedagem de imagens gratuita,upload de arquivos',
-        'meta-description': 'IPFSBED é um serviço de hospedagem de imagens permanente e descentralizado baseado no IPFS (Sistema de Arquivos Interplanetário). Suporta múltiplos métodos de upload, incluindo arrastar e soltar e colar, e fornece múltiplos gateways de acesso confiáveis.',
+        'meta-title': 'IPFSBED - Hospedagem de Imagens IPFS Descentralizada | ipfsbed.is-an.org',
+        'meta-keywords': 'IPFSBED,hospedagem de imagens IPFS,IPFS,hospedagem de imagens descentralizada,Sistema de Arquivos Interplanetário,hospedagem de imagens,hospedagem de imagens gratuita,upload de arquivos',
+        'meta-description': 'IPFSBED é um serviço de hospedagem de imagens descentralizado baseado no IPFS (Sistema de Arquivos Interplanetário). Suporta múltiplos métodos de upload, incluindo arrastar e soltar e colar, e fornece múltiplos gateways de acesso confiáveis.',
         
         // UI elements
         'upload-text': 'Clique para Enviar / Colar / Arrastar e Soltar',
-        'upload-description': 'Armazene e compartilhe arquivos de forma permanente e descentralizada',
+        'upload-description': 'Armazene e compartilhe arquivos de forma descentralizada',
         'file-list': 'Lista de Uploads',
         'copy-all': 'Copiar Tudo',
         'gateway-selector': 'Gateway de Acesso:',
@@ -301,13 +301,13 @@ const translations = {
     },
     'ko': {
         // Meta information
-        'meta-title': 'IPFSBED - 영구적인 탈중앙화 IPFS 이미지 호스팅 | ipfsbed.is-an.org',
-        'meta-keywords': 'IPFSBED,IPFS 이미지 호스팅,IPFS,탈중앙화 이미지 호스팅,영구 이미지 호스팅,행성간 파일 시스템,이미지 호스팅,무료 이미지 호스팅,파일 업로드',
-        'meta-description': 'IPFSBED는 IPFS(행성간 파일 시스템)를 기반으로 한 영구적이고 탈중앙화된 이미지 호스팅 서비스입니다. 드래그 앤 드롭 및 붙여넣기를 포함한 다양한 업로드 방법을 지원하며 여러 신뢰할 수 있는 액세스 게이트웨이를 제공합니다.',
+        'meta-title': 'IPFSBED - 탈중앙화 IPFS 이미지 호스팅 | ipfsbed.is-an.org',
+        'meta-keywords': 'IPFSBED,IPFS 이미지 호스팅,IPFS,탈중앙화 이미지 호스팅,행성간 파일 시스템,이미지 호스팅,무료 이미지 호스팅,파일 업로드',
+        'meta-description': 'IPFSBED는 IPFS(행성간 파일 시스템)를 기반으로 한 탈중앙화된 이미지 호스팅 서비스입니다. 드래그 앤 드롭 및 붙여넣기를 포함한 다양한 업로드 방법을 지원하며 여러 신뢰할 수 있는 액세스 게이트웨이를 제공합니다.',
         
         // UI elements
         'upload-text': '클릭하여 업로드 / 붙여넣기 / 드래그 앤 드롭',
-        'upload-description': '영구적이고 탈중앙화된 방식으로 파일 저장 및 공유',
+        'upload-description': '탈중앙화된 방식으로 파일 저장 및 공유',
         'file-list': '업로드 목록',
         'copy-all': '모두 복사',
         'gateway-selector': '접근 게이트웨이:',
@@ -331,13 +331,13 @@ const translations = {
     },
     'ja': {
         // Meta information
-        'meta-title': 'IPFSBED - 永続的な分散型IPFS画像ホスティング | ipfsbed.is-an.org',
-        'meta-keywords': 'IPFSBED,IPFS画像ホスティング,IPFS,分散型画像ホスティング,永続的画像ホスティング,惑星間ファイルシステム,画像ホスティング,無料画像ホスティング,ファイルアップロード',
-        'meta-description': 'IPFSBEDは、IPFS（惑星間ファイルシステム）に基づいた永続的で分散型の画像ホスティングサービスです。ドラッグアンドドロップや貼り付けなど複数のアップロード方法をサポートし、複数の信頼性の高いアクセスゲートウェイを提供します。',
+        'meta-title': 'IPFSBED - 分散型IPFS画像ホスティング | ipfsbed.is-an.org',
+        'meta-keywords': 'IPFSBED,IPFS画像ホスティング,IPFS,分散型画像ホスティング,惑星間ファイルシステム,画像ホスティング,無料画像ホスティング,ファイルアップロード',
+        'meta-description': 'IPFSBEDは、IPFS（惑星間ファイルシステム）に基づいた分散型の画像ホスティングサービスです。ドラッグアンドドロップや貼り付けなど複数のアップロード方法をサポートし、複数の信頼性の高いアクセスゲートウェイを提供します。',
         
         // UI elements
         'upload-text': 'クリックしてアップロード / 貼り付け / ドラッグアンドドロップ',
-        'upload-description': '永続的かつ分散型でファイルを保存・共有',
+        'upload-description': '分散型でファイルを保存・共有',
         'file-list': 'アップロードリスト',
         'copy-all': 'すべてコピー',
         'gateway-selector': 'アクセスゲートウェイ:',
