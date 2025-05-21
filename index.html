@@ -60,26 +60,37 @@
             cursor: pointer;
         }
         
-        #shareSelected {
-            margin-left: 10px;
-            background-color: #dcdfe6;
-            color: #909399;
-            border: none;
-            border-radius: 4px;
+        /* Updated button styles to be consistent */
+        .action-button {
+            display: inline-flex;
+            align-items: center;
             padding: 5px 10px;
-            cursor: not-allowed;
-            font-size: 14px;
-            transition: all 0.3s;
-        }
-        
-        #shareSelected.active {
-            background-color: #409eff;
-            color: white;
+            border-radius: 4px;
+            border: none;
             cursor: pointer;
+            font-size: 14px;
+            color: white;
+            transition: all 0.3s;
+            margin-left: 10px;
+            background-color: #409eff;
         }
         
-        #shareSelected.active:hover {
+        .action-button i {
+            margin-right: 5px;
+        }
+        
+        .action-button:hover {
             background-color: #66b1ff;
+        }
+        
+        .action-button.disabled {
+            background-color: #c0c4cc;
+            cursor: not-allowed;
+            opacity: 0.7;
+        }
+        
+        #shareSelected, .copyall {
+            text-decoration: none;
         }
         
         .batch-actions {
@@ -103,57 +114,6 @@
             margin-left: 5px;
             font-size: 14px;
             color: #606266;
-        }
-
-        /* Unified button styles */
-        .action-button {
-            padding: 5px 10px;
-            border-radius: 4px;
-            border: none;
-            font-size: 14px;
-            transition: all 0.3s;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .action-button.disabled {
-            background-color: #dcdfe6;
-            color: #909399;
-            cursor: not-allowed;
-        }
-
-        .action-button.active {
-            background-color: #409eff;
-            color: white;
-            cursor: pointer;
-        }
-
-        .action-button.active:hover {
-            background-color: #66b1ff;
-        }
-
-        .copyall {
-            background-color: #dcdfe6;
-            color: #909399;
-            cursor: not-allowed;
-            text-decoration: none;
-            padding: 5px 10px;
-            border-radius: 4px;
-            font-size: 14px;
-            transition: all 0.3s;
-            display: inline-flex;
-            align-items: center;
-        }
-
-        .copyall.active {
-            background-color: #409eff;
-            color: white;
-            cursor: pointer;
-        }
-
-        .copyall.active:hover {
-            background-color: #66b1ff;
         }
 
         /* Modal styles */
@@ -250,9 +210,9 @@
                         <span class="toggle-all-label" data-translate="select-all">全选</span>
                     </div>
                     <button id="shareSelected" class="action-button disabled" data-translate="share-selected">批量分享</button>
-                    <a href="javascript:void(0);" class="copyall disabled" onclick="copyAllLinks()" title="复制所有链接">
+                    <a href="javascript:void(0);" class="copyall action-button disabled" onclick="copyAllLinks()" title="复制所有链接">
                         <i class="fas fa-copy"></i>
-                        复制全部
+                        <span data-translate="copy-all">复制全部</span>
                     </a>
                 </div>
             </div>
