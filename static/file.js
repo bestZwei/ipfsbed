@@ -499,3 +499,9 @@ function showToast(message, type = 'info', duration = 3000) {
         }
     }, duration);
 }
+
+// 口令开关联动输入框
+$('#passphraseToggle').on('change', function() {
+    $('#passphraseInput').prop('disabled', !this.checked);
+    if (!this.checked) $('#passphraseInput').val('');
+});
