@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="" id="htmlLang">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>IPFSBED - Shared File</title>
+    <title>IPFSBED</title>
     <meta name="description" content="Access shared files securely via IPFSBED - a decentralized file hosting service based on IPFS">
     <link rel="shortcut icon" href="/img/ipfsbed.png">
     <link rel="stylesheet" href="./static/style.css">
@@ -450,28 +450,26 @@
     <div class="share-container">
         <div class="share-header">
             <img src="/img/ipfsbed.png" alt="IPFSBED Logo" width="28" height="28">
-            <h1 data-translate="share-header-title">IPFSBED Shared File</h1>
+            <h1 id="shareHeaderTitle">IPFSBED</h1>
         </div>
         
         <div class="share-content">
             <!-- Loading indicator -->
             <div class="loading" id="loadingIndicator">
                 <div class="spinner"></div>
-                <p data-translate="loading-file-info">Loading file information...</p>
+                <p id="loadingText"></p>
             </div>
             
             <!-- Passphrase form (shown for encrypted files) -->
             <div class="passphrase-form" id="passphraseForm" style="display:none;">
                 <div class="passphrase-input-wrapper">
-                    <input type="password" id="passphrase" data-translate-placeholder="passphrase-placeholder" placeholder="Enter passphrase to access">
-                    <button type="button" class="password-toggle" onclick="togglePasswordVisibility('passphrase')" title="Show/Hide Password">
+                    <input type="password" id="passphrase" placeholder="" data-translate-placeholder="passphrase-placeholder">
+                    <button type="button" class="password-toggle" onclick="togglePasswordVisibility('passphrase')" title="">
                         <i class="fas fa-eye"></i>
                     </button>
                 </div>
                 <div class="error-message" id="errorMessage"></div>
-                <button class="unlock-button" id="unlockButton">
-                    <i class="fas fa-lock-open"></i>Unlock
-                </button>
+                <button class="unlock-button" id="unlockButton"></button>
             </div>
             
             <!-- File details (shown after successful passphrase verification or for public files) -->
@@ -480,7 +478,7 @@
                     <!-- Icon will be inserted dynamically -->
                 </div>
                 <h3 class="file-name" id="fileName">filename.jpg</h3>
-                <div class="file-meta" id="fileSize">Size: 2.5 MB</div>
+                <div class="file-meta" id="fileSize"></div>
 
                 <!-- Gateway Selector and URL Display -->
                 <div class="gateway-and-url-section">
@@ -491,18 +489,18 @@
                         </select>
                     </div>
                     <div class="file-url-display-wrapper">
-                        <input type="text" id="fileUrlDisplay" readonly title="File Access URL">
+                        <input type="text" id="fileUrlDisplay" readonly title="">
                     </div>
                 </div>
                 
                 <a href="#" class="download-button" id="downloadButton">
-                    <i class="fas fa-download" style="margin-right: 8px;"></i>Get File
+                    <i class="fas fa-download" style="margin-right: 8px;"></i><span id="downloadButtonText"></span>
                 </a>
             </div>
         </div>
         
         <div class="return-home">
-            <a href="./index.html"><i class="fas fa-home"></i>Return to IPFSBED</a>
+            <a href="./index.html"><i class="fas fa-home"></i><span id="returnHomeText"></span></a>
         </div>
     </div>
     
@@ -601,6 +599,26 @@
             }
         }
 
+        // 修改: 多语言静态文本填充
+        function updateSharePageLanguage() {
+            // 设置 html lang
+            document.getElementById('htmlLang').setAttribute('lang', window.currentLang || 'en');
+            // 标题
+            // document.getElementById('shareHeaderTitle').textContent = _t('meta-title'); // 不再设置多语言标题
+            // loading
+            document.getElementById('loadingText').textContent = _t('accessing-file');
+            // passphrase
+            const passInput = document.getElementById('passphrase');
+            if (passInput) passInput.placeholder = _t('passphrase-placeholder');
+            document.getElementById('unlockButton').textContent = _t('passphrase-submit');
+            document.getElementById('downloadButtonText').textContent = _t('download-success') || 'Get File';
+            document.getElementById('returnHomeText').textContent = _t('return-home');
+            // 网关选择器标签
+            document.getElementById('shareGatewaySelectLabel').innerHTML = _t('gateway-selector');
+            // fileUrlDisplay title
+            document.getElementById('fileUrlDisplay').title = _t('copy-share-link');
+        }
+
         // Check URL parameters and determine if it's an encrypted share or direct CID
         function processShareUrl() {
             const urlParams = new URLSearchParams(window.location.search);
@@ -617,7 +635,7 @@
                 document.getElementById('unlockButton').addEventListener('click', function() {
                     const passphrase = document.getElementById('passphrase').value;
                     if (!passphrase) {
-                        document.getElementById('errorMessage').textContent = 'Please enter a passphrase';
+                        document.getElementById('errorMessage').textContent = _t('passphrase-placeholder');
                         return;
                     }
                     
@@ -627,7 +645,7 @@
                         document.getElementById('errorMessage').textContent = '';
                         displayFileDetails(decrypted.cid, decrypted.filename, decrypted.size);
                     } else {
-                        document.getElementById('errorMessage').textContent = 'Incorrect passphrase';
+                        document.getElementById('errorMessage').textContent = _t('passphrase-incorrect');
                         document.getElementById('passphrase').value = '';
                     }
                 });
@@ -655,8 +673,8 @@
                 document.getElementById('passphraseForm').style.display = 'none';
                 document.getElementById('fileDetails').style.display = 'block';
                 document.getElementById('fileIcon').innerHTML = '<i class="fas fa-exclamation-circle" style="font-size: 60px; color: #f56c6c;"></i>';
-                document.getElementById('fileName').textContent = 'Invalid Share Link';
-                document.getElementById('fileSize').textContent = 'This link is missing required parameters';
+                document.getElementById('fileName').textContent = _t('decryption-failed');
+                document.getElementById('fileSize').textContent = _t('selected-files-invalid');
                 document.getElementById('downloadButton').style.display = 'none';
             }
         }
@@ -677,7 +695,7 @@
             // Set file details
             document.getElementById('fileName').textContent = filename;
             if (filesize && filesize > 0) {
-                document.getElementById('fileSize').textContent = 'Size: ' + formatBytes(filesize);
+                document.getElementById('fileSize').textContent = _t('file-size', { size: formatBytes(filesize) });
             } else {
                 document.getElementById('fileSize').textContent = '';
             }
@@ -750,25 +768,8 @@
                 // If you add more static elements, call updatePageLanguage() here.
                 // Example: document.title = _t('meta-title-share-page'); // if you add such a key
             }
+            updateSharePageLanguage();
             processShareUrl();
-        });
-
-        // Initialize language after DOM is ready
-        document.addEventListener('DOMContentLoaded', function() {
-            if (window.initializeLanguage && window.updatePageLanguage) {
-                window.currentLang = window.initializeLanguage();
-                updatePageLanguage();
-
-                // Update static translatable elements
-                document.title = _t('meta-title-share-page');
-                document.querySelector('.share-header h1').textContent = _t('share-header-title');
-                document.querySelector('#loadingIndicator p').textContent = _t('loading-file-info');
-                document.querySelector('#passphrase').placeholder = _t('passphrase-placeholder');
-                document.querySelector('#unlockButton').innerHTML = `<i class="fas fa-lock-open"></i>${_t('passphrase-submit')}`;
-                document.querySelector('#fileUrlDisplay').title = _t('file-access-url');
-                document.querySelector('#downloadButton').innerHTML = `<i class="fas fa-download" style="margin-right: 8px;"></i>${_t('download-file')}`;
-                document.querySelector('.return-home a').innerHTML = `<i class="fas fa-home"></i>${_t('return-home')}`;
-            }
         });
     </script>
 </body>

@@ -51,7 +51,8 @@ const translations = {
         'batch-share-passphrase-title': '为批量分享设置口令',
         'batch-share-passphrase-placeholder': '输入口令（可选，留空则公开）',
         'batch-share-confirm-copy': '确认并复制链接',
-        'batch-share-cancel': '取消'
+        'batch-share-cancel': '取消',
+        'return-home': '返回主页'
     },
     'en': {
         // Meta information
@@ -105,7 +106,8 @@ const translations = {
         'batch-share-passphrase-title': 'Set Passphrase for Batch Share',
         'batch-share-passphrase-placeholder': 'Enter passphrase (optional, public if empty)',
         'batch-share-confirm-copy': 'Confirm & Copy Link',
-        'batch-share-cancel': 'Cancel'
+        'batch-share-cancel': 'Cancel',
+        'return-home': 'Return Home'
     },
     'de': {
         // Meta information
@@ -159,7 +161,8 @@ const translations = {
         'batch-share-passphrase-title': 'Passwort für Batch-Freigabe festlegen',
         'batch-share-passphrase-placeholder': 'Passwort eingeben (optional, öffentlich wenn leer)',
         'batch-share-confirm-copy': 'Bestätigen & Link kopieren',
-        'batch-share-cancel': 'Abbrechen'
+        'batch-share-cancel': 'Abbrechen',
+        'return-home': 'Zurück zur Startseite'
     },
     'ru': {
         // Meta information
@@ -213,7 +216,8 @@ const translations = {
         'batch-share-passphrase-title': 'Установить пароль для пакетного обмена',
         'batch-share-passphrase-placeholder': 'Введите пароль (необязательно, общедоступно если пусто)',
         'batch-share-confirm-copy': 'Подтвердить и скопировать ссылку',
-        'batch-share-cancel': 'Отмена'
+        'batch-share-cancel': 'Отмена',
+        'return-home': 'На главную'
     },
     'fr': {
         // Meta information
@@ -267,7 +271,8 @@ const translations = {
         'batch-share-passphrase-title': 'Définir un mot de passe pour le partage en masse',
         'batch-share-passphrase-placeholder': 'Entrez le mot de passe (optionnel, public si vide)',
         'batch-share-confirm-copy': 'Confirmer et copier le lien',
-        'batch-share-cancel': 'Annuler'
+        'batch-share-cancel': 'Annuler',
+        'return-home': 'Retour à l\'accueil'
     },
     'es': {
         // Meta information
@@ -321,7 +326,8 @@ const translations = {
         'batch-share-passphrase-title': 'Establecer contraseña para compartir en grupo',
         'batch-share-passphrase-placeholder': 'Ingrese la contraseña (opcional, público si está vacío)',
         'batch-share-confirm-copy': 'Confirmar y copiar enlace',
-        'batch-share-cancel': 'Cancelar'
+        'batch-share-cancel': 'Cancelar',
+        'return-home': 'Volver al inicio'
     },
     'ar': {
         // Meta information
@@ -375,7 +381,8 @@ const translations = {
         'batch-share-passphrase-title': 'تعيين كلمة مرور للمشاركة الجماعية',
         'batch-share-passphrase-placeholder': 'أدخل كلمة المرور (اختياري، عام إذا كان فارغًا)',
         'batch-share-confirm-copy': 'تأكيد ونسخ الرابط',
-        'batch-share-cancel': 'إلغاء'
+        'batch-share-cancel': 'إلغاء',
+        'return-home': 'العودة إلى الصفحة الرئيسية'
     },
     'fa': {
         // Meta information
@@ -429,7 +436,8 @@ const translations = {
         'batch-share-passphrase-title': 'تنظیم گذرواژه برای اشتراک‌گذاری گروهی',
         'batch-share-passphrase-placeholder': 'گذرواژه را وارد کنید (اختیاری، عمومی در صورت خالی بودن)',
         'batch-share-confirm-copy': 'تأیید و کپی پیوند',
-        'batch-share-cancel': 'لغو'
+        'batch-share-cancel': 'لغو',
+        'return-home': 'بازگشت به خانه'
     },
     'tr': {
         // Meta information
@@ -483,7 +491,8 @@ const translations = {
         'batch-share-passphrase-title': 'Toplu Paylaşım İçin Parola Ayarla',
         'batch-share-passphrase-placeholder': 'Parola girin (isteğe bağlı, boşsa herkese açık)',
         'batch-share-confirm-copy': 'Onayla ve Bağlantıyı Kopyala',
-        'batch-share-cancel': 'İptal'
+        'batch-share-cancel': 'İptal',
+        'return-home': 'Ana Sayfaya Dön'
     },
     'pt': {
         // Meta information
@@ -537,7 +546,8 @@ const translations = {
         'batch-share-passphrase-title': 'Definir Senha para Compartilhamento em Massa',
         'batch-share-passphrase-placeholder': 'Digite a senha (opcional, público se vazio)',
         'batch-share-confirm-copy': 'Confirmar e Copiar Link',
-        'batch-share-cancel': 'Cancelar'
+        'batch-share-cancel': 'Cancelar',
+        'return-home': 'Voltar para a página inicial'
     },
     'ko': {
         // Meta information
@@ -591,7 +601,8 @@ const translations = {
         'batch-share-passphrase-title': '배치 공유용 암호 설정',
         'batch-share-passphrase-placeholder': '암호 입력 (선택 사항, 비워두면 공개)',
         'batch-share-confirm-copy': '확인 및 링크 복사',
-        'batch-share-cancel': '취소'
+        'batch-share-cancel': '취소',
+        'return-home': '홈으로 돌아가기'
     },
     'ja': {
         // Meta information
@@ -645,7 +656,8 @@ const translations = {
         'batch-share-passphrase-title': 'バッチ共有のパスフレーズを設定',
         'batch-share-passphrase-placeholder': 'パスフレーズを入力 (任意、空の場合は公開)',
         'batch-share-confirm-copy': '確認してリンクをコピー',
-        'batch-share-cancel': 'キャンセル'
+        'batch-share-cancel': 'キャンセル',
+        'return-home': 'ホームに戻る'
     }
 };
 

@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="" id="htmlLang">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>IPFSBED - Batch Shared Files</title>
+    <title>IPFSBED</title>
     <meta name="description" content="Access multiple shared files via IPFSBED - a decentralized file hosting service based on IPFS">
     <link rel="shortcut icon" href="/img/ipfsbed.png">
     <link rel="stylesheet" href="./static/style.css">
@@ -606,41 +606,41 @@
     <div class="batch-share-container">
         <div class="batch-share-header">
             <img src="/img/ipfsbed.png" alt="IPFSBED Logo" width="32" height="32">
-            <h1 data-translate="batch-share-header-title">IPFSBED Batch Shared Files</h1>
+            <h1 id="batchShareHeaderTitle">IPFSBED</h1>
         </div>
         
         <div class="batch-share-content">
             <!-- Loading indicator -->
             <div class="loading" id="loadingIndicator">
                 <div class="spinner"></div>
-                <p data-translate="loading-batch-files">Loading shared files...</p>
+                <p id="batchLoadingText"></p>
             </div>
             
             <!-- Passphrase form (shown for encrypted shares) -->
             <div class="passphrase-form" id="passphraseForm" style="display:none;">
-                <h3 data-translate="batch-share-passphrase-title">This batch share is password protected</h3>
+                <h3 id="batchPassphraseTitle"></h3>
                 <div class="passphrase-input-wrapper">
-                    <input type="password" id="passphrase" data-translate-placeholder="passphrase-placeholder" placeholder="Enter passphrase to access files">
-                    <button type="button" class="password-toggle" onclick="togglePasswordVisibility('passphrase')" title="Show/Hide Password">
+                    <input type="password" id="passphrase" placeholder="" data-translate-placeholder="batch-share-passphrase-placeholder">
+                    <button type="button" class="password-toggle" onclick="togglePasswordVisibility('passphrase')" title="">
                         <i class="fas fa-eye"></i>
                     </button>
                 </div>
                 <div class="error-message" id="errorMessage"></div>
                 <button class="batch-button select-all-btn" id="unlockButton">
-                    <i class="fas fa-lock-open"></i>Unlock Files
+                    <i class="fas fa-lock-open"></i><span id="batchUnlockBtnText"></span>
                 </button>
             </div>
             
             <!-- Batch file details -->
             <div id="batchFilesContainer" style="display:none;">
                 <div class="files-info">
-                    <span id="filesCount">0 files shared</span>
+                    <span id="filesCount"></span>
                 </div>
                 
                 <!-- Gateway selector -->
                 <div class="gateway-selector-group">
-                    <label for="batchGatewaySelect">Choose Gateway:</label>
-                    <select id="batchGatewaySelect" title="Gateway Selector">
+                    <label for="batchGatewaySelect" id="batchGatewaySelectLabel"></label>
+                    <select id="batchGatewaySelect">
                         <!-- Options will be populated by JavaScript -->
                     </select>
                 </div>
@@ -651,35 +651,35 @@
                 <!-- Batch actions -->
                 <div class="batch-actions">
                     <button class="batch-button select-all-btn" id="selectAllBtn">
-                        <i class="fas fa-check-square"></i>Select All
+                        <i class="fas fa-check-square"></i><span id="selectAllBtnText"></span>
                     </button>
                     <button class="batch-button deselect-all-btn" id="deselectAllBtn">
-                        <i class="fas fa-square"></i>Deselect All
+                        <i class="fas fa-square"></i><span id="deselectAllBtnText"></span>
                     </button>
                     <button class="batch-button download-all-btn" id="downloadAllBtn">
-                        <i class="fas fa-download"></i>Download Selected
+                        <i class="fas fa-download"></i><span id="downloadAllBtnText"></span>
                     </button>
                     <button class="batch-button copy-all-btn" id="copyAllBtn">
-                        <i class="fas fa-copy"></i>Copy All URLs
+                        <i class="fas fa-copy"></i><span id="copyAllBtnText"></span>
                     </button>
                 </div>
             </div>
         </div>
         
         <div class="return-home">
-            <a href="./index.html"><i class="fas fa-home"></i>Return to IPFSBED</a>
+            <a href="./index.html"><i class="fas fa-home"></i><span id="batchReturnHomeText"></span></a>
         </div>
     </div>
     
     <!-- Download Progress Dialog -->
     <div class="download-dialog" id="downloadDialog">
         <div class="dialog-content">
-            <h3>Downloading Files</h3>
+            <h3 id="downloadDialogTitle"></h3>
             <div class="download-progress">
                 <div class="download-progress-inner" id="downloadProgressBar"></div>
             </div>
-            <div class="download-status" id="downloadStatus">Preparing download...</div>
-            <button class="download-cancel" id="downloadCancel">Cancel</button>
+            <div class="download-status" id="downloadStatus"></div>
+            <button class="download-cancel" id="downloadCancel"></button>
         </div>
     </div>
     
@@ -766,67 +766,49 @@
         // Function to parse URL parameters and process the batch share
         function processBatchShare() {
             const urlParams = new URLSearchParams(window.location.search);
-            
-            // Show loading indicator
             document.getElementById('loadingIndicator').style.display = 'block';
-            
             if (urlParams.has('share')) {
-                // This is an encrypted batch share
                 const encryptedPayload = urlParams.get('share');
-                
-                // Show passphrase form
                 document.getElementById('passphraseForm').style.display = 'block';
                 document.getElementById('loadingIndicator').style.display = 'none';
-                
-                // Handle unlock button click
                 document.getElementById('unlockButton').addEventListener('click', function() {
                     const passphrase = document.getElementById('passphrase').value;
                     if (!passphrase) {
-                        document.getElementById('errorMessage').textContent = 'Please enter a passphrase';
+                        document.getElementById('errorMessage').textContent = _t('passphrase-placeholder');
                         return;
                     }
-                    
                     const decrypted = decryptData(encryptedPayload, passphrase);
                     if (decrypted && Array.isArray(decrypted)) {
-                        // Successfully decrypted
                         document.getElementById('errorMessage').textContent = '';
                         document.getElementById('passphraseForm').style.display = 'none';
-                        
-                        // Display batch files
                         displayBatchFiles(decrypted);
                     } else {
-                        document.getElementById('errorMessage').textContent = 'Incorrect passphrase';
+                        document.getElementById('errorMessage').textContent = _t('passphrase-incorrect');
                         document.getElementById('passphrase').value = '';
                     }
                 });
-                
-                // Allow entering passphrase with Enter key
                 document.getElementById('passphrase').addEventListener('keypress', function(e) {
                     if (e.key === 'Enter') {
                         document.getElementById('unlockButton').click();
                     }
                 });
-                
             } else if (urlParams.has('files')) {
                 try {
-                    // This is a non-encrypted batch share
                     const filesData = JSON.parse(decodeURIComponent(urlParams.get('files')));
-                    
                     if (Array.isArray(filesData) && filesData.length > 0) {
-                        // Display batch files
                         displayBatchFiles(filesData);
                     } else {
-                        showError('Invalid batch share data');
+                        showError(_t('selected-files-invalid'));
                     }
                 } catch (e) {
-                    showError('Error parsing batch share data');
+                    showError(_t('decryption-failed'));
                     console.error(e);
                 }
             } else {
-                showError('Invalid batch share URL');
+                showError(_t('selected-files-invalid'));
             }
         }
-        
+
         // Display error message when batch share is invalid
         function showError(message) {
             document.getElementById('loadingIndicator').style.display = 'none';
@@ -836,8 +818,8 @@
             batchFilesContainer.innerHTML = `
                 <div style="text-align:center; padding: 30px;">
                     <i class="fas fa-exclamation-circle" style="font-size: 48px; color: #f56c6c; margin-bottom: 15px;"></i>
-                    <h3>${message}</h3>
-                    <p>The batch share link is invalid or corrupted.</p>
+                    <h3 style="font-size: 18px; margin-bottom: 10px;">${message}</h3>
+                    <p style="font-size: 14px; line-height: 1.6;">The batch share link is invalid or corrupted.</p>
                 </div>
             `;
             batchFilesContainer.style.display = 'block';
@@ -851,7 +833,7 @@
             document.getElementById('loadingIndicator').style.display = 'none';
             
             // Update file count
-            document.getElementById('filesCount').textContent = `${files.length} files shared`;
+            document.getElementById('filesCount').textContent = files.length + ' ' + _t('file-list');
             
             // Populate gateway selector
             const gatewaySelect = document.getElementById('batchGatewaySelect');
@@ -1132,26 +1114,32 @@
             }
         }
 
+        // 多语言静态文本填充
+        function updateBatchSharePageLanguage() {
+            document.getElementById('htmlLang').setAttribute('lang', window.currentLang || 'en');
+            // document.getElementById('batchShareHeaderTitle').textContent = _t('meta-title'); // 不再设置多语言标题
+            document.getElementById('batchLoadingText').textContent = _t('accessing-file');
+            document.getElementById('batchPassphraseTitle').textContent = _t('batch-share-passphrase-title');
+            document.getElementById('passphrase').placeholder = _t('batch-share-passphrase-placeholder');
+            document.getElementById('unlockButton').title = _t('passphrase-submit');
+            document.getElementById('batchUnlockBtnText').textContent = _t('passphrase-submit');
+            document.getElementById('batchGatewaySelectLabel').innerHTML = _t('gateway-selector');
+            document.getElementById('selectAllBtnText').textContent = _t('select-all');
+            document.getElementById('deselectAllBtnText').textContent = _t('deselect-all-btn') || 'Deselect All';
+            document.getElementById('downloadAllBtnText').textContent = _t('download-all-btn') || 'Download Selected';
+            document.getElementById('copyAllBtnText').textContent = _t('copy-all');
+            document.getElementById('batchReturnHomeText').textContent = _t('return-home');
+            document.getElementById('downloadDialogTitle').textContent = _t('download-success') || 'Downloading Files';
+            document.getElementById('downloadCancel').textContent = _t('batch-share-cancel');
+        }
+
         // Initialize when DOM is ready
         document.addEventListener('DOMContentLoaded', function() {
             // Initialize language
             if (window.initializeLanguage && window.updatePageLanguage) {
                 window.currentLang = window.initializeLanguage();
-                updatePageLanguage();
-
-                // Update static translatable elements
-                document.title = _t('meta-title-batch-share-page');
-                document.querySelector('.batch-share-header h1').textContent = _t('batch-share-header-title');
-                document.querySelector('#loadingIndicator p').textContent = _t('loading-batch-files');
-                document.querySelector('#passphrase').placeholder = _t('passphrase-placeholder');
-                document.querySelector('#unlockButton').innerHTML = `<i class="fas fa-lock-open"></i>${_t('passphrase-submit')}`;
-                document.querySelector('#batchGatewaySelect').title = _t('gateway-selector');
-                document.querySelector('#selectAllBtn').innerHTML = `<i class="fas fa-check-square"></i>${_t('select-all')}`;
-                document.querySelector('#deselectAllBtn').innerHTML = `<i class="fas fa-square"></i>${_t('deselect-all')}`;
-                document.querySelector('#downloadAllBtn').innerHTML = `<i class="fas fa-download"></i>${_t('download-selected')}`;
-                document.querySelector('#copyAllBtn').innerHTML = `<i class="fas fa-copy"></i>${_t('copy-all-urls')}`;
-                document.querySelector('.return-home a').innerHTML = `<i class="fas fa-home"></i>${_t('return-home')}`;
             }
+            updateBatchSharePageLanguage();
             processBatchShare();
         });
     </script>
