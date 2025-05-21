@@ -1012,6 +1012,131 @@ body {
     align-items: center;
 }
 
+/* Styles for the share access passphrase prompt */
+#shareAccessPrompt {
+    display: none; /* Initially hidden, shown by JS */
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+    z-index: 10000;
+    display: flex; /* Changed from none to flex for JS to toggle visibility */
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    opacity: 0; /* Start with opacity 0 for fade-in */
+    transition: opacity 0.3s ease-in-out;
+    visibility: hidden; /* Start hidden */
+}
+
+#shareAccessPrompt.visible {
+    opacity: 1;
+    visibility: visible;
+}
+
+.prompt-box {
+    background: #fff;
+    padding: 30px 35px;
+    border-radius: 12px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.25);
+    width: 100%;
+    max-width: 420px;
+    text-align: center;
+    transform: scale(0.95); /* Start slightly smaller for pop-in effect */
+    transition: transform 0.3s ease-in-out;
+}
+
+#shareAccessPrompt.visible .prompt-box {
+    transform: scale(1);
+}
+
+.prompt-box h3 {
+    font-size: 22px;
+    font-weight: 600;
+    color: #333;
+    margin-top: 0;
+    margin-bottom: 25px;
+}
+
+.prompt-box div {
+    margin-bottom: 20px;
+    text-align: left;
+}
+
+.prompt-box label {
+    display: block;
+    font-size: 14px;
+    color: #555;
+    margin-bottom: 8px;
+    font-weight: 500;
+}
+
+.prompt-box input[type="password"] {
+    width: 100%;
+    padding: 12px 15px;
+    border: 1px solid #dcdfe6;
+    border-radius: 8px;
+    font-size: 16px;
+    color: #333;
+    box-sizing: border-box;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.prompt-box input[type="password"]:focus {
+    outline: none;
+    border-color: #409eff;
+    box-shadow: 0 0 0 3px rgba(64, 158, 255, 0.2);
+}
+
+.prompt-box button {
+    width: 100%;
+    padding: 12px;
+    background-color: #409eff;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.1s;
+}
+
+.prompt-box button:hover {
+    background-color: #337ecc;
+}
+
+.prompt-box button:active {
+    transform: scale(0.98);
+}
+
+#passphraseError {
+    color: #f56c6c;
+    font-size: 14px;
+    margin-top: 15px;
+    min-height: 20px; /* Reserve space to prevent layout shift */
+    text-align: center;
+}
+
+/* Responsive adjustments for the prompt */
+@media (max-width: 480px) {
+    .prompt-box {
+        padding: 25px 20px;
+    }
+    .prompt-box h3 {
+        font-size: 20px;
+    }
+    .prompt-box input[type="password"],
+    .prompt-box button {
+        font-size: 15px;
+        padding: 10px 12px;
+    }
+}
+
+
 .copyall {
     display: inline-flex;
     align-items: center;
