@@ -141,33 +141,7 @@ body {
 }
 
 .button-group {
-    display: flex;
-    justify-content: center;
-    gap: 10px;
-    margin-top: 15px;
-}
-
-.button-group button {
-    width: 80px;
-    height: 36px;
-    border-radius: 18px;
-    background-color: #fff;
-    border: 1px solid #dcdfe6;
-    transition: all 0.3s ease;
-    cursor: pointer;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
-    font-weight: 500;
-    color: #444;
-}
-
-.button-group button:hover {
-    background-color: #f5f7fa;
-    transform: translateY(-2px);
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
-}
-
-.button-group button:active {
-    transform: translateY(0);
+    display: none; /* Hide button group since we're removing it */
 }
 
 .gateway-button {
@@ -389,8 +363,12 @@ body {
     transform: translateY(0);
 }
 
-.icon-open:hover {
+.icon-copy:hover {
     fill: #409eff !important;
+}
+
+.icon-copy-cid:hover {
+    fill: #67c23a !important;
 }
 
 .icon-delete:hover {
@@ -670,12 +648,11 @@ body {
     }
     
     .copy-buttons-group {
-        gap: 6px;
+        display: none; /* Hide completely */
     }
     
     .copy-btn {
-        padding: 4px 10px;
-        font-size: 11px;
+        display: none; /* Hide completely */
     }
 }
 
@@ -763,64 +740,6 @@ body {
 .select-group select:focus {
     border-color: #409eff;
     box-shadow: 0 0 0 3px rgba(64, 158, 255, 0.2);
-}
-
-/* Copy buttons styling */
-.copy-buttons-group {
-    display: flex;
-    justify-content: flex-start;
-    gap: 10px;
-    margin-top: 15px;
-    flex-wrap: wrap;
-}
-
-.copy-btn {
-    padding: 8px 16px;
-    border-radius: 20px;
-    background-color: #f5f7fa;
-    color: #555;
-    border: 1px solid #e4e7ed;
-    font-size: 13px;
-    cursor: pointer;
-    transition: all 0.25s ease;
-    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.05);
-    font-weight: 500;
-}
-
-.copy-btn:hover {
-    background-color: #ecf5ff;
-    color: #409eff;
-    border-color: #c6e2ff;
-    transform: translateY(-3px);
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.08);
-}
-
-.copy-btn:active {
-    transform: translateY(0);
-}
-
-/* Style for copy all button */
-.copyall {
-    cursor: pointer;
-    font-size: 13px;
-    color: #409eff;
-    padding: 6px 14px;
-    border-radius: 20px;
-    transition: all 0.25s ease;
-    background-color: rgba(64, 158, 255, 0.1);
-    white-space: nowrap;
-    display: inline-flex;
-    align-items: center;
-    height: 32px;
-    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.05);
-    font-weight: 500;
-}
-
-.copyall:hover {
-    color: #fff;
-    background-color: #409eff;
-    box-shadow: 0 6px 12px rgba(64, 158, 255, 0.3);
-    transform: translateY(-2px);
 }
 
 /* Toast notification styling */

@@ -177,9 +177,14 @@ $(document).ready(() => {
                         <div class="desc__name">${file.name}</div>
                         <div class="desc__size">${_t('file-size', {size: formatBytes(file.size)})}</div>
                     </div>
-                    <a id="url" href="javascript:void(0);" class="link" title="打开链接">
-                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" class="icon-open">
-                            <path d="M14,3V5H17.59L7.76,14.83L9.17,16.24L19,6.41V10H21V3M19,19H5V5H12V3H5C3.89,3 3,3.9 3,5V19A2,2 0 0,0 5,21H19A2,2 0 0,0 21,19V12H19V19Z" fill="#909399"/>
+                    <a href="javascript:void(0);" class="link" title="复制链接" onclick="copyLinkUrl(this); return false;">
+                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" class="icon-copy">
+                            <path d="M19,21H8V7H19M19,5H8A2,2 0 0,0 6,7V21A2,2 0 0,0 8,23H19A2,2 0 0,0 21,21V7A2,2 0 0,0 19,5M16,1H4A2,2 0 0,0 2,3V17H4V3H16V1Z" fill="#909399"/>
+                        </svg>
+                    </a>
+                    <a href="javascript:void(0);" class="link" title="复制CID" onclick="copyCID(this); return false;">
+                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" class="icon-copy-cid">
+                            <path d="M14,8H10V6H14V8M20,4V20C20,21.1 19.1,22 18,22H6C4.9,22 4,21.1 4,20V4C4,2.9 4.9,2 6,2H18C19.1,2 20,2.9 20,4M18,13H6V20H18V13M18,4H6V11H18V4M14,15H10V17H14V15Z" fill="#909399"/>
                         </svg>
                     </a>
                     <a title="删除" class="link" onclick="deleteItem(this); return false;">
@@ -194,30 +199,9 @@ $(document).ready(() => {
                     </div>
                     <div class="progress-status">0%</div>
                 </div>
-                <!-- Copy buttons group -->
-                <div class="copy-buttons-group" style="display:none">
-                    <button class="copy-btn" data-type="url" onclick="copySpecificFormat(this)">
-                        <i class="fas fa-link" style="margin-right: 5px;"></i>URL
-                    </button>
-                    <button class="copy-btn" data-type="cid" onclick="copySpecificFormat(this)">
-                        <i class="fas fa-fingerprint" style="margin-right: 5px;"></i>CID
-                    </button>
-                    <button class="copy-btn" data-type="html" onclick="copySpecificFormat(this)">
-                        <i class="fas fa-code" style="margin-right: 5px;"></i>HTML
-                    </button>
-                    <button class="copy-btn" data-type="ubb" onclick="copySpecificFormat(this)">
-                        <i class="fas fa-code" style="margin-right: 5px;"></i>UBB
-                    </button>
-                    <button class="copy-btn" data-type="markdown" onclick="copySpecificFormat(this)">
-                        <i class="fas fa-file-alt" style="margin-right: 5px;"></i>MD
-                    </button>
-                </div>
                 <!-- Hidden inputs to store the data -->
                 <input type="hidden" class="data-url" value="">
                 <input type="hidden" class="data-cid" value="">
-                <input type="hidden" class="data-html" value="">
-                <input type="hidden" class="data-ubb" value="">
-                <input type="hidden" class="data-markdown" value="">
             </div>
         `;
     }
@@ -266,17 +250,10 @@ $(document).ready(() => {
         $(`.${randomClass}`).find('.progress').fadeOut(500, function() {
             $(`.${randomClass}`).removeClass('uploading');
         });
-        $(`.${randomClass}`).find('#url').attr({ href: imgSrc, target: '_blank' });
         
-        // Store the various format values in hidden inputs
+        // Store the URL and CID values in hidden inputs
         $(`.${randomClass}`).find('.data-url').val(imgSrc);
         $(`.${randomClass}`).find('.data-cid').val(res.Hash);
-        $(`.${randomClass}`).find('.data-html').val(`<img src="${imgSrc}"/>`);
-        $(`.${randomClass}`).find('.data-ubb').val(`[img]${imgSrc}[/img]`);
-        $(`.${randomClass}`).find('.data-markdown').val(`![](${imgSrc})`);
-        
-        // 显示复制按钮组
-        $(`.${randomClass}`).find('.copy-buttons-group').hide().slideDown(300);
         
         $('.copyall').show();
         
@@ -314,48 +291,44 @@ function deleteItem(obj) {
     });
 }
 
-// 复制特定格式的链接 with enhanced animation
-function copySpecificFormat(button) {
+// Function to copy the URL link
+function copyLinkUrl(button) {
     const item = button.closest('.item');
-    const formatType = button.getAttribute('data-type');
-    let textToCopy;
+    const textToCopy = item.querySelector('.data-url').value;
     
-    switch(formatType) {
-        case 'url':
-            textToCopy = item.querySelector('.data-url').value;
-            break;
-        case 'cid':
-            textToCopy = item.querySelector('.data-cid').value;
-            break;
-        case 'html':
-            textToCopy = item.querySelector('.data-html').value;
-            break;
-        case 'ubb':
-            textToCopy = item.querySelector('.data-ubb').value;
-            break;
-        case 'markdown':
-            textToCopy = item.querySelector('.data-markdown').value;
-            break;
-        default:
-            textToCopy = item.querySelector('.data-url').value;
-    }
+    copyToClipboard(textToCopy);
+    showToast(_t('copied-format', {format: 'URL'}), 'success');
     
-    // 创建临时textarea来执行复制操作
-    const textarea = document.createElement('textarea');
-    textarea.value = textToCopy;
-    document.body.appendChild(textarea);
-    textarea.select();
-    document.execCommand('copy');
-    document.body.removeChild(textarea);
-    
-    // 显示复制成功提示
-    showToast(_t('copied-format', {format: button.innerText}), 'success');
-    
-    // Add visual feedback when button is clicked
+    // Add visual feedback
     $(button).addClass('active');
     setTimeout(() => {
         $(button).removeClass('active');
     }, 300);
+}
+
+// Function to copy the CID
+function copyCID(button) {
+    const item = button.closest('.item');
+    const textToCopy = item.querySelector('.data-cid').value;
+    
+    copyToClipboard(textToCopy);
+    showToast(_t('copied-format', {format: 'CID'}), 'success');
+    
+    // Add visual feedback
+    $(button).addClass('active');
+    setTimeout(() => {
+        $(button).removeClass('active');
+    }, 300);
+}
+
+// Helper function for copying to clipboard
+function copyToClipboard(text) {
+    const textarea = document.createElement('textarea');
+    textarea.value = text;
+    document.body.appendChild(textarea);
+    textarea.select();
+    document.execCommand('copy');
+    document.body.removeChild(textarea);
 }
 
 function changeGateway(obj) {
@@ -373,12 +346,6 @@ function changeGateway(obj) {
         // 更新URL
         const newUrl = `${newUrlBase}/ipfs/${cid}${filenameParam}`;
         item.querySelector('.data-url').value = newUrl;
-        item.querySelector('.data-html').value = `<img src="${newUrl}"/>`;
-        item.querySelector('.data-ubb').value = `[img]${newUrl}[/img]`;
-        item.querySelector('.data-markdown').value = `![](${newUrl})`;
-        
-        // 更新预览链接
-        item.querySelector(".file #url").href = newUrl;
     });
 }
 
@@ -434,12 +401,8 @@ function copyAllLinks() {
             allLinks += `${input.value}\n`;
         }
     });
-    const textarea = document.createElement('textarea');
-    textarea.value = allLinks;
-    document.body.appendChild(textarea);
-    textarea.select();
-    document.execCommand('copy');
-    document.body.removeChild(textarea);
+    
+    copyToClipboard(allLinks);
     showToast(_t('copied-all'), 'success');
 }
 
