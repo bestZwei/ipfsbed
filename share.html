@@ -13,7 +13,8 @@
     <script src="./static/langs.js"></script>
     <style>
         .share-container {
-            max-width: 600px;
+            width: 600px;
+            max-width: 90%;
             margin: 50px auto;
             padding: 30px;
             background-color: #fff;
@@ -78,6 +79,8 @@
             margin-bottom: 8px;
             text-align: center;
             word-break: break-word;
+            overflow-wrap: break-word;
+            max-width: 100%;
         }
         
         .file-meta {
@@ -157,6 +160,43 @@
         
         .return-home a:hover {
             color: #409eff;
+        }
+        
+        /* Responsive adjustments */
+        @media (max-width: 767px) {
+            .share-container {
+                width: 100%;
+                max-width: 95%;
+                padding: 20px 15px;
+                margin: 20px auto;
+            }
+            
+            .share-content {
+                padding: 15px;
+            }
+            
+            .file-name {
+                font-size: 16px;
+            }
+            
+            .download-button {
+                width: 100%;
+            }
+            
+            .passphrase-form input {
+                width: 100%;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .share-container {
+                padding: 15px 10px;
+                margin: 10px auto;
+            }
+            
+            .share-header {
+                margin-bottom: 15px;
+            }
         }
     </style>
 </head>
