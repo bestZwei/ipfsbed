@@ -274,10 +274,10 @@ body {
 }
 
 .filelist .list .item {
-    margin-bottom: 20px;
+    margin-bottom: 15px; /* Reduced from 20px */
     background-color: #f9fafc;
     border-radius: 12px;
-    padding: 18px;
+    padding: 14px; /* Reduced from 18px */
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
     transition: all 0.3s ease;
     position: relative;
@@ -294,23 +294,18 @@ body {
 .filelist .list .item .file {
     display: flex;
     align-items: center;
-    margin-bottom: 10px;
+    margin-bottom: 8px; /* Reduced from 10px */
 }
 
 .filelist .list .item .file .icon {
-    width: 52px;
-    height: 52px;
+    width: 42px; /* Reduced from 52px */
+    height: 42px; /* Reduced from 52px */
     margin-right: 15px;
     fill: #777;
     background-color: rgba(144, 147, 153, 0.08);
-    padding: 12px;
-    border-radius: 12px;
+    padding: 10px; /* Reduced from 12px */
+    border-radius: 10px; /* Reduced from 12px */
     transition: all 0.3s ease;
-}
-
-.filelist .list .item:hover .file .icon {
-    background-color: rgba(64, 158, 255, 0.1);
-    fill: #409eff;
 }
 
 .filelist .list .item .file .desc {
@@ -319,17 +314,17 @@ body {
 }
 
 .filelist .list .item .file .desc__name {
-    font-size: 16px;
+    font-size: 15px; /* Reduced from 16px */
     white-space: nowrap;
     text-overflow: ellipsis;
     overflow: hidden;
     font-weight: 600;
     color: #333;
-    margin-bottom: 8px;
+    margin-bottom: 6px; /* Reduced from 8px */
 }
 
 .filelist .list .item .file .desc__size {
-    font-size: 13px;
+    font-size: 12px; /* Reduced from 13px */
     color: #909399;
 }
 
@@ -337,50 +332,28 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 10px;
+    padding: 8px; /* Reduced from 10px */
     cursor: pointer;
-    margin-left: 12px;
+    margin-left: 10px; /* Reduced from 12px */
     border-radius: 50%;
     transition: all 0.3s ease;
     background-color: rgba(240, 240, 240, 0.5);
-    width: 40px;
-    height: 40px;
+    width: 34px; /* Reduced from 40px */
+    height: 34px; /* Reduced from 40px */
 }
 
 .filelist .list .item .file .link svg {
-    width: 20px;
-    height: 20px;
+    width: 18px; /* Reduced from 20px */
+    height: 18px; /* Reduced from 20px */
     transition: all 0.3s ease;
-}
-
-.filelist .list .item .file .link:hover {
-    background: rgba(64, 158, 255, 0.1);
-    transform: translateY(-3px);
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.08);
-}
-
-.filelist .list .item .file .link:active {
-    transform: translateY(0);
-}
-
-.icon-copy:hover {
-    fill: #409eff !important;
-}
-
-.icon-copy-cid:hover {
-    fill: #67c23a !important;
-}
-
-.icon-delete:hover {
-    fill: #f56c6c !important;
 }
 
 .filelist .list .item .progress {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    font-size: 12px;
-    margin-bottom: 10px;
+    font-size: 11px; /* Reduced from 12px */
+    margin-bottom: 8px; /* Reduced from 10px */
 }
 
 .filelist .list .item .progress .progress-bar {
