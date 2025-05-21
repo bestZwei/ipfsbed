@@ -7,10 +7,6 @@ $(document).ready(() => {
     // Create toast container
     $('body').append('<div class="toast-container"></div>');
 
-    // Initialize button states by calling updateShareSelectedButtonState
-    // Assumes buttons are visible in HTML by default.
-    updateShareSelectedButtonState();
-
     function initEventListeners() {
         $(document).on('paste', handlePasteUpload);
         $('.upload .content').on('click', () => $('#file').click());
@@ -396,15 +392,16 @@ $(document).ready(() => {
         $(`.${randomClass}`).find('.data-cid').val(res.Hash);
         $(`.${randomClass}`).find('.data-filename').val(file.name); // Store original filename
         
-        // Buttons are now visible from the start, updateShareSelectedButtonState will manage their enabled state.
-        // $('.copyall').fadeIn(300); // Removed
-        // $('#shareSelected').fadeIn(300); // Removed
+        // Make sure the copyall button is visible
+        $('.copyall').fadeIn(300);
+        $('#shareSelected').fadeIn(300);
         
         // Success notification
         showToast(_t('upload-success'), 'success');
         
         // Enable batch sharing functionality once files are uploaded
         updateShareSelectedButtonState();
+        updateActionButtonsState(); // Update action buttons state
     }
 
     function handleError(randomClass, message = _t('upload-error')) {
@@ -436,6 +433,7 @@ function deleteItem(obj) {
         $(this).remove();
         // Check if there are any items left
         updateShareSelectedButtonState();
+        updateActionButtonsState(); // Update action buttons state
     });
 }
 
@@ -537,6 +535,11 @@ function seeding(res) {
 }
 
 function copyAllLinks() {
+    const copyAllBtn = document.querySelector('.copyall');
+    if (copyAllBtn.classList.contains('disabled')) {
+        return; // Do nothing if disabled
+    }
+    
     let allLinks = '';
     document.querySelectorAll('.data-url').forEach(input => {
         if (input.value) {
@@ -791,38 +794,104 @@ function shareBatchFiles(passphrase) { // passphrase is now an argument
 
 // New function to update the state of the "Share Selected" button
 function updateShareSelectedButtonState() {
-    const items = $('.item');
-    const successfulUploadItems = items.filter(function() {
-        // Check if data-url has a non-empty value
-        return $(this).find('.data-url').val() !== '';
-    });
-    const selectedCheckboxes = $('.file-select-checkbox:checked');
-
-    const anyItemsPresent = items.length > 0;
-    const anySuccessfulUploads = successfulUploadItems.length > 0;
-    const anyFilesSelected = selectedCheckboxes.length > 0;
-
-    // Manage "Copy All" button (.copyall)
-    // Assuming .copyall is an <a> tag styled as a button.
-    // Add/remove 'disabled' class for styling and pointer-events.
-    if (anySuccessfulUploads) {
-        $('.copyall').removeClass('disabled');
-        // If .copyall were a <button> element, you'd also do:
-        // $('.copyall').prop('disabled', false);
+    const anyFilesUploaded = $('.item').length > 0;
+    const anyFilesSelected = $('.file-select-checkbox:checked').length > 0;
+    
+    if (!anyFilesUploaded) {
+        $('#shareSelected').hide();
+        $('#toggleAllFiles').prop('disabled', true);
     } else {
-        $('.copyall').addClass('disabled');
-        // If .copyall were a <button> element, you'd also do:
-        // $('.copyall').prop('disabled', true);
+        $('#toggleAllFiles').prop('disabled', false);
+        if (anyFilesSelected) {
+            $('#shareSelected').fadeIn(300).removeClass('disabled');
+        } else {
+            $('#shareSelected').addClass('disabled');
+        }
     }
-
-    // Manage "Share Selected" button (#shareSelected)
-    // This is likely a <button> element, so manage class and 'disabled' property.
-    if (anyItemsPresent && anyFilesSelected) {
-        $('#shareSelected').removeClass('disabled').prop('disabled', false);
-    } else {
-        $('#shareSelected').addClass('disabled').prop('disabled', true);
-    }
-
-    // Manage "Toggle All Files" checkbox (#toggleAllFiles)
-    $('#toggleAllFiles').prop('disabled', !anyItemsPresent);
 }
+
+// This function should be called when files are successfully uploaded
+function updateActionButtonsState() {
+    const fileList = document.querySelector('.filelist .list');
+    const hasFiles = fileList.children.length > 0;
+    
+    const shareSelectedBtn = document.getElementById('shareSelected');
+    const copyAllBtn = document.querySelector('.copyall');
+    const toggleAllCheckbox = document.getElementById('toggleAllFiles');
+    
+    if (hasFiles) {
+        // Enable buttons if there are files
+        shareSelectedBtn.classList.remove('disabled');
+        shareSelectedBtn.classList.add('active');
+        copyAllBtn.classList.remove('disabled');
+        copyAllBtn.classList.add('active');
+        toggleAllCheckbox.disabled = false;
+    } else {
+        // Disable buttons if there are no files
+        shareSelectedBtn.classList.add('disabled');
+        shareSelectedBtn.classList.remove('active');
+        copyAllBtn.classList.add('disabled');
+        copyAllBtn.classList.remove('active');
+        toggleAllCheckbox.disabled = true;
+        toggleAllCheckbox.checked = false;
+    }
+}
+
+// Add this to the places where files are added to the list
+// For example, after a successful upload in the uploadFile function
+// and in the success callback of AJAX uploads
+
+// Add this code to the part where a file is added to the list
+// ...existing code...
+function addFile(cid, filename, gateway, filesize) {
+    // ...existing code for adding a file...
+    
+    // After adding the file, update the button states
+    updateActionButtonsState();
+}
+
+// Add this to the file deletion handler function
+function deleteFile(element) {
+    // ...existing code for deleting a file...
+    
+    // After removing the file, update the button states
+    updateActionButtonsState();
+}
+
+// Update copyAllLinks function to check if it's active first
+function copyAllLinks() {
+    const copyAllBtn = document.querySelector('.copyall');
+    if (copyAllBtn.classList.contains('disabled')) {
+        return; // Do nothing if disabled
+    }
+    
+    let allLinks = '';
+    document.querySelectorAll('.data-url').forEach(input => {
+        if (input.value) {
+            allLinks += `${input.value}\n`;
+        }
+    });
+    
+    copyToClipboard(allLinks);
+    showToast(_t('copied-all'), 'success');
+}
+
+// Add similar check to the batch share functionality
+document.getElementById('shareSelected').addEventListener('click', function() {
+    if (this.classList.contains('disabled')) {
+        return; // Do nothing if disabled
+    }
+    
+    // Existing batch share logic
+    // ...existing code...
+});
+
+// Initialize the button states when the page loads
+document.addEventListener('DOMContentLoaded', function() {
+    // Other initialization code
+    // ...existing code...
+    
+    // Initialize button states
+    updateActionButtonsState();
+    updateShareSelectedButtonState();
+});
