@@ -780,8 +780,8 @@ function shareBatchFiles(passphrase) { // passphrase is now an argument
             copyToClipboard(batchShareUrl);
             showToast(_t('batch-share-link-copied'), 'success');
             
-            // Open the batch share page in a new tab
-            window.open(batchShareUrl, '_blank');
+            // Open the batch share page in a new tab - REMOVED
+            // window.open(batchShareUrl, '_blank');
         } else {
             showToast(_t('batch-encryption-failed'), 'error');
         }
@@ -793,8 +793,8 @@ function shareBatchFiles(passphrase) { // passphrase is now an argument
         copyToClipboard(batchShareUrl);
         showToast(_t('batch-share-link-copied'), 'success');
         
-        // Open the batch share page in a new tab
-        window.open(batchShareUrl, '_blank');
+        // Open the batch share page in a new tab - REMOVED
+        // window.open(batchShareUrl, '_blank');
     }
 }
 
