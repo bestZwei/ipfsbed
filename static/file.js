@@ -753,3 +753,53 @@ function updateShareSelectedButtonState() {
         }
     }
 }
+
+// Add this function to your code to handle batch share button updates
+function updateBatchShareButton() {
+    const checkboxes = document.querySelectorAll('.file-select-checkbox:checked');
+    const shareSelectedBtn = document.getElementById('shareSelected');
+    
+    if (checkboxes.length > 0) {
+        shareSelectedBtn.classList.remove('disabled');
+        shareSelectedBtn.style.display = 'inline-block';
+    } else {
+        shareSelectedBtn.classList.add('disabled');
+    }
+}
+
+// Modify the existing createUploadedFileElement function to add event listeners for checkboxes
+function createUploadedFileElement(file) {
+    // ...existing code...
+    
+    // Add a checkbox for batch selection
+    const checkbox = document.createElement('input');
+    checkbox.type = 'checkbox';
+    checkbox.className = 'file-select-checkbox';
+    checkbox.addEventListener('change', function() {
+        updateBatchShareButton();
+    });
+    
+    // Add the checkbox to the file item
+    fileItem.prepend(checkbox);
+    
+    // ...existing code...
+    
+    return fileItem;
+}
+
+// Handle the toggle all checkbox
+document.addEventListener('DOMContentLoaded', function() {
+    const toggleAllCheckbox = document.getElementById('toggleAllFiles');
+    if (toggleAllCheckbox) {
+        toggleAllCheckbox.addEventListener('change', function() {
+            const isChecked = this.checked;
+            document.querySelectorAll('.file-select-checkbox').forEach(checkbox => {
+                checkbox.checked = isChecked;
+            });
+            updateBatchShareButton();
+        });
+    }
+    
+    // Initialize the share selected button
+    updateBatchShareButton();
+});
