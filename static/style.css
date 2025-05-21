@@ -54,11 +54,11 @@ body {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    background: linear-gradient(-45deg, rgba(9, 69, 138, 0.2), rgba(68, 155, 255, 0.7), rgba(117, 113, 251, 0.7), rgba(68, 155, 255, 0.7), rgba(9, 69, 138, 0.2));
-    background-size: 400% 400%;
+    background: radial-gradient(circle at 60% 40%, rgba(117, 113, 251, 0.7) 0%, rgba(62, 144, 238, 0.7) 40%, rgba(68, 155, 255, 0.7) 70%, rgba(9, 69, 138, 0.2) 100%);
+    background-size: 300% 300%;
     background-attachment: fixed;
-    -webkit-animation: Gradient 15s ease infinite;
-    animation: Gradient 15s ease infinite;
+    -webkit-animation: Gradient 30s ease infinite;
+    animation: Gradient 30s ease infinite;
     -webkit-user-select: none;
     -moz-user-select: none;
     -ms-user-select: none;
