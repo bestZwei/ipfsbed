@@ -1002,7 +1002,7 @@ body {
 #langSelect:focus {
     outline: none;
     border-color: #409eff;
-    box-shadow: 0 0 0 2px rgba(64, 158, 255, 0.2);
+    box-shadow: 0 0 0 2px rgba(64,158,255,0.2);
 }
 
 /* Make sure the title has position relative to contain the absolute positioned language selector */
@@ -1072,50 +1072,11 @@ body {
     gap: 8px;
 }
 
-/* 美观的开关样式 */
-.switch {
-    position: relative;
-    display: inline-block;
-    width: 44px;
-    height: 24px;
-}
-.switch input {
-    opacity: 0;
-    width: 0;
-    height: 0;
-}
-.slider {
-    position: absolute;
-    cursor: pointer;
-    top: 0; left: 0; right: 0; bottom: 0;
-    background-color: #e4e7ed;
-    transition: .3s;
-    border-radius: 24px;
-}
-.slider:before {
-    position: absolute;
-    content: "";
-    height: 18px;
-    width: 18px;
-    left: 3px;
-    bottom: 3px;
-    background-color: #fff;
-    transition: .3s;
-    border-radius: 50%;
-    box-shadow: 0 1px 4px rgba(0,0,0,0.08);
-}
-.switch input:checked + .slider {
-    background-color: #409eff;
-}
-.switch input:checked + .slider:before {
-    transform: translateX(20px);
-}
-
 /* 口令输入框样式 */
 #passphraseInput {
     flex: 1;
     min-width: 120px;
-    max-width: 220px;
+    max-width: none;
     padding: 7px 14px;
     border-radius: 12px;
     border: 1px solid #dcdfe6;
@@ -1128,11 +1089,6 @@ body {
 #passphraseInput:focus {
     border-color: #409eff;
     box-shadow: 0 0 0 2px rgba(64,158,255,0.15);
-}
-#passphraseInput:disabled {
-    background: #f5f7fa;
-    color: #bbb;
-    cursor: not-allowed;
 }
 
 /* 响应式调整 */
