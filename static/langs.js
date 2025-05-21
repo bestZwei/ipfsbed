@@ -38,7 +38,8 @@ const translations = {
         'copy-share-link': '复制分享链接',
         'encryption-failed': '加密失败，请重试。',
         'decryption-failed': '解密失败。链接可能已损坏或口令错误。',
-        'accessing-file': '正在访问文件...'
+        'accessing-file': '正在访问文件...',
+        'file-will-be-public': '文件将公开。'
     },
     'en': {
         // Meta information
@@ -79,7 +80,8 @@ const translations = {
         'copy-share-link': 'Copy Share Link',
         'encryption-failed': 'Encryption failed. Please try again.',
         'decryption-failed': 'Decryption failed. Link might be corrupted or passphrase incorrect.',
-        'accessing-file': 'Accessing file...'
+        'accessing-file': 'Accessing file...',
+        'file-will-be-public': 'File will be public.'
     },
     'de': {
         // Meta information
@@ -120,7 +122,8 @@ const translations = {
         'copy-share-link': 'Share-Link kopieren',
         'encryption-failed': 'Verschlüsselung fehlgeschlagen. Bitte versuchen Sie es erneut.',
         'decryption-failed': 'Entschlüsselung fehlgeschlagen. Link könnte beschädigt sein oder Passwort falsch.',
-        'accessing-file': 'Datei wird aufgerufen...'
+        'accessing-file': 'Datei wird aufgerufen...',
+        'file-will-be-public': 'Datei wird öffentlich sein.'
     },
     'ru': {
         // Meta information
@@ -161,7 +164,8 @@ const translations = {
         'copy-share-link': 'Копировать ссылку для обмена',
         'encryption-failed': 'Ошибка шифрования. Пожалуйста, попробуйте еще раз.',
         'decryption-failed': 'Ошибка расшифровки. Ссылка может быть повреждена или пароль неверен.',
-        'accessing-file': 'Доступ к файлу...'
+        'accessing-file': 'Доступ к файлу...',
+        'file-will-be-public': 'Файл будет общедоступным.'
     },
     'fr': {
         // Meta information
@@ -202,7 +206,8 @@ const translations = {
         'copy-share-link': 'Copier le lien de partage',
         'encryption-failed': 'Échec du chiffrement. Veuillez réessayer.',
         'decryption-failed': 'Échec du déchiffrement. Le lien est peut-être corrompu ou le mot de passe incorrect.',
-        'accessing-file': 'Accès au fichier...'
+        'accessing-file': 'Accès au fichier...',
+        'file-will-be-public': 'Le fichier sera public.'
     },
     'es': {
         // Meta information
@@ -243,7 +248,8 @@ const translations = {
         'copy-share-link': 'Copiar enlace para compartir',
         'encryption-failed': 'Falló el cifrado. Por favor, inténtelo de nuevo.',
         'decryption-failed': 'Falló el descifrado. El enlace podría estar dañado o la contraseña incorrecta.',
-        'accessing-file': 'Accediendo al archivo...'
+        'accessing-file': 'Accediendo al archivo...',
+        'file-will-be-public': 'El archivo será público.'
     },
     'ar': {
         // Meta information
@@ -284,7 +290,8 @@ const translations = {
         'copy-share-link': 'نسخ رابط المشاركة',
         'encryption-failed': 'فشل التشفير. يرجى المحاولة مرة أخرى.',
         'decryption-failed': 'فشل فك التشفير. قد يكون الرابط تالفًا أو كلمة المرور غير صحيحة.',
-        'accessing-file': 'جار الوصول إلى الملف...'
+        'accessing-file': 'جار الوصول إلى الملف...',
+        'file-will-be-public': 'سيكون الملف عامًا.'
     },
     'fa': {
         // Meta information
@@ -325,7 +332,8 @@ const translations = {
         'copy-share-link': 'کپی پیوند اشتراک‌گذاری',
         'encryption-failed': 'رمزگذاری ناموفق بود. لطفاً دوباره امتحان کنید.',
         'decryption-failed': 'رمزگشایی ناموفق بود. پیوند ممکن است خراب باشد یا گذرواژه نادرست باشد.',
-        'accessing-file': 'درحال دسترسی به فایل...'
+        'accessing-file': 'درحال دسترسی به فایل...',
+        'file-will-be-public': 'فایل عمومی خواهد بود.'
     },
     'tr': {
         // Meta information
@@ -366,7 +374,8 @@ const translations = {
         'copy-share-link': 'Paylaşım Bağlantısını Kopyala',
         'encryption-failed': 'Şifreleme başarısız oldu. Lütfen tekrar deneyin.',
         'decryption-failed': 'Şifre çözme başarısız oldu. Bağlantı bozuk olabilir veya parola yanlış olabilir.',
-        'accessing-file': 'Dosyaya erişiliyor...'
+        'accessing-file': 'Dosyaya erişiliyor...',
+        'file-will-be-public': 'Dosya herkese açık olacak.'
     },
     'pt': {
         // Meta information
@@ -407,7 +416,8 @@ const translations = {
         'copy-share-link': 'Copiar Link de Compartilhamento',
         'encryption-failed': 'A criptografia falhou. Por favor, tente novamente.',
         'decryption-failed': 'A descriptografia falhou. O link pode estar corrompido ou a senha incorreta.',
-        'accessing-file': 'Acessando arquivo...'
+        'accessing-file': 'Acessando arquivo...',
+        'file-will-be-public': 'O arquivo será público.'
     },
     'ko': {
         // Meta information
@@ -448,7 +458,8 @@ const translations = {
         'copy-share-link': '공유 링크 복사',
         'encryption-failed': '암호화에 실패했습니다. 다시 시도하십시오.',
         'decryption-failed': '복호화에 실패했습니다. 링크가 손상되었거나 암호가 잘못되었을 수 있습니다.',
-        'accessing-file': '파일에 액세스하는 중...'
+        'accessing-file': '파일에 액세스하는 중...',
+        'file-will-be-public': '파일이 공개됩니다.'
     },
     'ja': {
         // Meta information
@@ -489,7 +500,8 @@ const translations = {
         'copy-share-link': '共有リンクをコピー',
         'encryption-failed': '暗号化に失敗しました。もう一度お試しください。',
         'decryption-failed': '復号に失敗しました。リンクが破損しているか、パスフレーズが間違っている可能性があります。',
-        'accessing-file': 'ファイルにアクセスしています...'
+        'accessing-file': 'ファイルにアクセスしています...',
+        'file-will-be-public': 'ファイルは公開されます。'
     }
 };
 

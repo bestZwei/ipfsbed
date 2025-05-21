@@ -58,7 +58,7 @@
         <div class="upload">
             <div class="title">
                 <div class="title-text">
-                    <img src="/img/ipfsbed.png" alt="IPFSBED Logo" width="28" height="28" style="vertical-align: middle; margin-right: 8px;">
+                    <img src="/img/ipfsbed.png" alt="IPFSBED Logo" width="28" height="28">
                     IPFSBED
                 </div>
                 <div class="lang-selector">
@@ -147,8 +147,8 @@
             <div class="list"></div>
         </div>
     </div>
-    <div id="footer" style="position:fixed;width: 100%;text-align: center;bottom: 0px;display: block;">
-        <div style="height: auto; padding: 5px 0;">
+    <div id="footer">
+        <div>
             <div class="info">
                 <a href="https://github.com/bestZwei/ipfsbed"><i class="fab fa-github" style="margin-right: 5px;"></i>项目地址</a> | 
                 <a href="https://check.ipfs.winx.run/"><i class="fas fa-network-wired" style="margin-right: 5px;"></i>更多网关</a>
@@ -157,15 +157,15 @@
         </div>
     </div>
     <!-- Hidden section for passphrase prompt when accessing a shared link -->
-    <div id="shareAccessPrompt" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.7); z-index: 1000; align-items: center; justify-content: center;">
-        <div style="background-color: white; padding: 20px; border-radius: 8px; box-shadow: 0 0 15px rgba(0,0,0,0.2); text-align: center;">
+    <div id="shareAccessPrompt">
+        <div>
             <h3 data-translate="passphrase-prompt-title">Enter Passphrase</h3>
             <div>
                 <label for="accessPassphraseInput" data-translate="passphrase-prompt-label">Passphrase:</label>
-                <input type="password" id="accessPassphraseInput" style="margin: 10px 0; padding: 8px; width: 200px; border: 1px solid #ccc; border-radius: 4px;">
+                <input type="password" id="accessPassphraseInput">
             </div>
-            <button id="submitAccessPassphrase" data-translate="passphrase-submit" style="padding: 10px 20px; background-color: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer;">Unlock</button>
-            <p id="passphraseError" style="color: red; margin-top: 10px;"></p>
+            <button id="submitAccessPassphrase" data-translate="passphrase-submit">Unlock</button>
+            <p id="passphraseError"></p>
         </div>
     </div>
     <script>

@@ -323,7 +323,7 @@ $(document).ready(() => {
                 itemElement.find('.data-passphrase-protected').val('true');
             } else {
                 // Encryption failed, fallback to direct link and notify user
-                showToast(_t('encryption-failed') + " " + _t('file-will-be-public'), 'error'); // Add 'file-will-be-public' translation
+                showToast(_t('encryption-failed') + " " + _t('file-will-be-public'), 'error');
                 // Ensure copy button reflects non-passphrase state
                  const itemElement = $(`.${randomClass}`);
                 itemElement.find('.copy-primary-link')
