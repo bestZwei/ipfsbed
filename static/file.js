@@ -309,12 +309,20 @@ $(document).ready(() => {
         
         const passphrase = $('#passphraseInput').val();
         let displaySrc = directIpfsSrc;
+        let shareUrl;
 
         if (passphrase) {
-            const payloadToEncrypt = { cid: res.Hash, filename: file.name };
+            const payloadToEncrypt = { 
+                cid: res.Hash, 
+                filename: file.name,
+                size: file.size  // Add file size to the encrypted payload
+            };
             const encryptedPayload = encryptData(payloadToEncrypt, passphrase);
             if (encryptedPayload) {
-                displaySrc = `${window.location.origin}${window.location.pathname}#share=${encryptedPayload}`;
+                // Create share URL pointing to share.html instead of using hash
+                shareUrl = `${window.location.origin}${window.location.pathname.replace('index.html', '')}share.html?share=${encodeURIComponent(encryptedPayload)}`;
+                displaySrc = shareUrl;
+                
                 // Update copy button for this item if it was created before passphrase was known to be used
                 const itemElement = $(`.${randomClass}`);
                 itemElement.find('.copy-primary-link')
@@ -324,13 +332,20 @@ $(document).ready(() => {
             } else {
                 // Encryption failed, fallback to direct link and notify user
                 showToast(_t('encryption-failed') + " " + _t('file-will-be-public'), 'error');
-                // Ensure copy button reflects non-passphrase state
-                 const itemElement = $(`.${randomClass}`);
+                // Use public share link without passphrase
+                shareUrl = `${window.location.origin}${window.location.pathname.replace('index.html', '')}share.html?cid=${res.Hash}&filename=${fileName}&size=${file.size}`;
+                displaySrc = shareUrl;
+                
+                const itemElement = $(`.${randomClass}`);
                 itemElement.find('.copy-primary-link')
                     .attr('title', _t('copy-link'))
                     .attr('onclick', `copyLinkUrl(this); return false;`);
                 itemElement.find('.data-passphrase-protected').val('false');
             }
+        } else {
+            // Public file - create share URL without encryption
+            shareUrl = `${window.location.origin}${window.location.pathname.replace('index.html', '')}share.html?cid=${res.Hash}&filename=${fileName}&size=${file.size}`;
+            displaySrc = shareUrl;
         }
         
         $('#file').val(null);
@@ -341,12 +356,12 @@ $(document).ready(() => {
             // Show and populate the URL display
             const urlDisplay = $(`.${randomClass}`).find('.url-display');
             const fileUrlInput = $(`.${randomClass}`).find('.file-url-input');
-            fileUrlInput.val(displaySrc); // Show share link or direct link
+            fileUrlInput.val(displaySrc); // Show share link
             urlDisplay.fadeIn(300);
         });
         
         // Store the URL and CID values in hidden inputs
-        $(`.${randomClass}`).find('.data-url').val(displaySrc); // Store share link or direct link
+        $(`.${randomClass}`).find('.data-url').val(displaySrc); // Store share link
         $(`.${randomClass}`).find('.data-cid').val(res.Hash);
         $(`.${randomClass}`).find('.data-filename').val(file.name); // Store original filename
         
@@ -390,7 +405,7 @@ function deleteItem(obj) {
 // Function to copy the URL link (either direct or share link)
 function copyLinkUrl(button) {
     const item = $(button).closest('.item');
-    const textToCopy = item.find('.data-url').val(); // This now holds the primary link (direct or share)
+    const textToCopy = item.find('.data-url').val(); // This now holds the share link URL
     
     copyToClipboard(textToCopy);
     const isProtected = item.find('.data-passphrase-protected').val() === 'true';
@@ -607,24 +622,22 @@ function decryptData(encryptedData, passphrase) {
 
 function checkAccessMode() {
     if (window.location.hash && window.location.hash.startsWith('#share=')) {
+        // Legacy hash-based share links - redirect to new share.html page
         const encryptedPayload = window.location.hash.substring('#share='.length);
         if (encryptedPayload) {
-            displayPassphrasePrompt(encryptedPayload);
-        } else {
-            // Invalid share link, clear hash and show normal UI
-            window.location.hash = '';
-            $('.container').show();
-            $('#shareAccessPrompt').removeClass('visible').data('payload', '');
+            window.location.href = `share.html?share=${encodeURIComponent(encryptedPayload)}`;
+            return;
         }
-    } else {
-        $('.container').show();
-        $('#shareAccessPrompt').removeClass('visible').data('payload', '');
     }
+    
+    // Not a share link, show normal UI
+    $('.container').show();
+    $('#shareAccessPrompt').hide().data('payload', '');
 }
 
 function displayPassphrasePrompt(encryptedPayload) {
     $('.container').hide(); // Hide main upload UI
-    $('#shareAccessPrompt').data('payload', encryptedPayload).addClass('visible');
+    $('#shareAccessPrompt').data('payload', encryptedPayload).css('display', 'flex');
     $('#accessPassphraseInput').val('').focus();
     $('#passphraseError').text('');
     // Ensure translations are applied if language changes while prompt is hidden
@@ -643,16 +656,8 @@ function handlePassphraseSubmit(encryptedPayload, enteredPassphrase) {
 
     if (decrypted && decrypted.cid && decrypted.filename) {
         showToast(_t('accessing-file'), 'info', 2000);
-        const gateway = $('#gatewaySelect').val() || 'https://cdn.ipfsscan.io'; // Use current gateway selection
-        const finalUrl = `${gateway}/ipfs/${decrypted.cid}?filename=${encodeURIComponent(decrypted.filename)}`;
-        
-        // Clear the hash to prevent re-prompting if user navigates back
-        // and then redirect.
-        window.location.hash = ''; 
-        // Redirect after a short delay to allow toast to be seen
-        setTimeout(() => {
-            window.location.href = finalUrl;
-        }, 500);
+        // Redirect to share.html with the decrypted information
+        window.location.href = `share.html?cid=${decrypted.cid}&filename=${encodeURIComponent(decrypted.filename)}&size=${decrypted.size || 0}`;
     } else {
         $('#passphraseError').text(_t('passphrase-incorrect'));
         $('#accessPassphraseInput').val(''); // Clear input on failure
