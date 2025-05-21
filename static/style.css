@@ -1011,3 +1011,41 @@ body {
     display: flex;
     align-items: center;
 }
+
+.copyall {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #ecf5ff;
+    color: #409eff;
+    padding: 6px 15px;
+    border-radius: 12px;
+    font-weight: 500;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: 1px solid rgba(64, 158, 255, 0.2);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+    text-decoration: none;
+}
+
+.copyall:hover {
+    background-color: #409eff;
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(64, 158, 255, 0.4);
+}
+
+.copyall:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 6px rgba(64, 158, 255, 0.2);
+}
+
+.copyall i {
+    margin-right: 5px;
+}
+
+/* Initially hide the copy all button until files are uploaded */
+.copyall {
+    display: none;
+}

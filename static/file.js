@@ -199,6 +199,10 @@ $(document).ready(() => {
                     </div>
                     <div class="progress-status">0%</div>
                 </div>
+                <!-- URL display text input -->
+                <div class="url-display" style="display: none; margin-top: 8px;">
+                    <input type="text" class="file-url-input" style="width: 100%; padding: 6px; border: 1px solid #dcdfe6; border-radius: 4px; box-sizing: border-box;" readonly>
+                </div>
                 <!-- Hidden inputs to store the data -->
                 <input type="hidden" class="data-url" value="">
                 <input type="hidden" class="data-cid" value="">
@@ -249,13 +253,20 @@ $(document).ready(() => {
         $(`.${randomClass}`).find('.progress-inner').addClass('success');
         $(`.${randomClass}`).find('.progress').fadeOut(500, function() {
             $(`.${randomClass}`).removeClass('uploading');
+            
+            // Show and populate the URL display
+            const urlDisplay = $(`.${randomClass}`).find('.url-display');
+            const fileUrlInput = $(`.${randomClass}`).find('.file-url-input');
+            fileUrlInput.val(imgSrc);
+            urlDisplay.fadeIn(300);
         });
         
         // Store the URL and CID values in hidden inputs
         $(`.${randomClass}`).find('.data-url').val(imgSrc);
         $(`.${randomClass}`).find('.data-cid').val(res.Hash);
         
-        $('.copyall').show();
+        // Make sure the copyall button is visible
+        $('.copyall').fadeIn(300);
         
         // Success notification
         showToast(_t('upload-success'), 'success');
@@ -346,6 +357,11 @@ function changeGateway(obj) {
         // 更新URL
         const newUrl = `${newUrlBase}/ipfs/${cid}${filenameParam}`;
         item.querySelector('.data-url').value = newUrl;
+        
+        // Also update the visible URL input if it exists
+        if (item.querySelector('.file-url-input')) {
+            item.querySelector('.file-url-input').value = newUrl;
+        }
     });
 }
 
