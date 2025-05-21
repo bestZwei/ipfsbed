@@ -49,11 +49,11 @@ html {
 }
 
 body {
-    min-height: 100%;
+    min-height: 100vh; /* Changed from 100% to 100vh */
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
+    justify-content: space-between; /* Changed from center to space-between */
     background: radial-gradient(circle at 60% 40%, rgba(117, 113, 251, 0.7) 0%, rgba(62, 144, 238, 0.7) 40%, rgba(68, 155, 255, 0.7) 70%, rgba(9, 69, 138, 0.2) 100%);
     background-size: 300% 300%;
     background-attachment: fixed;
@@ -813,29 +813,31 @@ body {
 
 /* Add footer styling */
 #footer {
-    margin-top: 20px;
+    position: fixed; /* added to stick footer at bottom */
+    bottom: 0;       /* added to position footer at bottom */
+    left: 0;       /* added to align footer to the left */
     color: rgba(255, 255, 255, 0.9);
     font-size: 14px;
     text-align: center;
-    padding: 15px;
+    padding: 20px; /* Adjusted padding for better spacing */
     width: 100%;
     background-color: rgba(0, 0, 0, 0.2);
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
     border-radius: 12px 12px 0 0;
     z-index: 100;
+    box-sizing: border-box; /* Ensure padding is included in width */
+}
+
+#footer .info {
+    margin-bottom: 10px; /* Add space between links and copyright text */
 }
 
 #footer a {
     color: rgba(255, 255, 255, 0.95);
     text-decoration: none;
     transition: color 0.2s;
-    margin: 0 5px;
-}
-
-#footer a:hover {
-    color: #fff;
-    text-decoration: underline;
+    margin: 0 8px; /* Adjusted horizontal margin for links */
 }
 
 /* Add loading animations */
