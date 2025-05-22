@@ -928,18 +928,18 @@ function getFilesFromDataTransferItems(items) {
 }
 
 // 文件夹上传
-function uploadDirectory(fileList) {
-    if (!fileList || !fileList.length) return;
+function uploadDirectory(files) {
+    if (!files || !files.length) return;
     // 文件夹名取第一个文件的 webkitRelativePath 的首目录
-    const firstPath = fileList[0].webkitRelativePath || fileList[0].name;
+    const firstPath = files[0].webkitRelativePath || files[0].name;
     const folderName = firstPath.split('/')[0];
     // 计算总大小
     let totalSize = 0;
-    Array.from(fileList).forEach(f => totalSize += f.size);
+    Array.from(files).forEach(f => totalSize += f.size);
 
     // 构建 FormData
     const formData = new FormData();
-    Array.from(fileList).forEach(f => {
+    Array.from(files).forEach(f => {
         // 保持相对路径
         formData.append('file', f, f.webkitRelativePath || f.name);
     });
@@ -1017,13 +1017,16 @@ function uploadDirectory(fileList) {
 
 // 创建文件夹上传条目
 function createDirectoryItem(folderName, totalSize, randomClass) {
+    // Remove trailing slash if it exists to avoid duplication
+    const cleanFolderName = folderName.endsWith('/') ? folderName.slice(0, -1) : folderName;
+    
     return `
         <div class="item ${randomClass}">
             <div class="file">
                 <input type="checkbox" class="file-select-checkbox" title="${_t('select-for-batch-sharing')}">
                 <svg class="icon" viewBox="0 0 24 24" width="32" height="32"><path d="M10 4H2v16h20V6H12l-2-2z" fill="#f7ba2a"/><path d="M2 20V4h8l2 2h10v14z" fill="none"/></svg>
                 <div class="desc">
-                    <div class="desc__name">${folderName}/</div>
+                    <div class="desc__name">${cleanFolderName}/</div>
                     <div class="desc__size">${_t('file-size', {size: formatBytes(totalSize)})}</div>
                 </div>
                 <a href="javascript:void(0);" class="link copy-primary-link" title="${_t('copy-share-link')}" onclick="copyLinkUrl(this); return false;">
@@ -1053,7 +1056,7 @@ function createDirectoryItem(folderName, totalSize, randomClass) {
             </div>
             <input type="hidden" class="data-url" value="">
             <input type="hidden" class="data-cid" value="">
-            <input type="hidden" class="data-filename" value="${folderName}">
+            <input type="hidden" class="data-filename" value="${cleanFolderName}">
             <input type="hidden" class="data-passphrase-protected" value="false">
         </div>
     `;
@@ -1061,7 +1064,10 @@ function createDirectoryItem(folderName, totalSize, randomClass) {
 
 // 文件夹上传成功处理
 function handleDirectoryUploadSuccess(dirObj, folderName, totalSize, randomClass) {
-    const shareUrl = `${window.location.origin}${window.location.pathname.replace('index.html', '')}share.html?cid=${dirObj.Hash}&filename=${encodeURIComponent(folderName)}&size=${totalSize}`;
+    // Remove trailing slash if it exists to avoid duplication
+    const cleanFolderName = folderName.endsWith('/') ? folderName.slice(0, -1) : folderName;
+    
+    const shareUrl = `${window.location.origin}${window.location.pathname.replace('index.html', '')}share.html?cid=${dirObj.Hash}&filename=${encodeURIComponent(cleanFolderName)}&size=${totalSize}`;
     $('#file').val(null);
     $(`.${randomClass}`).find('.progress-inner').addClass('success');
     $(`.${randomClass}`).find('.progress').fadeOut(500, function() {
@@ -1073,7 +1079,7 @@ function handleDirectoryUploadSuccess(dirObj, folderName, totalSize, randomClass
     });
     $(`.${randomClass}`).find('.data-url').val(shareUrl);
     $(`.${randomClass}`).find('.data-cid').val(dirObj.Hash);
-    $(`.${randomClass}`).find('.data-filename').val(folderName);
+    $(`.${randomClass}`).find('.data-filename').val(cleanFolderName);
     $('.copyall').removeClass('disabled');
     showToast(_t('upload-success'), 'success');
     updateShareSelectedButtonState();
