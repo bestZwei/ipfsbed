@@ -33,7 +33,7 @@ function processShareUrl() {
     const urlParams = new URLSearchParams(window.location.search);
     
     // Show loading indicator
-    document.getElementById('loadingIndicator').style.display = 'block';
+    document.getElementById('loadingIndicator').style.display = 'flex';
     
     if (urlParams.has('share')) {
         // Encrypted share
@@ -161,7 +161,39 @@ function updateFileAccessLinks() {
     const fileUrl = `${selectedGatewayBase}/ipfs/${currentCid}?filename=${encodedFilename}`;
     
     document.getElementById('fileUrlDisplay').value = fileUrl;
-    document.getElementById('downloadButton').href = fileUrl;
+    document.getElementById('downloadButton').setAttribute('data-url', fileUrl); // 不再直接设置 href
+}
+
+// 强制下载文件的函数
+async function forceDownloadFile(url, filename, btn) {
+    try {
+        btn.classList.add('disabled');
+        btn.querySelector('span').textContent = _t('download-progress') || 'Downloading...';
+        // 显示loading
+        document.getElementById('loadingIndicator').style.display = 'flex';
+
+        const response = await fetch(url);
+        if (!response.ok) throw new Error('Network error');
+        const blob = await response.blob();
+
+        // 创建临时a标签下载
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = filename;
+        document.body.appendChild(a);
+        a.click();
+        setTimeout(() => {
+            URL.revokeObjectURL(a.href);
+            document.body.removeChild(a);
+        }, 100);
+
+    } catch (e) {
+        showToast(_t('upload-error'), 'error');
+    } finally {
+        btn.classList.remove('disabled');
+        btn.querySelector('span').textContent = _t('download-button') || 'Download';
+        document.getElementById('loadingIndicator').style.display = 'none';
+    }
 }
 
 // Initialize when DOM is ready
@@ -172,4 +204,15 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     updateSharePageLanguage();
     processShareUrl();
+
+    // 绑定下载按钮事件，阻止默认跳转，强制下载
+    const downloadBtn = document.getElementById('downloadButton');
+    if (downloadBtn) {
+        downloadBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            const url = downloadBtn.getAttribute('data-url');
+            if (!url) return;
+            forceDownloadFile(url, currentFilename, downloadBtn);
+        });
+    }
 });

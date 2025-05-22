@@ -30,7 +30,7 @@ function updateBatchSharePageLanguage() {
 // Function to parse URL parameters and process the batch share
 function processBatchShare() {
     const urlParams = new URLSearchParams(window.location.search);
-    document.getElementById('loadingIndicator').style.display = 'block';
+    document.getElementById('loadingIndicator').style.display = 'flex';
     
     if (urlParams.has('share')) {
         const encryptedPayload = urlParams.get('share');
@@ -229,19 +229,40 @@ function getSelectedFiles() {
 }
 
 // Download a single file
-function downloadSingleFile(index) {
+async function downloadSingleFile(index) {
     if (index < 0 || index >= batchFiles.length) return;
     
     const file = batchFiles[index];
     const fileUrl = getFileUrl(file);
     
-    // Create a temporary link and click it to start download
-    const a = document.createElement('a');
-    a.href = fileUrl;
-    a.download = file.filename;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
+    try {
+        // Show loading indicator
+        document.getElementById('loadingIndicator').style.display = 'flex';
+        
+        // Fetch the file
+        const response = await fetch(fileUrl);
+        if (!response.ok) throw new Error('Network error');
+        const blob = await response.blob();
+
+        // Create a temporary link and click it to start download
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = file.filename;
+        document.body.appendChild(a);
+        a.click();
+        setTimeout(() => {
+            URL.revokeObjectURL(a.href);
+            document.body.removeChild(a);
+        }, 100);
+        
+        showToast(_t('download-started') || 'Download started', 'success');
+    } catch (e) {
+        console.error('Download error:', e);
+        showToast(_t('upload-error') || 'Download failed', 'error');
+    } finally {
+        // Hide loading indicator
+        document.getElementById('loadingIndicator').style.display = 'none';
+    }
 }
 
 // Download all selected files as zip

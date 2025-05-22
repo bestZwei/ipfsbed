@@ -243,6 +243,11 @@
     box-shadow: 0 2px 8px rgba(64, 158, 255, 0.3);
 }
 
+.download-button.disabled {
+    pointer-events: none;
+    opacity: 0.6;
+}
+
 .unlock-button {
     padding: 12px 28px;
     background-color: #409eff;
@@ -267,24 +272,41 @@
 }
 
 .loading {
-    display: none;
-    text-align: center;
-    margin: 25px 0;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(255, 255, 255, 0.8);
+    z-index: 1000;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    backdrop-filter: blur(3px);
+    display: none; /* Hidden by default, JS will toggle to 'flex' */
 }
 
 .spinner {
-    border: 4px solid rgba(0, 0, 0, 0.1);
-    width: 40px;
-    height: 40px;
+    border: 5px solid rgba(0, 0, 0, 0.1); /* Thicker border */
+    width: 60px; /* Larger spinner */
+    height: 60px; /* Larger spinner */
     border-radius: 50%;
     border-left-color: #409eff;
     animation: spin 1s linear infinite;
-    margin: 0 auto 15px;
+    margin-bottom: 20px; /* Adjusted margin for spacing */
 }
 
 @keyframes spin {
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
+}
+
+.loading p {
+    font-size: 16px;
+    color: #303133;
+    font-weight: 500;
+    margin-top: 15px;
+    text-align: center;
 }
 
 .return-home {
