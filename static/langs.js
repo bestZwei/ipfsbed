@@ -51,7 +51,7 @@ const translations = {
     'passphrase-submit': '解锁',
     'project-repo': '项目地址',
     'more-gateways': '更多网关',
-    'copyright-text': '© 2021-2025 IPFSBED - 基于IPFS的去中心化文件托管服务',
+    'copyright-text': '© {year} IPFSBED - 基于IPFS的去中心化文件托管服务',
     'upload-list': '上传列表',
   },
   'en': {
@@ -102,7 +102,7 @@ const translations = {
     'passphrase-submit': 'Unlock',
     'project-repo': 'Project Repository',
     'more-gateways': 'More Gateways',
-    'copyright-text': '© 2021-2025 IPFSBED - Decentralized IPFS File Hosting Service',
+    'copyright-text': '© {year} IPFSBED - Decentralized IPFS File Hosting Service',
     'upload-list': 'Upload List',
   },
   'de': {
@@ -153,7 +153,7 @@ const translations = {
     'passphrase-submit': 'Entsperren',
     'project-repo': 'Projektrepository',
     'more-gateways': 'Weitere Gateways',
-    'copyright-text': '© 2021-2025 IPFSBED - Dezentraler IPFS-Dateihosting-Dienst',
+    'copyright-text': '© {year} IPFSBED - Dezentraler IPFS-Dateihosting-Dienst',
     'upload-list': 'Upload-Liste',
   },
   'ru': {
@@ -204,7 +204,7 @@ const translations = {
     'passphrase-submit': 'Разблокировать',
     'project-repo': 'Репозиторий проекта',
     'more-gateways': 'Больше шлюзов',
-    'copyright-text': '© 2021-2025 IPFSBED - Децентрализованный сервис хостинга файлов IPFS',
+    'copyright-text': '© {year} IPFSBED - Децентрализованный сервис хостинга файлов IPFS',
     'upload-list': 'Список загрузок',
   },
   'fr': {
@@ -255,7 +255,7 @@ const translations = {
     'passphrase-submit': 'Déverrouiller',
     'project-repo': 'Dépôt du projet',
     'more-gateways': 'Plus de passerelles',
-    'copyright-text': '© 2021-2025 IPFSBED - Service d\'hébergement de fichiers IPFS décentralisé',
+    'copyright-text': '© {year} IPFSBED - Service d\'hébergement de fichiers IPFS décentralisé',
     'upload-list': 'Liste des téléchargements',
   },
   'es': {
@@ -306,7 +306,7 @@ const translations = {
     'passphrase-submit': 'Desbloquear',
     'project-repo': 'Repositorio del proyecto',
     'more-gateways': 'Más puertas de enlace',
-    'copyright-text': '© 2021-2025 IPFSBED - Servicio de alojamiento de archivos IPFS descentralizado',
+    'copyright-text': '© {year} IPFSBED - Servicio de alojamiento de archivos IPFS descentralizado',
     'upload-list': 'Lista de subidas',
   },
   'ar': {
@@ -357,7 +357,7 @@ const translations = {
     'passphrase-submit': 'فتح',
     'project-repo': 'مستودع المشروع',
     'more-gateways': 'المزيد من البوابات',
-    'copyright-text': '© 2021-2025 IPFSBED - خدمة استضافة ملفات IPFS اللامركزية',
+    'copyright-text': '© {year} IPFSBED - خدمة استضافة ملفات IPFS اللامركزية',
     'upload-list': 'قائمة التحميل',
   },
   'fa': {
@@ -408,7 +408,7 @@ const translations = {
     'passphrase-submit': 'باز کردن',
     'project-repo': 'مخزن پروژه',
     'more-gateways': 'دروازه‌های بیشتر',
-    'copyright-text': '© 2021-2025 IPFSBED - سرویس میزبانی فایل IPFS غیرمتمرکز',
+    'copyright-text': '© {year} IPFSBED - سرویس میزبانی فایل IPFS غیرمتمرکز',
     'upload-list': 'لیست آپلودها',
   },
   'tr': {
@@ -459,7 +459,7 @@ const translations = {
     'passphrase-submit': 'Kilidi aç',
     'project-repo': 'Proje Deposu',
     'more-gateways': 'Daha Fazla Ağ Geçidi',
-    'copyright-text': '© 2021-2025 IPFSBED - Merkezi Olmayan IPFS Dosya Barındırma Hizmeti',
+    'copyright-text': '© {year} IPFSBED - Merkezi Olmayan IPFS Dosya Barındırma Hizmeti',
     'upload-list': 'Yükleme Listesi',
   },
   'pt': {
@@ -510,7 +510,7 @@ const translations = {
     'passphrase-submit': 'Desbloquear',
     'project-repo': 'Repositório do Projeto',
     'more-gateways': 'Mais Gateways',
-    'copyright-text': '© 2021-2025 IPFSBED - Serviço de Hospedagem de Arquivos IPFS Descentralizado',
+    'copyright-text': '© {year} IPFSBED - Serviço de Hospedagem de Arquivos IPFS Descentralizado',
     'upload-list': 'Lista de Uploads',
   },
   'ko': {
@@ -561,7 +561,7 @@ const translations = {
     'passphrase-submit': '잠금 해제',
     'project-repo': '프로젝트 저장소',
     'more-gateways': '더 많은 게이트웨이',
-    'copyright-text': '© 2021-2025 IPFSBED - 분산형 IPFS 파일 호스팅 서비스',
+    'copyright-text': '© {year} IPFSBED - 분산형 IPFS 파일 호스팅 서비스',
     'upload-list': '업로드 목록',
   },
   'ja': {
@@ -612,7 +612,7 @@ const translations = {
     'passphrase-submit': 'ロック解除',
     'project-repo': 'プロジェクトリポジトリ',
     'more-gateways': '他のゲートウェイ',
-    'copyright-text': '© 2021-2025 IPFSBED - 分散型IPFSファイルホスティングサービス',
+    'copyright-text': '© {year} IPFSBED - 分散型IPFSファイルホスティングサービス',
     'upload-list': 'アップロードリスト',
   }
 };
@@ -621,15 +621,27 @@ const translations = {
 function _t(key, replacements = {}) {
   // Get translation for current language or fallback to English
   const lang = translations[currentLang] || translations['en'];
-  
+
   // Get the text or use the key if not found
   let text = lang[key] || translations['en'][key] || key;
-  
+
+  // 自动替换 {year} 为当前年份
+  if (text.includes('{year}')) {
+    let year;
+    try {
+      year = (new Date()).getFullYear();
+      if (!year || isNaN(year)) year = 2025;
+    } catch (e) {
+      year = 2025;
+    }
+    text = text.replace('{year}', year);
+  }
+
   // Replace any placeholders with actual values
   for (const placeholder in replacements) {
     text = text.replace(`{${placeholder}}`, replacements[placeholder]);
   }
-  
+
   return text;
 }
 
