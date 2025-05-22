@@ -31,6 +31,7 @@
     <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
     <script src="./static/langs.js"></script>
+    <script src="./static/common.js"></script>
     <script src="./static/file.js" defer></script>
     <script defer src="https://umami.zwei.de.eu.org/script.js" data-website-id="9377510d-06c4-40da-ba16-c7442815c04c"></script>
     
@@ -503,51 +504,6 @@
             const passwordToggles = document.querySelectorAll('.password-toggle');
             passwordToggles.forEach(toggle => {
                 toggle.title = _t('show-password');
-            });
-            
-            // Language dropdown functionality
-            const langToggle = document.getElementById('langToggle');
-            const langDropdown = document.getElementById('langDropdown');
-            const langLinks = langDropdown.querySelectorAll('a');
-            
-            // Set active language in dropdown
-            langLinks.forEach(link => {
-                if (link.getAttribute('data-lang') === currentLang) {
-                    link.classList.add('active');
-                } else {
-                    link.classList.remove('active');
-                }
-            });
-            
-            // Toggle dropdown visibility
-            langToggle.addEventListener('click', function(e) {
-                e.stopPropagation();
-                langDropdown.classList.toggle('show');
-            });
-            
-            // Handle language selection
-            langLinks.forEach(link => {
-                link.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    const lang = this.getAttribute('data-lang');
-                    
-                    // Update active class
-                    langLinks.forEach(l => l.classList.remove('active'));
-                    this.classList.add('active');
-                    
-                    // Change language
-                    changeLanguage(lang);
-                    
-                    // Hide dropdown
-                    langDropdown.classList.remove('show');
-                });
-            });
-            
-            // Close dropdown when clicking outside
-            document.addEventListener('click', function(e) {
-                if (!langDropdown.contains(e.target) && !langToggle.contains(e.target)) {
-                    langDropdown.classList.remove('show');
-                }
             });
         });
         
