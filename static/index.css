@@ -1,0 +1,329 @@
+/* File select checkbox styles */
+.file-select-checkbox {
+    margin-right: 8px;
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
+}
+
+/* Updated button styles to be consistent */
+.action-button {
+    display: inline-flex;
+    align-items: center;
+    padding: 5px 10px;
+    border-radius: 4px;
+    border: none;
+    cursor: pointer;
+    font-size: 14px;
+    color: white;
+    transition: all 0.3s;
+    margin-left: 10px;
+    background-color: #409eff;
+}
+
+.action-button i {
+    margin-right: 5px;
+}
+
+.action-button:hover {
+    background-color: #66b1ff;
+}
+
+.action-button.disabled {
+    background-color: #c0c4cc;
+    cursor: not-allowed;
+    opacity: 0.7;
+}
+
+#shareSelected, .copyall {
+    text-decoration: none;
+}
+
+.batch-actions {
+    display: flex;
+    align-items: center;
+}
+
+.toggle-all-wrapper {
+    display: flex;
+    align-items: center;
+    margin-right: 10px;
+}
+
+#toggleAllFiles {
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
+}
+
+.toggle-all-label {
+    margin-left: 5px;
+    font-size: 14px;
+    color: #606266;
+}
+
+/* Modal styles */
+#batchSharePassphraseModal {
+    display: none; /* Hidden by default */
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgb(0,0,0);
+    background-color: rgba(0,0,0,0.4);
+}
+
+#batchSharePassphraseModal .modal-content {
+    background-color: #fefefe;
+    margin: 15% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+    max-width: 500px;
+    border-radius: 8px;
+}
+
+#batchSharePassphraseModal h3 {
+    margin-top: 0;
+}
+
+#batchSharePassphraseModal .input-wrapper {
+    margin-bottom: 15px;
+}
+
+#batchSharePassphraseModal .modal-actions {
+    display: flex;
+    justify-content: space-between;
+}
+
+/* 优化 file-select-checkbox 在小屏幕下的尺寸 */
+@media (max-width: 480px) {
+    .file-select-checkbox, #toggleAllFiles {
+        width: 14px;
+        height: 14px;
+    }
+    .toggle-all-label {
+        font-size: 12px;
+    }
+}
+/* 优化 batch-actions 在小屏幕下的间距 */
+@media (max-width: 480px) {
+    .batch-actions {
+        gap: 4px;
+    }
+    .toggle-all-wrapper {
+        margin-right: 4px;
+    }
+}
+/* 优化 modal 在小屏幕下的宽度和圆角 */
+@media (max-width: 480px) {
+    #batchSharePassphraseModal .modal-content {
+        padding: 10px 3vw;
+        max-width: 98vw;
+        border-radius: 8px;
+    }
+    #batchSharePassphraseModal input[type="password"],
+    #batchSharePassphraseModal input[type="text"] {
+        font-size: 13px;
+        border-radius: 6px;
+        padding: 8px 28px 8px 8px;
+    }
+    #batchSharePassphraseModal .modal-actions button {
+        font-size: 13px;
+        padding: 7px 12px;
+        border-radius: 6px;
+    }
+}
+/* 优化 action-button 和 copyall 在小屏幕下的尺寸 */
+@media (max-width: 480px) {
+    .action-button, .copyall {
+        font-size: 12px;
+        padding: 4px 8px;
+        border-radius: 8px;
+        min-width: 48px;
+        margin-left: 4px;
+    }
+}
+/* 优化 lang-selector 在小屏幕下的位置 */
+@media (max-width: 480px) {
+    .lang-selector {
+        right: 6px;
+    }
+    #langSelect {
+        font-size: 12px;
+        padding: 3px 6px;
+        border-radius: 6px;
+    }
+}
+/* 优化 passphrase-bar 在小屏幕下的布局 */
+@media (max-width: 480px) {
+    .passphrase-bar {
+        padding: 7px 6px 3px 6px;
+        min-height: 28px;
+        border-radius: 8px 8px 0 0;
+    }
+    .passphrase-input-wrapper {
+        gap: 4px;
+    }
+    #passphraseInput {
+        font-size: 13px;
+        border-radius: 8px;
+        padding: 6px 10px;
+    }
+    .password-toggle {
+        padding: 4px 7px;
+        font-size: 13px;
+        border-radius: 6px;
+    }
+}
+/* 优化 footer 在小屏幕下的显示 */
+@media (max-width: 480px) {
+    #footer {
+        font-size: 12px;
+        padding: 10px 4px;
+        border-radius: 8px 8px 0 0;
+    }
+    #footer .info {
+        margin-bottom: 6px;
+    }
+    #footer a {
+        margin: 0 4px;
+    }
+}
+/* 优化 toast 在小屏幕下的圆角和字体 */
+@media (max-width: 480px) {
+    .toast {
+        border-radius: 8px;
+        font-size: 13px;
+        padding: 10px 12px;
+    }
+}
+/* 优化 select-group 在小屏幕下的间距 */
+@media (max-width: 480px) {
+    .select-group {
+        gap: 5px;
+    }
+    .select-group label {
+        font-size: 12px;
+    }
+    .select-group select {
+        font-size: 13px;
+        border-radius: 8px;
+        padding: 6px 10px;
+        padding-right: 20px;
+    }
+}
+
+#shareAccessPrompt { display: none; }
+
+/* Language dropdown menu styles */
+.lang-icon {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(255, 255, 255, 0.9);
+    border-radius: 50%;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    z-index: 100;
+    transition: all 0.3s ease;
+}
+
+.lang-icon:hover {
+    background-color: #f0f8ff;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.lang-dropdown {
+    position: absolute;
+    top: 60px;
+    right: 20px;
+    background-color: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+    padding: 10px 0;
+    z-index: 100;
+    display: none;
+    animation: fadeIn 0.3s ease;
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+.lang-dropdown.show {
+    display: block;
+}
+
+.lang-dropdown a {
+    display: block;
+    padding: 8px 20px;
+    color: #333;
+    text-decoration: none;
+    transition: background-color 0.2s;
+}
+
+.lang-dropdown a:hover {
+    background-color: #f0f8ff;
+}
+
+.lang-dropdown a.active {
+    background-color: #e6f0ff;
+    color: #409eff;
+    font-weight: 500;
+}
+
+.site-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+    position: relative;
+}
+
+.site-logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 20px;
+    font-weight: 600;
+    color: white;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Updated container spacing */
+.container {
+    margin-top: 0;
+    padding-top: 20px;
+}
+
+/* Mobile optimizations */
+@media (max-width: 480px) {
+    .lang-icon {
+        top: 15px;
+        right: 15px;
+        width: 32px;
+        height: 32px;
+    }
+    
+    .lang-dropdown {
+        top: 55px;
+        right: 15px;
+        max-width: 150px;
+    }
+    
+    .site-logo {
+        font-size: 18px;
+    }
+}

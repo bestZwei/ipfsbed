@@ -1,0 +1,432 @@
+.share-container {
+    width: 600px;
+    max-width: 90%;
+    margin: 50px auto;
+    padding: 30px;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+}
+
+.share-header {
+    text-align: center;
+    margin-bottom: 25px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.share-header img {
+    vertical-align: middle;
+    margin-right: 10px;
+    transition: transform 0.3s ease;
+}
+
+.share-header:hover img {
+    transform: scale(1.1);
+}
+
+.share-header h1 {
+    font-size: 24px;
+    font-weight: 600;
+    color: #303133;
+    margin: 0;
+}
+
+.share-content {
+    padding: 25px;
+    border-radius: 8px;
+    background-color: #f8f9fa;
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.passphrase-form {
+    text-align: center;
+    position: relative;
+}
+
+.passphrase-input-wrapper {
+    position: relative;
+    display: inline-block;
+    width: 70%;
+    margin-bottom: 20px;
+}
+
+.passphrase-form input {
+    width: 100%;
+    padding: 14px;
+    padding-right: 45px;
+    border: 1px solid #dcdfe6;
+    border-radius: 6px;
+    font-size: 16px;
+    transition: all 0.3s;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
+}
+
+.passphrase-form input:focus {
+    border-color: #409eff;
+    box-shadow: 0 0 0 2px rgba(64, 158, 255, 0.2);
+    outline: none;
+}
+
+.password-toggle {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: transparent;
+    border: none;
+    color: #909399;
+    cursor: pointer;
+    padding: 5px;
+    z-index: 2;
+    transition: all 0.2s;
+}
+
+.password-toggle:hover {
+    color: #409eff;
+    transform: translateY(-50%) scale(1.1);
+}
+
+.error-message {
+    color: #f56c6c;
+    margin: 15px 0;
+    font-size: 14px;
+    min-height: 20px;
+}
+
+.file-details {
+    display: none;
+    margin-top: 25px;
+    animation: fadeIn 0.5s ease;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.file-icon {
+    width: 70px;
+    height: 70px;
+    margin: 0 auto 20px;
+    display: block;
+    transition: transform 0.3s ease;
+}
+
+.file-icon:hover {
+    transform: scale(1.05);
+}
+
+.file-icon svg {
+    width: 100%;
+    height: 100%;
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
+}
+
+.file-name {
+    font-size: 20px;
+    font-weight: 500;
+    margin-bottom: 10px;
+    text-align: center;
+    word-break: break-word;
+    overflow-wrap: break-word;
+    max-width: 100%;
+    color: #303133;
+}
+
+.file-meta {
+    color: #606266;
+    font-size: 15px;
+    text-align: center;
+    margin-bottom: 25px;
+}
+
+.gateway-and-url-section {
+    margin-top: 25px;
+    margin-bottom: 25px;
+    background-color: #fff;
+    border-radius: 6px;
+    padding: 15px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.gateway-selector-group {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+    flex-wrap: wrap;
+}
+
+.gateway-selector-group label {
+    margin-right: 10px;
+    font-size: 14px;
+    color: #303133;
+    font-weight: 500;
+}
+
+.gateway-selector-group select {
+    padding: 10px 12px;
+    border: 1px solid #dcdfe6;
+    border-radius: 6px;
+    font-size: 14px;
+    flex-grow: 1;
+    min-width: 150px;
+    background-color: #f5f7fa;
+    transition: all 0.3s;
+    cursor: pointer;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23606266' d='M6 8.825L1.175 4 2.05 3.125 6 7.075 9.95 3.125 10.825 4z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    padding-right: 30px;
+}
+
+.gateway-selector-group select:focus {
+    border-color: #409eff;
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(64, 158, 255, 0.2);
+}
+
+.gateway-selector-group select:hover {
+    border-color: #c0c4cc;
+}
+
+.file-url-display-wrapper {
+    margin-bottom: 20px;
+    position: relative;
+}
+
+.file-url-display-wrapper input[type="text"] {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #dcdfe6;
+    border-radius: 6px;
+    font-size: 14px;
+    background-color: #f5f7fa;
+    color: #303133;
+    box-sizing: border-box;
+    transition: all 0.3s;
+}
+
+.file-url-display-wrapper input[type="text"]:focus {
+    border-color: #409eff;
+    outline: none;
+}
+
+.download-button {
+    display: block;
+    width: 80%;
+    margin: 25px auto 0;
+    padding: 14px;
+    background-color: #409eff;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: all 0.3s;
+    text-align: center;
+    text-decoration: none;
+    box-shadow: 0 4px 12px rgba(64, 158, 255, 0.2);
+}
+
+.download-button:hover {
+    background-color: #66b1ff;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(64, 158, 255, 0.3);
+}
+
+.download-button:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 8px rgba(64, 158, 255, 0.3);
+}
+
+.unlock-button {
+    padding: 12px 28px;
+    background-color: #409eff;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: all 0.3s;
+    box-shadow: 0 4px 12px rgba(64, 158, 255, 0.2);
+}
+
+.unlock-button:hover {
+    background-color: #66b1ff;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(64, 158, 255, 0.3);
+}
+
+.unlock-button:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 8px rgba(64, 158, 255, 0.3);
+}
+
+.loading {
+    display: none;
+    text-align: center;
+    margin: 25px 0;
+}
+
+.spinner {
+    border: 4px solid rgba(0, 0, 0, 0.1);
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border-left-color: #409eff;
+    animation: spin 1s linear infinite;
+    margin: 0 auto 15px;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.return-home {
+    text-align: center;
+    margin-top: 25px;
+    padding-top: 15px;
+    border-top: 1px solid #ebeef5;
+}
+
+.return-home a {
+    color: #909399;
+    text-decoration: none;
+    transition: all 0.3s;
+    padding: 6px 12px;
+    border-radius: 4px;
+    display: inline-flex;
+    align-items: center;
+}
+
+.return-home a:hover {
+    color: #409eff;
+    background-color: rgba(64, 158, 255, 0.1);
+}
+
+.return-home a i {
+    margin-right: 8px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 767px) {
+    .share-container {
+        width: 100%;
+        max-width: 98vw;
+        padding: 14px 4vw;
+        margin: 10px auto;
+        border-radius: 8px;
+    }
+    .share-content {
+        padding: 10px 4px;
+        border-radius: 8px;
+    }
+    .file-name {
+        font-size: 16px;
+    }
+    .download-button {
+        width: 100%;
+        font-size: 15px;
+        padding: 12px;
+        border-radius: 7px;
+    }
+    .passphrase-input-wrapper {
+        width: 100%;
+    }
+    .file-icon {
+        width: 48px;
+        height: 48px;
+        margin-bottom: 12px;
+    }
+    .gateway-and-url-section {
+        padding: 8px 4px;
+        border-radius: 7px;
+    }
+    .gateway-selector-group select {
+        font-size: 13px;
+        border-radius: 7px;
+        padding: 7px 8px;
+        padding-right: 22px;
+    }
+    .file-url-display-wrapper input[type="text"] {
+        font-size: 13px;
+        border-radius: 7px;
+        padding: 8px;
+    }
+    .share-header h1 {
+        font-size: 20px;
+    }
+}
+@media (max-width: 480px) {
+    .share-container {
+        padding: 8px 2vw;
+        margin: 4px auto;
+        border-radius: 6px;
+    }
+    .share-header {
+        margin-bottom: 8px;
+    }
+    .file-icon {
+        width: 36px;
+        height: 36px;
+        margin-bottom: 8px;
+    }
+    .file-name {
+        font-size: 14px;
+    }
+    .file-meta {
+        font-size: 12px;
+    }
+    .download-button {
+        font-size: 13px;
+        padding: 8px;
+        border-radius: 6px;
+    }
+    .gateway-and-url-section {
+        margin-top: 12px;
+        margin-bottom: 12px;
+        padding: 6px 2px;
+        border-radius: 6px;
+    }
+    .gateway-selector-group label {
+        font-size: 12px;
+    }
+    .gateway-selector-group select {
+        font-size: 12px;
+        border-radius: 6px;
+        padding: 6px 6px;
+        padding-right: 16px;
+        min-width: 90px;
+    }
+    .file-url-display-wrapper input[type="text"] {
+        font-size: 12px;
+        border-radius: 6px;
+        padding: 6px;
+    }
+    .passphrase-form input {
+        font-size: 13px;
+        border-radius: 6px;
+        padding: 10px;
+        padding-right: 32px;
+    }
+    .password-toggle {
+        padding: 3px 6px;
+        font-size: 13px;
+        border-radius: 5px;
+        right: 4px;
+    }
+    .return-home {
+        margin-top: 12px;
+        padding-top: 8px;
+    }
+    .return-home a {
+        font-size: 12px;
+        padding: 4px 8px;
+        border-radius: 5px;
+    }
+}
