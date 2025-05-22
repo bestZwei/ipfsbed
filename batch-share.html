@@ -97,5 +97,35 @@
             <button class="download-cancel" id="downloadCancel"></button>
         </div>
     </div>
+
+    <script>
+        // Initialize when DOM is ready
+        document.addEventListener('DOMContentLoaded', function() {
+            // Set initial title for password toggle button
+            const passwordToggle = document.querySelector('.password-toggle');
+            if (passwordToggle) {
+                passwordToggle.title = _t('show-password');
+            }
+        });
+        
+        // Function to toggle password visibility
+        function togglePasswordVisibility(inputId) {
+            const passwordInput = document.getElementById(inputId);
+            const toggleButton = passwordInput.nextElementSibling;
+            const icon = toggleButton.querySelector('i');
+            
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                icon.classList.remove('fa-eye');
+                icon.classList.add('fa-eye-slash');
+                toggleButton.title = _t('hide-password');
+            } else {
+                passwordInput.type = 'password';
+                icon.classList.remove('fa-eye-slash');
+                icon.classList.add('fa-eye');
+                toggleButton.title = _t('show-password');
+            }
+        }
+    </script>
 </body>
 </html>

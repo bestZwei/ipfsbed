@@ -19,6 +19,12 @@ function updateSharePageLanguage() {
     document.getElementById('shareGatewaySelectLabel').innerHTML = _t('gateway-selector');
     // fileUrlDisplay title
     document.getElementById('fileUrlDisplay').title = _t('copy-share-link');
+    
+    // Set password toggle button title
+    const passwordToggle = document.querySelector('.password-toggle');
+    if (passwordToggle) {
+        passwordToggle.title = _t('show-password');
+    }
 }
 
 // Check URL parameters and determine if it's an encrypted share or direct CID

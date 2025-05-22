@@ -19,6 +19,12 @@ function updateBatchSharePageLanguage() {
     document.getElementById('batchReturnHomeText').textContent = _t('return-home');
     document.getElementById('downloadDialogTitle').textContent = _t('download-progress') || 'Downloading Files';
     document.getElementById('downloadCancel').textContent = _t('batch-share-cancel');
+    
+    // Set password toggle button title
+    const passwordToggle = document.querySelector('.password-toggle');
+    if (passwordToggle) {
+        passwordToggle.title = _t('show-password');
+    }
 }
 
 // Function to parse URL parameters and process the batch share
