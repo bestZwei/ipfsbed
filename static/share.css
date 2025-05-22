@@ -243,6 +243,11 @@
     box-shadow: 0 2px 8px rgba(64, 158, 255, 0.3);
 }
 
+.download-button.disabled {
+    pointer-events: none;
+    opacity: 0.6;
+}
+
 .unlock-button {
     padding: 12px 28px;
     background-color: #409eff;
