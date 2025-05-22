@@ -33,7 +33,7 @@ function processShareUrl() {
     const urlParams = new URLSearchParams(window.location.search);
     
     // Show loading indicator
-    document.getElementById('loadingIndicator').style.display = 'block';
+    document.getElementById('loadingIndicator').style.display = 'flex';
     
     if (urlParams.has('share')) {
         // Encrypted share
@@ -170,7 +170,7 @@ async function forceDownloadFile(url, filename, btn) {
         btn.classList.add('disabled');
         btn.querySelector('span').textContent = _t('download-progress') || 'Downloading...';
         // 显示loading
-        document.getElementById('loadingIndicator').style.display = 'block';
+        document.getElementById('loadingIndicator').style.display = 'flex';
 
         const response = await fetch(url);
         if (!response.ok) throw new Error('Network error');

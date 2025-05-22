@@ -272,34 +272,28 @@
 }
 
 .loading {
-    display: none;
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.6);
+    background-color: rgba(255, 255, 255, 0.8);
     z-index: 1000;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
-    flex-direction: column;
-    backdrop-filter: blur(5px);
-}
-
-.loading.show {
-    display: flex;
+    backdrop-filter: blur(3px);
+    display: none; /* Hidden by default, JS will toggle to 'flex' */
 }
 
 .spinner {
-    border: 6px solid rgba(255, 255, 255, 0.2);
-    width: 60px;
-    height: 60px;
+    border: 5px solid rgba(0, 0, 0, 0.1); /* Thicker border */
+    width: 60px; /* Larger spinner */
+    height: 60px; /* Larger spinner */
     border-radius: 50%;
-    border-top: 6px solid #409eff;
-    border-right: 6px solid #67c23a;
+    border-left-color: #409eff;
     animation: spin 1s linear infinite;
-    margin-bottom: 20px;
-    box-shadow: 0 4px 20px rgba(64, 158, 255, 0.3);
+    margin-bottom: 20px; /* Adjusted margin for spacing */
 }
 
 @keyframes spin {
@@ -308,18 +302,15 @@
 }
 
 .loading p {
-    font-size: 18px;
-    color: #ffffff;
+    font-size: 16px;
+    color: #303133;
     font-weight: 500;
-    margin: 0;
+    margin-top: 15px;
     text-align: center;
-    background-color: rgba(255, 255, 255, 0.1);
-    padding: 12px 24px;
-    border-radius: 12px;
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-    min-width: 200px;
+    background-color: white;
+    padding: 8px 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
 }
 
 .return-home {
