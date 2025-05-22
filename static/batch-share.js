@@ -228,20 +228,54 @@ function getSelectedFiles() {
     return selected;
 }
 
+// Force download a file instead of opening it in browser
+async function forceDownloadFile(url, filename, button) {
+    try {
+        if (button) {
+            button.disabled = true;
+            button.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+        }
+        
+        // Show loading indicator
+        document.getElementById('loadingIndicator').style.display = 'block';
+        
+        const response = await fetch(url);
+        if (!response.ok) throw new Error('Network error');
+        const blob = await response.blob();
+        
+        // Create temporary a tag to download
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = filename;
+        document.body.appendChild(a);
+        a.click();
+        setTimeout(() => {
+            URL.revokeObjectURL(a.href);
+            document.body.removeChild(a);
+        }, 100);
+        
+    } catch (e) {
+        console.error('Download error:', e);
+        showToast(_t('upload-error') || 'Download failed', 'error');
+    } finally {
+        if (button) {
+            button.disabled = false;
+            button.innerHTML = '<i class="fas fa-download"></i>';
+        }
+        document.getElementById('loadingIndicator').style.display = 'none';
+    }
+}
+
 // Download a single file
 function downloadSingleFile(index) {
     if (index < 0 || index >= batchFiles.length) return;
     
     const file = batchFiles[index];
     const fileUrl = getFileUrl(file);
+    const button = event.currentTarget; // Get the button that was clicked
     
-    // Create a temporary link and click it to start download
-    const a = document.createElement('a');
-    a.href = fileUrl;
-    a.download = file.filename;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
+    // Use the forced download function instead of direct link
+    forceDownloadFile(fileUrl, file.filename, button);
 }
 
 // Download all selected files as zip
