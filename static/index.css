@@ -183,11 +183,11 @@
 @media (max-width: 480px) {
     #footer {
         font-size: 12px;
-        padding: 10px 4px;
+        padding: 8px 4px; 
         border-radius: 8px 8px 0 0;
     }
     #footer .info {
-        margin-bottom: 6px;
+        margin-bottom: 4px; 
     }
     #footer a {
         margin: 0 4px;

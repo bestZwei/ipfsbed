@@ -75,7 +75,7 @@ body {
     grid-template-columns: 320px 580px;
     grid-template-rows: auto;
     max-width: 90%;
-    margin-bottom: 60px;
+    margin-bottom: 35px; /* Reduced from 60px to 40px */
     position: relative;
 }
 
@@ -461,14 +461,14 @@ body {
     }
     
     .site-header {
-        margin-bottom: 15px;
+        margin-bottom: 8px; /* 原20px，缩小为8px */
     }
     
     .container {
         grid-template-columns: minmax(300px, 90%);
         grid-template-rows: auto auto;
         width: 100%;
-        margin-bottom: 40px;
+        margin-bottom: 20px; /* Reduced from 40px to 30px */
     }
     
     .upload {
@@ -813,26 +813,18 @@ body {
     animation: toast-out-right 0.7s forwards;
 }
 
-/* Add footer styling */
 #footer {
-    position: fixed; /* added to stick footer at bottom */
-    bottom: 0;       /* added to position footer at bottom */
-    left: 0;       /* added to align footer to the left */
     color: rgba(255, 255, 255, 0.9);
     font-size: 14px;
     text-align: center;
-    padding: 20px; /* Adjusted padding for better spacing */
+    padding: 12px; /* Reduced from 20px to 12px */
     width: 100%;
-    background-color: rgba(0, 0, 0, 0.2);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    border-radius: 12px 12px 0 0;
-    z-index: 100;
-    box-sizing: border-box; /* Ensure padding is included in width */
+    box-sizing: border-box; 
+    margin-top: auto; 
 }
 
 #footer .info {
-    margin-bottom: 10px; /* Add space between links and copyright text */
+    margin-bottom: 6px; /* Reduced from 10px to 6px */
 }
 
 #footer a {
@@ -1331,9 +1323,9 @@ body {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin-bottom: 20px;
+    margin-bottom: 8px;
     position: relative;
-    padding: 0 10px;
+    padding: 0 10px 0 10px;
 }
 
 .site-logo {
@@ -1360,14 +1352,14 @@ body {
     }
     
     .site-header {
-        margin-bottom: 15px;
+        margin-bottom: 8px; /* 原20px，缩小为8px */
     }
     
     .container {
         grid-template-columns: minmax(300px, 90%);
         grid-template-rows: auto auto;
         width: 100%;
-        margin-bottom: 40px;
+        margin-bottom: 20px; /* Reduced from 40px to 30px */
     }
     
     .upload {
@@ -1712,26 +1704,18 @@ body {
     animation: toast-out-right 0.7s forwards;
 }
 
-/* Add footer styling */
 #footer {
-    position: fixed; /* added to stick footer at bottom */
-    bottom: 0;       /* added to position footer at bottom */
-    left: 0;       /* added to align footer to the left */
     color: rgba(255, 255, 255, 0.9);
     font-size: 14px;
     text-align: center;
-    padding: 20px; /* Adjusted padding for better spacing */
+    padding: 12px; /* Reduced from 20px to 12px */
     width: 100%;
-    background-color: rgba(0, 0, 0, 0.2);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    border-radius: 12px 12px 0 0;
-    z-index: 100;
-    box-sizing: border-box; /* Ensure padding is included in width */
+    box-sizing: border-box; 
+    margin-top: auto; 
 }
 
 #footer .info {
-    margin-bottom: 10px; /* Add space between links and copyright text */
+    margin-bottom: 6px; /* Reduced from 10px to 6px */
 }
 
 #footer a {

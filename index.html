@@ -278,7 +278,7 @@
         /* Language dropdown menu styles */
         .lang-icon {
             position: absolute;
-            top: 20px;
+            top: 50%; /* Changed: position relative to parent's height */
             right: 20px;
             width: 36px;
             height: 36px;
@@ -291,6 +291,7 @@
             cursor: pointer;
             z-index: 100;
             transition: all 0.3s ease;
+            transform: translateY(-50%); /* Added: center vertically */
         }
         
         .lang-icon:hover {
@@ -339,8 +340,10 @@
         .site-header {
             display: flex;
             align-items: center;
-            margin-bottom: 20px;
+            justify-content: space-between;
+            margin-bottom: 8px; 
             position: relative;
+            padding: 0 0; 
         }
         
         .site-logo {
@@ -361,13 +364,13 @@
         /* Updated container spacing */
         .container {
             margin-top: 0;
-            padding-top: 20px;
+            padding-top: 15px; /* 原20px，缩小为10px */
         }
         
         /* Mobile optimizations */
         @media (max-width: 480px) {
             .lang-icon {
-                top: 15px;
+                top: 50%; /* Changed: align to center of parent */
                 right: 15px;
                 width: 32px;
                 height: 32px;
