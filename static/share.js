@@ -4,22 +4,12 @@ let currentCid = null;
 let currentFilename = null;
 let currentFilesize = null;
 
-// 新增：渲染加载动画的函数
-function renderLoadingIndicator(text) {
-    const loadingIndicator = document.getElementById('loadingIndicator');
-    loadingIndicator.innerHTML = `
-        <div class="spinner"></div>
-        <div class="loading-text">${text || _t('accessing-file')}</div>
-    `;
-    loadingIndicator.style.display = 'block';
-}
-
 // Update page language elements specific to share page
 function updateSharePageLanguage() {
     // Set html lang
     document.getElementById('htmlLang').setAttribute('lang', window.currentLang || 'en');
     // loading
-    renderLoadingIndicator(_t('accessing-file'));
+    document.getElementById('loadingText').textContent = _t('accessing-file');
     // passphrase
     const passInput = document.getElementById('passphrase');
     if (passInput) passInput.placeholder = _t('passphrase-placeholder');
@@ -41,10 +31,10 @@ function updateSharePageLanguage() {
 // Check URL parameters and determine if it's an encrypted share or direct CID
 function processShareUrl() {
     const urlParams = new URLSearchParams(window.location.search);
-
-    // 优化：直接用 renderLoadingIndicator
-    renderLoadingIndicator(_t('accessing-file'));
-
+    
+    // Show loading indicator
+    document.getElementById('loadingIndicator').style.display = 'block';
+    
     if (urlParams.has('share')) {
         // Encrypted share
         const encryptedPayload = urlParams.get('share');
@@ -76,7 +66,7 @@ function processShareUrl() {
             }
         });
         
-        // document.getElementById('loadingIndicator').style.display = 'none';
+        document.getElementById('loadingIndicator').style.display = 'none';
         
     } else if (urlParams.has('cid') && urlParams.has('filename')) {
         // Public file (no encryption)
@@ -87,6 +77,7 @@ function processShareUrl() {
         // Display file details directly
         displayFileDetails(cid, filename, filesize);
     } else {
+        // Invalid URL parameters
         document.getElementById('loadingIndicator').style.display = 'none';
         document.getElementById('passphraseForm').style.display = 'none';
         document.getElementById('fileDetails').style.display = 'block';
