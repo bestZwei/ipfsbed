@@ -270,37 +270,148 @@
                 padding-right: 20px;
             }
         }
-    </style>
-    <style>
+        
         #shareAccessPrompt { display: none; }
+        
+        /* Language dropdown menu styles */
+        .lang-icon {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 50%;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            cursor: pointer;
+            z-index: 100;
+            transition: all 0.3s ease;
+        }
+        
+        .lang-icon:hover {
+            background-color: #f0f8ff;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+        
+        .lang-dropdown {
+            position: absolute;
+            top: 60px;
+            right: 20px;
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+            padding: 10px 0;
+            z-index: 100;
+            display: none;
+            animation: fadeIn 0.3s ease;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        
+        .lang-dropdown.show {
+            display: block;
+        }
+        
+        .lang-dropdown a {
+            display: block;
+            padding: 8px 20px;
+            color: #333;
+            text-decoration: none;
+            transition: background-color 0.2s;
+        }
+        
+        .lang-dropdown a:hover {
+            background-color: #f0f8ff;
+        }
+        
+        .lang-dropdown a.active {
+            background-color: #e6f0ff;
+            color: #409eff;
+            font-weight: 500;
+        }
+        
+        .site-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            position: relative;
+        }
+        
+        .site-logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 20px;
+            font-weight: 600;
+            color: white;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        /* Updated container spacing */
+        .container {
+            margin-top: 0;
+            padding-top: 20px;
+        }
+        
+        /* Mobile optimizations */
+        @media (max-width: 480px) {
+            .lang-icon {
+                top: 15px;
+                right: 15px;
+                width: 32px;
+                height: 32px;
+            }
+            
+            .lang-dropdown {
+                top: 55px;
+                right: 15px;
+                max-width: 150px;
+            }
+            
+            .site-logo {
+                font-size: 18px;
+            }
+        }
     </style>
 </head>
 <body>
+    <div class="site-header">
+        <div class="site-logo">
+            <img src="/img/ipfsbed.png" alt="IPFSBED Logo" width="32" height="32">
+            IPFSBED
+        </div>
+        <div class="lang-icon" id="langToggle">
+            <i class="fas fa-globe"></i>
+        </div>
+        <div class="lang-dropdown" id="langDropdown">
+            <a href="#" data-lang="zh-CN" class="active">中文</a>
+            <a href="#" data-lang="en">English</a>
+            <a href="#" data-lang="de">Deutsch</a>
+            <a href="#" data-lang="ru">Русский</a>
+            <a href="#" data-lang="fr">Français</a>
+            <a href="#" data-lang="es">Español</a>
+            <a href="#" data-lang="ar">العربية</a>
+            <a href="#" data-lang="fa">فارسی</a>
+            <a href="#" data-lang="tr">Türkçe</a>
+            <a href="#" data-lang="pt">Português</a>
+            <a href="#" data-lang="ko">조선어</a>
+            <a href="#" data-lang="ja">日本語</a>
+        </div>
+    </div>
+    
     <input id="file" type="file" multiple style="display: none;">
     <div class="container">
         <div class="upload">
-            <div class="title">
-                <div class="title-text">
-                    <img src="/img/ipfsbed.png" alt="IPFSBED Logo" width="28" height="28">
-                    IPFSBED
-                </div>
-                <div class="lang-selector">
-                    <select id="langSelect" onchange="changeLanguage(this.value)">
-                        <option value="zh-CN">中文</option>
-                        <option value="en">English</option>
-                        <option value="de">Deutsch</option>
-                        <option value="ru">Русский</option>
-                        <option value="fr">Français</option>
-                        <option value="es">Español</option>
-                        <option value="ar">العربية</option>
-                        <option value="fa">فارسی</option>
-                        <option value="tr">Türkçe</option>
-                        <option value="pt">Português</option>
-                        <option value="ko">조선어</option>
-                        <option value="ja">日本語</option>
-                    </select>
-                </div>
-            </div>
+            <!-- Removed title div -->
             <!-- 新增：设置口令栏，添加了切换密码可见性的按钮 -->
             <div class="passphrase-bar">
                 <div class="passphrase-input-wrapper" style="display: flex; align-items: center; width: 100%;">
@@ -384,8 +495,6 @@
     <script>
         // Initialize language after DOM is ready
         document.addEventListener('DOMContentLoaded', function() {
-            // Set the language selector to the current language
-            document.querySelector('#langSelect').value = currentLang;
             // Update all UI elements with translations
             updatePageLanguage();
             
@@ -393,6 +502,51 @@
             const passwordToggles = document.querySelectorAll('.password-toggle');
             passwordToggles.forEach(toggle => {
                 toggle.title = _t('show-password');
+            });
+            
+            // Language dropdown functionality
+            const langToggle = document.getElementById('langToggle');
+            const langDropdown = document.getElementById('langDropdown');
+            const langLinks = langDropdown.querySelectorAll('a');
+            
+            // Set active language in dropdown
+            langLinks.forEach(link => {
+                if (link.getAttribute('data-lang') === currentLang) {
+                    link.classList.add('active');
+                } else {
+                    link.classList.remove('active');
+                }
+            });
+            
+            // Toggle dropdown visibility
+            langToggle.addEventListener('click', function(e) {
+                e.stopPropagation();
+                langDropdown.classList.toggle('show');
+            });
+            
+            // Handle language selection
+            langLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const lang = this.getAttribute('data-lang');
+                    
+                    // Update active class
+                    langLinks.forEach(l => l.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    // Change language
+                    changeLanguage(lang);
+                    
+                    // Hide dropdown
+                    langDropdown.classList.remove('show');
+                });
+            });
+            
+            // Close dropdown when clicking outside
+            document.addEventListener('click', function(e) {
+                if (!langDropdown.contains(e.target) && !langToggle.contains(e.target)) {
+                    langDropdown.classList.remove('show');
+                }
             });
         });
         
