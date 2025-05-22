@@ -391,6 +391,96 @@
                 font-size: 18px;
             }
         }
+        
+        /* Toggle switch styles */
+        .mode-toggle-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 8px 0;
+            background-color: #f9f9f9;
+            border-radius: 0 0 8px 8px;
+            margin-bottom: 10px;
+            border-top: 1px solid #e6e6e6;
+        }
+        
+        .mode-toggle-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 48px;
+            height: 24px;
+        }
+        
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        
+        .toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 24px;
+        }
+        
+        .toggle-slider:before {
+            position: absolute;
+            content: "";
+            height: 18px;
+            width: 18px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+        
+        input:checked + .toggle-slider {
+            background-color: #409eff;
+        }
+        
+        input:checked + .toggle-slider:before {
+            transform: translateX(24px);
+        }
+        
+        .toggle-label {
+            font-size: 14px;
+            color: #606266;
+        }
+        
+        @media (max-width: 480px) {
+            .toggle-switch {
+                width: 40px;
+                height: 20px;
+            }
+            
+            .toggle-slider:before {
+                height: 14px;
+                width: 14px;
+                left: 3px;
+                bottom: 3px;
+            }
+            
+            input:checked + .toggle-slider:before {
+                transform: translateX(20px);
+            }
+            
+            .toggle-label {
+                font-size: 12px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -419,9 +509,9 @@
     </div>
     
     <input id="file" type="file" multiple style="display: none;">
+    <input id="directory" type="file" multiple webkitdirectory directory style="display: none;">
     <div class="container">
         <div class="upload">
-            <!-- Removed title div -->
             <!-- 新增：设置口令栏，添加了切换密码可见性的按钮 -->
             <div class="passphrase-bar">
                 <div class="passphrase-input-wrapper" style="display: flex; align-items: center; width: 100%;">
@@ -429,6 +519,17 @@
                     <button type="button" class="password-toggle" onclick="togglePasswordVisibility('passphraseInput')" title="显示/隐藏密码">
                         <i class="fas fa-eye"></i>
                     </button>
+                </div>
+            </div>
+            <!-- New: Upload mode toggle -->
+            <div class="mode-toggle-container">
+                <div class="mode-toggle-wrapper">
+                    <span class="toggle-label" data-translate="file-mode">文件模式</span>
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="uploadModeToggle">
+                        <span class="toggle-slider"></span>
+                    </label>
+                    <span class="toggle-label" data-translate="folder-mode">文件夹模式</span>
                 </div>
             </div>
             <div class="content" id="dragbox">
@@ -533,6 +634,23 @@
                 toggleButton.title = _t('show-password');
             }
         }
+
+        // Toggle between file and directory upload modes
+        const uploadModeToggle = document.getElementById('uploadModeToggle');
+        const fileInput = document.getElementById('file');
+        const directoryInput = document.getElementById('directory');
+
+        uploadModeToggle.addEventListener('change', function() {
+            // The actual toggling of webkitdirectory attribute is now handled in file.js
+            // This is just for any immediate UI updates needed
+            if (this.checked) {
+                // Directory mode selected
+                console.log("Switched to directory mode");
+            } else {
+                // File mode selected
+                console.log("Switched to file mode");
+            }
+        });
     </script>
 </body>
 </html>
