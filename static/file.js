@@ -1053,7 +1053,7 @@ function createDirectoryItem(folderName, totalSize, randomClass) {
             </div>
             <input type="hidden" class="data-url" value="">
             <input type="hidden" class="data-cid" value="">
-            <input type="hidden" class="data-filename" value="${folderName}/">
+            <input type="hidden" class="data-filename" value="${folderName}">
             <input type="hidden" class="data-passphrase-protected" value="false">
         </div>
     `;
@@ -1061,7 +1061,7 @@ function createDirectoryItem(folderName, totalSize, randomClass) {
 
 // 文件夹上传成功处理
 function handleDirectoryUploadSuccess(dirObj, folderName, totalSize, randomClass) {
-    const shareUrl = `${window.location.origin}${window.location.pathname.replace('index.html', '')}share.html?cid=${dirObj.Hash}&filename=${encodeURIComponent(folderName + '/')}&size=${totalSize}`;
+    const shareUrl = `${window.location.origin}${window.location.pathname.replace('index.html', '')}share.html?cid=${dirObj.Hash}&filename=${encodeURIComponent(folderName)}&size=${totalSize}`;
     $('#file').val(null);
     $(`.${randomClass}`).find('.progress-inner').addClass('success');
     $(`.${randomClass}`).find('.progress').fadeOut(500, function() {
@@ -1073,7 +1073,7 @@ function handleDirectoryUploadSuccess(dirObj, folderName, totalSize, randomClass
     });
     $(`.${randomClass}`).find('.data-url').val(shareUrl);
     $(`.${randomClass}`).find('.data-cid').val(dirObj.Hash);
-    $(`.${randomClass}`).find('.data-filename').val(folderName + '/');
+    $(`.${randomClass}`).find('.data-filename').val(folderName);
     $('.copyall').removeClass('disabled');
     showToast(_t('upload-success'), 'success');
     updateShareSelectedButtonState();
