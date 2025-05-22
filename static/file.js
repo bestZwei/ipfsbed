@@ -279,12 +279,12 @@ $(document).ready(() => {
                             <path d="M19,21H8V7H19M19,5H8A2,2 0 0,0 6,7V21A2,2 0 0,0 8,23H19A2,2 0 0,0 21,21V7A2,2 0 0,0 19,5M16,1H4A2,2 0 0,0 2,3V17H4V3H16V1Z" fill="#909399"/>
                         </svg>
                     </a>
-                    <a href="javascript:void(0);" class="link" title="复制CID" onclick="copyCID(this); return false;">
+                    <a href="javascript:void(0);" class="link" title="CID" onclick="copyCID(this); return false;">
                         <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" class="icon-copy-cid">
                             <path d="M14,8H10V6H14V8M20,4V20C20,21.1 19.1,22 18,22H6C4.9,22 4,21.1 4,20V4C4,2.9 4.9,2 6,2H18C19.1,2 20,2.9 20,4M18,13H6V20H18V13M18,4H6V11H18V4H14,15H10V17H14V15Z" fill="#909399"/>
                         </svg>
                     </a>
-                    <a title="删除" class="link" onclick="deleteItem(this); return false;">
+                    <a title="delete" class="link" onclick="deleteItem(this); return false;">
                         <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" class="icon-delete">
                             <path d="M19,4H15.5L14.5,3H9.5L8.5,4H5V6H19M6,19A2,2 0 0,0 8,21H16A2,2 0 0,0 18,19V7H6V19Z" fill="#909399"/>
                         </svg>
