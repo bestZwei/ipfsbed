@@ -1283,22 +1283,899 @@ body {
     border-color: #c0c4cc;
 }
 
-/* Centered overlay loading spinner for share/batch-share pages */
-.loading {
-    position: fixed !important;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    z-index: 2000;
-    background: rgba(255,255,255,0.7);
+/* 
+  Add these styles if needed. If the file doesn't exist or these styles 
+  conflict with existing ones, you can omit this section as the changes 
+  in index.html should be sufficient.
+*/
+
+.action-button {
+    display: inline-flex;
+    align-items: center;
+    padding: 5px 10px;
+    border-radius: 4px;
+    border: none;
+    cursor: pointer;
+    font-size: 14px;
+    color: white;
+    transition: all 0.3s;
+    margin-left: 10px;
+    background-color: #409eff;
+}
+
+.action-button i {
+    margin-right: 5px;
+}
+
+.action-button:hover {
+    background-color: #66b1ff;
+}
+
+.action-button.disabled {
+    background-color: #c0c4cc;
+    cursor: not-allowed;
+    opacity: 0.7;
+}
+
+/* Make sure the .copyall matches the action button */
+.copyall {
+    text-decoration: none;
+}
+
+/* Site header styling */
+.site-header {
+    width: 100%;
+    max-width: 950px;
     display: flex;
-    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 8px;
+    position: relative;
+    padding: 0 10px 0 10px;
+}
+
+.site-logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 22px;
+    font-weight: 600;
+    color: white;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.site-logo img {
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+}
+
+/* Mobile adjustments */
+@media (max-width: 900px) {
+    body {
+        justify-content: flex-start;
+        padding-top: 20px;
+        padding-bottom: 60px;
+        min-height: 100vh;
+    }
+    
+    .site-header {
+        margin-bottom: 8px; /* 原20px，缩小为8px */
+    }
+    
+    .container {
+        grid-template-columns: minmax(300px, 90%);
+        grid-template-rows: auto auto;
+        width: 100%;
+        margin-bottom: 20px; /* Reduced from 40px to 30px */
+    }
+    
+    .upload {
+        height: auto;
+        min-height: 200px;
+        transition: all 0.4s ease;
+    }
+    
+    .filelist {
+        height: auto;
+        min-height: 300px;
+        transition: all 0.4s ease;
+    }
+    
+    .upload .content {
+        padding: 30px 15px;
+    }
+    
+    .upload .content .icon {
+        width: 70px;
+        height: 70px;
+        margin-bottom: 15px;
+    }
+    
+    #show {
+        width: 100%;
+        max-width: 350px;
+    }
+    
+    .filelist .title {
+        height: auto;
+        min-height: 50px;
+        padding: 10px 15px;
+        gap: 8px;
+    }
+    
+    .filelist .list {
+        max-height: 400px;
+        padding-bottom: 40px; /* 确保底部内容不被footer遮挡 */
+    }
+}
+
+@media (max-width: 480px) {
+    body {
+        padding: 15px 10px 50px 10px;
+    }
+    
+    .site-header {
+        margin-bottom: 10px;
+    }
+    
+    .site-logo {
+        font-size: 18px;
+        gap: 8px;
+    }
+    
+    .site-logo img {
+        width: 28px;
+        height: 28px;
+    }
+    
+    .container {
+        gap: 15px;
+        max-width: 95%;
+    }
+    
+    .upload .content .icon {
+        width: 50px;
+        height: 50px;
+        margin-bottom: 10px;
+    }
+    
+    .button-group button {
+        width: 60px;
+        height: 28px;
+        font-size: 12px;
+    }
+    
+    .filelist .list {
+        padding: 10px;
+    }
+    
+    .filelist .list .item {
+        padding: 10px;
+    }
+    
+    .upload .title,
+    .filelist .title {
+        font-size: 15px;
+        padding: 10px 15px;
+        min-height: 50px;
+    }
+    
+    .gateway-selector {
+        padding: 8px 15px;
+        padding: 10px 15px;
+        min-height: 60px;
+        text-align: center; /* 确保在移动端也居中 */
+    }
+    
+    .upload .title small {
+        display: block;
+        margin-top: 2px;
+    }
+    .filelist .title {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 12px 15px;
+        flex-wrap: nowrap; /* 防止换行 */
+    }
+    
+    .select-group {
+        display: flex;
+        flex-wrap: nowrap;
+        align-items: center;
+        gap: 8px;
+        width: 100%;
+        justify-content: center; /* 确保在移动端也居中 */
+    }
+    
+    .select-group label {
+        font-size: 13px;
+        font-weight: 400;
+        white-space: nowrap;
+        width: auto;
+    }
+    
+    .select-group select {
+        flex: 1;
+        min-width: 0;
+        max-width: none;
+    }
+      .copyall {
+        height: 36px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0 12px;
+        font-size: 13px;
+        font-weight: 500;
+        min-width: 70px;
+        margin-left: auto;
+        white-space: nowrap;
+        flex-shrink: 0; /* 防止按钮缩小 */
+    }
+    
+    .upload .content .desc {
+        font-size: 14px;
+    }
+    
+    .filelist .list .item .file {
+        flex-wrap: wrap;
+    }
+    
+    .filelist .list .item .file .icon {
+        width: 40px;
+        height: 40px;
+        padding: 8px;
+    }
+    
+    .filelist .list .item .file .link {
+        width: 32px;
+        height: 32px;
+    }
+    
+    .copy-buttons-group {
+        display: none; /* Hide completely */
+    }
+    
+    .copy-btn {
+        display: none; /* Hide completely */
+    }
+}
+
+/* Mobile optimized filelist title layout */
+@media (max-width: 480px) {
+    .filelist .title {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 10px 15px;
+        flex-wrap: nowrap; /* 防止换行 */
+    }
+    
+    .gateway-selector {
+        padding: 10px 15px;
+        min-height: 60px;
+        border-bottom: 1px solid #f2f6fc;
+        background-color: #f9fafc;
+        text-align: center; /* 确保在移动端也居中 */
+    }
+    
+    .select-group {
+        width: 100%;
+        justify-content: center; /* 确保在移动端也居中 */
+    }
+    
+    .select-group label {
+        font-size: 13px;
+        white-space: nowrap; /* 防止标签换行 */
+    }
+    
+    .select-group select {
+        flex: 1;
+        min-width: 0;
+        max-width: none;
+    }
+    
+    .copyall {
+        white-space: nowrap;
+        margin-left: 8px; /* 确保与标题有一定间距 */
+    }
+    
+    .title-text {
+        white-space: nowrap; /* 防止标题文字换行 */
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+}
+
+/* 优化 container 在超小屏幕下的布局 */
+@media (max-width: 360px) {
+    .container {
+        max-width: 100%;
+        gap: 8px;
+        margin-top: 8px;
+        margin-bottom: 30px;
+    }
+    .upload, .filelist {
+        border-radius: 8px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    }
+}
+
+/* 优化 upload 和 filelist 在中小屏幕下的间距和圆角 */
+@media (max-width: 900px) {
+    .container {
+        gap: 18px;
+        margin-top: 12px;
+        margin-bottom: 30px;
+    }
+    .upload, .filelist {
+        border-radius: 12px;
+        box-shadow: 0 6px 18px rgba(0,0,0,0.09);
+    }
+}
+
+/* Toast notification styling */
+.toast-container {
+    position: fixed;
+    top: 24px;
+    right: 24px;
+    z-index: 9999;
+    max-width: 320px;
+}
+
+@media (max-width: 480px) {
+    .toast-container {
+        top: 10px;
+        right: 10px;
+        left: 10px;
+        max-width: calc(100% - 20px);
+    }
+    
+    .toast {
+        width: 100%;
+    }
+}
+
+.toast {
+    background-color: rgba(51, 51, 51, 0.9);
+    color: #fff;
+    padding: 14px 20px;
+    border-radius: 12px;
+    margin-bottom: 12px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    animation: toast-in-right 0.7s;
+    transition: transform 0.3s ease;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+}
+
+.toast.success {
+    background-color: rgba(40, 167, 69, 0.9);
+    border-left: 5px solid #1e7e34;
+}
+
+.toast.error {
+    background-color: rgba(220, 53, 69, 0.9);
+    border-left: 5px solid #bd2130;
+}
+
+.toast.info {
+    background-color: rgba(23, 162, 184, 0.9);
+    border-left: 5px solid #117a8b;
+}
+
+.toast-message {
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.toast-close {
+    cursor: pointer;
+    margin-left: 10px;
+    font-size: 16px;
+    opacity: 0.8;
+    transition: opacity 0.2s;
+}
+
+.toast-close:hover {
+    opacity: 1;
+}
+
+@keyframes toast-in-right {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+@keyframes toast-out-right {
+    from {
+        transform: translateX(0);
+        opacity: 1;
+    }
+    to {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+}
+
+.toast.hide {
+    animation: toast-out-right 0.7s forwards;
+}
+
+#footer {
+    color: rgba(255, 255, 255, 0.9);
+    font-size: 14px;
+    text-align: center;
+    padding: 12px; /* Reduced from 20px to 12px */
+    width: 100%;
+    box-sizing: border-box; 
+    margin-top: auto; 
+}
+
+#footer .info {
+    margin-bottom: 6px; /* Reduced from 10px to 6px */
+}
+
+#footer a {
+    color: rgba(255, 255, 255, 0.95);
+    text-decoration: none;
+    transition: color 0.2s;
+    margin: 0 8px; /* Adjusted horizontal margin for links */
+}
+
+/* Add loading animations */
+@keyframes pulse {
+    0% {
+        opacity: 0.6;
+    }
+    50% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0.6;
+    }
+}
+
+.filelist .list .item.uploading {
+    animation: pulse 1.5s infinite ease-in-out;
+}
+
+/* Add touch specific enhancements for mobile */
+@media (hover: none) and (pointer: coarse) {
+    /* 增加触摸目标尺寸，更容易点击 */
+    .select-group select,
+    .copyall,
+    .copy-btn,
+    .filelist .list .item .file .link {
+        min-height: 40px;
+        min-width: 40px;
+    }
+    
+    /* 增大下拉菜单选项的可点击区域 */
+    .select-group select {
+        font-size: 16px; /* 避免iOS自动缩放 */
+        padding: 10px 12px;
+        padding-right: 30px;
+        background-size: 12px auto;
+        background-position: right 12px top 50%;
+    }
+    
+    /* 增加触摸反馈 */
+    .select-group select:active,
+    .copyall:active,
+    .copy-btn:active {
+        transform: scale(0.96);
+        transition: transform 0.1s;
+    }
+    .upload .content:active {
+        background-color: #f0f8ff;
+        transform: scale(0.98);
+    }
+    
+    .upload .content:active .icon {
+        transform: translateY(-5px);
+        fill: #409eff;
+    }
+    
+    .filelist .list .item .file .link {
+        padding: 10px;
+        width: 40px;
+        height: 40px;
+    }
+    
+    .filelist .list .item .file .link svg {
+        width: 20px;
+        height: 20px;
+    }
+    
+    .copy-btn {
+        padding: 8px 15px;
+        font-size: 14px;
+    }
+    
+    /* Add active state feedback for mobile taps */
+    .copy-btn:active,
+    .select-group select:active,
+    .copyall:active,
+    .filelist .list .item .file .link:active {
+        transform: scale(0.95);
+        opacity: 0.9;
+    }
+    
+    /* Improved scrolling for touch devices */
+    .filelist .list {
+        -webkit-overflow-scrolling: touch;
+    }
+}
+
+/* Extra small devices */
+@media (max-width: 360px) {
+    .filelist .title {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    
+    .gateway-selector .select-group {
+        flex-direction: column;
+        align-items: center; /* 修改为居中对齐 */
+        gap: 5px;
+    }
+    
+    .gateway-selector .select-group label {
+        margin-bottom: 3px;
+    }
+    
+    .select-group select {
+        width: 100%;
+        max-width: none;
+    }
+    
+    .copyall {
+        padding: 0 10px;
+        min-width: 60px;
+    }
+}
+
+/* Language selector styling */
+/* .lang-selector {
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+} */
+
+#langSelect {
+    padding: 5px 8px;
+    border-radius: 8px;
+    border: 1px solid #dcdfe6;
+    background-color: #fff;
+    font-size: 13px;
+    color: #555;
+    cursor: pointer;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+    transition: all 0.3s ease;
+}
+
+#langSelect:focus {
+    outline: none;
+    border-color: #409eff;
+    box-shadow: 0 0 0 2px rgba(64,158,255,0.2);
+}
+
+/* Make sure the title has position relative to contain the absolute positioned language selector */
+.upload .title {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.action-button,
+.copyall {
+    display: inline-flex;
     align-items: center;
     justify-content: center;
-    pointer-events: all;
-    /* Remove margin if any */
-    margin: 0 !important;
-    /* Remove box-shadow if inherited */
-    box-shadow: none !important;
+    background-color: #ecf5ff;
+    color: #409eff;
+    padding: 6px 15px;
+    border-radius: 12px;
+    font-weight: 500;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: 1px solid rgba(64, 158, 255, 0.2);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+    text-decoration: none;
+    background-color: #409eff;
+    color: white;
+    border: none;
+}
+
+.action-button:hover,
+.copyall:hover {
+    background-color: #66b1ff;
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(64, 158, 255, 0.4);
+}
+
+.action-button:active,
+.copyall:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 6px rgba(64, 158, 255, 0.2);
+}
+
+.copyall i {
+    margin-right: 5px;
+}
+
+/* Initially hide the copy all button until files are uploaded */
+.copyall {
+    display: none;
+}
+
+/* 为设置口令栏添加样式，包括美观的开关和输入框。 */
+.passphrase-bar {
+    display: flex;
+    align-items: center;
+    gap: 10px;                  /* 原16px，缩小间距 */
+    padding: 8px 16px 4px 16px; /* 原16px 24px 8px 24px，缩小内边距 */
+    background: rgba(249,250,252,0.7);
+    border-bottom: 1px solid #f0f4f9;
+    position: relative;
+    min-height: 36px;           /* 增加最小高度限制 */
+}
+
+.passphrase-bar label {
+    margin: 0;
+    font-size: 14px;
+    color: #444;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+/* 口令输入框样式 */
+#passphraseInput {
+    flex: 1;
+    min-width: 120px;
+    max-width: none;
+    padding: 7px 14px;
+    border-radius: 12px;
+    border: 1px solid #dcdfe6;
+    font-size: 14px;
+    color: #444;
+    background: #fff;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+#passphraseInput:focus {
+    border-color: #409eff;
+    box-shadow: 0 0 0 2px rgba(64,158,255,0.15);
+}
+
+/* 新增：密码显示切换按钮样式 */
+.password-toggle {
+    margin-left: 8px;
+    background: transparent;
+    border: none;
+    color: #909399;
+    cursor: pointer;
+    padding: 5px 10px;
+    border-radius: 4px;
+    transition: all 0.3s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.password-toggle:hover {
+    color: #409eff;
+    background-color: rgba(64, 158, 255, 0.1);
+}
+
+.password-toggle:active {
+    transform: scale(0.95);
+}
+
+.password-toggle i {
+    font-size: 16px;
+}
+
+/* 确保密码输入区域处于相对定位 */
+.passphrase-bar {
+    display: flex;
+    align-items: center;
+    gap: 10px;                  /* 原16px，缩小间距 */
+    padding: 8px 16px 4px 16px; /* 原16px 24px 8px 24px，缩小内边距 */
+    background: rgba(249,250,252,0.7);
+    border-bottom: 1px solid #f0f4f9;
+    position: relative;
+    min-height: 36px;           /* 增加最小高度限制 */
+}
+
+/* 响应式调整 */
+@media (max-width: 900px) {
+    .upload .title,
+    .filelist .title {
+        min-height: 38px; /* 更小屏幕进一步缩小 */
+        padding: 0 10px;
+        font-size: 14px;
+    }
+    .gateway-selector,
+    .passphrase-bar {
+        padding: 6px 10px 3px 10px;
+        min-height: 30px;
+    }
+}
+@media (max-width: 480px) {
+    .passphrase-bar {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 8px;
+        padding: 10px 10px 4px 10px;
+    }
+    
+    .passphrase-input-wrapper {
+        display: flex;
+        align-items: center;
+        width: 100%;
+    }
+    
+    #passphraseInput {
+        width: 100%;
+        min-width: 0;
+        max-width: none;
+        flex: 1;
+    }
+    
+    .password-toggle {
+        margin-left: 8px;
+        flex-shrink: 0;
+    }
+}
+
+/* 密码提示框中的密码切换样式 */
+#shareAccessPrompt .password-toggle {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: transparent;
+    border: none;
+    color: #909399;
+    cursor: pointer;
+    padding: 5px;
+}
+
+#shareAccessPrompt .input-wrapper {
+    position: relative;
+    display: flex;
+    margin-bottom: 15px;
+    margin-top: 10px;
+}
+
+/* Styles for the batch share passphrase modal */
+#batchSharePassphraseModal {
+    display: none; /* Hidden by default */
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0,0,0,0.5); /* Darker overlay */
+    display: flex; /* Use flexbox for centering */
+    align-items: center; /* Vertical center */
+    justify-content: center; /* Horizontal center */
+}
+
+#batchSharePassphraseModal .modal-content {
+    background-color: #ffffff; /* Cleaner white background */
+    margin: auto; /* Centering fallback */
+    padding: 25px 30px; /* Increased padding */
+    border: none; /* Remove border */
+    width: 90%; /* Responsive width */
+    max-width: 450px; /* Max width */
+    border-radius: 12px; /* Softer corners */
+    box-shadow: 0 8px 25px rgba(0,0,0,0.15); /* Enhanced shadow */
+    text-align: left; /* Align text to left for better readability */
+}
+
+#batchSharePassphraseModal h3 {
+    margin-top: 0;
+    margin-bottom: 20px; /* More space below title */
+    font-size: 18px; /* Slightly larger title */
+    color: #333; /* Darker text color */
+    text-align: center; /* Center the title */
+}
+
+#batchSharePassphraseModal .input-wrapper {
+    margin-bottom: 20px; /* More space below input */
+    position: relative; /* For password toggle positioning */
+}
+
+#batchSharePassphraseModal input[type="password"],
+#batchSharePassphraseModal input[type="text"] { /* Allow text type for visibility toggle */
+    width: 100%;
+    padding: 12px 40px 12px 12px; /* Adjust padding for icon */
+    border: 1px solid #dcdfe6;
+    border-radius: 6px; /* Consistent border-radius */
+    font-size: 14px;
+    box-sizing: border-box; /* Ensure padding doesn't affect width */
+    transition: border-color 0.3s ease;
+}
+
+#batchSharePassphraseModal input[type="password"]:focus,
+#batchSharePassphraseModal input[type="text"]:focus {
+    border-color: #409eff;
+    box-shadow: 0 0 0 2px rgba(64, 158, 255, 0.2);
+    outline: none;
+}
+
+#batchSharePassphraseModal .password-toggle {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: transparent;
+    border: none;
+    color: #909399;
+    cursor: pointer;
+    padding: 8px; /* Easier to click */
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#batchSharePassphraseModal .password-toggle:hover {
+    color: #409eff;
+}
+
+#batchSharePassphraseModal .modal-actions {
+    display: flex;
+    justify-content: flex-end; /* Align buttons to the right */
+    gap: 10px; /* Space between buttons */
+}
+
+#batchSharePassphraseModal .modal-actions button {
+    padding: 10px 20px; /* Standard padding */
+    border-radius: 6px; /* Consistent border-radius */
+    border: none;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500; /* Slightly bolder text */
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+#batchSharePassphraseModal #confirmBatchSharePassphrase {
+    background-color: #409eff;
+    color: white;
+}
+
+#batchSharePassphraseModal #confirmBatchSharePassphrase:hover {
+    background-color: #66b1ff;
+    box-shadow: 0 2px 8px rgba(64, 158, 255, 0.2); /* Subtle shadow on hover */
+}
+
+#batchSharePassphraseModal #cancelBatchSharePassphrase {
+    background-color: #f0f2f5; /* Lighter background for cancel */
+    color: #606266; /* Darker text for cancel */
+    border: 1px solid #dcdfe6; /* Subtle border */
+}
+
+#batchSharePassphraseModal #cancelBatchSharePassphrase:hover {
+    background-color: #e4e7ed;
+    border-color: #c0c4cc;
 }
