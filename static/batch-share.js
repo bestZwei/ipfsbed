@@ -3,6 +3,16 @@
 let batchFiles = [];
 let downloadCancelled = false;
 
+// 新增：渲染加载动画的函数
+function renderLoadingIndicator(text) {
+    const loadingIndicator = document.getElementById('loadingIndicator');
+    loadingIndicator.innerHTML = `
+        <div class="spinner"></div>
+        <div class="loading-text">${text || _t('accessing-file')}</div>
+    `;
+    loadingIndicator.style.display = 'block';
+}
+
 // Update page language elements specific to batch share page
 function updateBatchSharePageLanguage() {
     document.getElementById('htmlLang').setAttribute('lang', window.currentLang || 'en');
@@ -30,7 +40,7 @@ function updateBatchSharePageLanguage() {
 // Function to parse URL parameters and process the batch share
 function processBatchShare() {
     const urlParams = new URLSearchParams(window.location.search);
-    document.getElementById('loadingIndicator').style.display = 'block';
+    renderLoadingIndicator(_t('accessing-file'));
     
     if (urlParams.has('share')) {
         const encryptedPayload = urlParams.get('share');
