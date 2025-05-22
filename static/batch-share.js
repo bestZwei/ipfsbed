@@ -30,7 +30,7 @@ function updateBatchSharePageLanguage() {
 // Function to parse URL parameters and process the batch share
 function processBatchShare() {
     const urlParams = new URLSearchParams(window.location.search);
-    document.getElementById('loadingIndicator').style.display = 'block';
+    document.getElementById('loadingIndicator').style.display = 'flex';
     
     if (urlParams.has('share')) {
         const encryptedPayload = urlParams.get('share');
@@ -237,7 +237,7 @@ async function downloadSingleFile(index) {
     
     try {
         // Show loading indicator
-        document.getElementById('loadingIndicator').style.display = 'block';
+        document.getElementById('loadingIndicator').style.display = 'flex';
         
         // Fetch the file
         const response = await fetch(fileUrl);
