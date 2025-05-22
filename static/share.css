@@ -278,23 +278,24 @@
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(255, 255, 255, 0.8);
+    background-color: rgba(255, 255, 255, 0.9);
     z-index: 1000;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    backdrop-filter: blur(3px);
+    backdrop-filter: blur(5px);
 }
 
 .spinner {
-    border: 4px solid rgba(0, 0, 0, 0.1);
-    width: 50px;
-    height: 50px;
+    border: 5px solid rgba(0, 0, 0, 0.1);
+    width: 60px;
+    height: 60px;
     border-radius: 50%;
     border-left-color: #409eff;
     animation: spin 1s linear infinite;
-    margin: 0 auto 15px;
+    margin: 0 auto 20px;
+    box-shadow: 0 0 15px rgba(64, 158, 255, 0.2);
 }
 
 @keyframes spin {
@@ -309,9 +310,16 @@
     margin-top: 15px;
     text-align: center;
     background-color: white;
-    padding: 8px 20px;
-    border-radius: 8px;
-    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+    padding: 12px 25px;
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% { box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); }
+    50% { box-shadow: 0 4px 20px rgba(64, 158, 255, 0.3); }
+    100% { box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); }
 }
 
 .return-home {
