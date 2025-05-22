@@ -10,7 +10,7 @@
 
 IPFSBED is a decentralized file hosting platform built on the InterPlanetary File System (IPFS). It allows users to upload and share files of various formats through the distributed IPFS network, making content accessible globally without relying on central servers.
 
-![IPFSBED Screenshot](https://i0.img2ipfs.com/ipfs/QmXKo32jvDsMUaFxCSBMpPLFoRnNu5r1yMW63HJJuvTDL2?filename=ipfsbed-screenshot.png)
+![IPFSBED Screenshot](img/jt.png)
 
 ## Key Features
 

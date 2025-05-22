@@ -10,7 +10,7 @@
 
 IPFSBED是一个基于星际文件系统（IPFS）构建的去中心化文件托管平台。它允许用户通过分布式IPFS网络上传和共享各种格式的文件，使内容全球可访问，而无需依赖中央服务器。
 
-![IPFSBED截图](https://i0.img2ipfs.com/ipfs/QmXKo32jvDsMUaFxCSBMpPLFoRnNu5r1yMW63HJJuvTDL2?filename=ipfsbed-screenshot.png)
+![IPFSBED截图](img/jt.png)
 
 ## 主要功能
 
