@@ -1017,13 +1017,15 @@ function uploadDirectory(fileList) {
 
 // 创建文件夹上传条目
 function createDirectoryItem(folderName, totalSize, randomClass) {
+    // Remove trailing slash for display only
+    const displayName = folderName.endsWith('/') ? folderName.slice(0, -1) : folderName;
     return `
         <div class="item ${randomClass}">
             <div class="file">
                 <input type="checkbox" class="file-select-checkbox" title="${_t('select-for-batch-sharing')}">
                 <svg class="icon" viewBox="0 0 24 24" width="32" height="32"><path d="M10 4H2v16h20V6H12l-2-2z" fill="#f7ba2a"/><path d="M2 20V4h8l2 2h10v14z" fill="none"/></svg>
                 <div class="desc">
-                    <div class="desc__name">${folderName}</div>
+                    <div class="desc__name">${displayName}</div>
                     <div class="desc__size">${_t('file-size', {size: formatBytes(totalSize)})}</div>
                 </div>
                 <a href="javascript:void(0);" class="link copy-primary-link" title="${_t('copy-share-link')}" onclick="copyLinkUrl(this); return false;">

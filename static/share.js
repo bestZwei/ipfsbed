@@ -107,8 +107,9 @@ function displayFileDetails(cid, filename, filesize) {
     }
     document.getElementById('fileIcon').innerHTML = fileIcon;
     
-    // Set file details
-    document.getElementById('fileName').textContent = filename;
+    // Set file details (strip trailing slash for display if folder)
+    let displayName = filename.endsWith('/') ? filename.slice(0, -1) : filename;
+    document.getElementById('fileName').textContent = displayName;
     if (filesize && filesize > 0) {
         document.getElementById('fileSize').textContent = _t('file-size', { size: formatBytes(filesize) });
     } else {
