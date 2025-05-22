@@ -120,14 +120,17 @@ function displayBatchFiles(files) {
     files.forEach((file, index) => {
         const fileIcon = getFileTypeIcon(file.filename);
         const fileSize = file.size ? formatBytes(file.size) : 'Unknown size';
-        
+
+        // Remove trailing slash for display if folder
+        const displayName = file.filename.endsWith('/') ? file.filename.slice(0, -1) : file.filename;
+
         const fileItem = document.createElement('div');
         fileItem.className = 'file-item';
         fileItem.innerHTML = `
             <input type="checkbox" class="file-checkbox" data-index="${index}" checked>
             <div class="file-icon">${fileIcon}</div>
             <div class="file-details">
-                <div class="file-name">${file.filename}</div>
+                <div class="file-name">${displayName}</div>
                 <div class="file-size">${fileSize}</div>
             </div>
             <div class="file-actions">

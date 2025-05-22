@@ -53,6 +53,8 @@ const translations = {
     'more-gateways': '更多网关',
     'copyright-text': '© {year} IPFSBED - 基于IPFS的去中心化文件托管服务',
     'upload-list': '上传列表',
+    'file-mode': '文件模式',
+    'folder-mode': '文件夹模式',
   },
   'en': {
     'meta-title': 'IPFSBED - Decentralized IPFS File Hosting Service',
@@ -104,6 +106,8 @@ const translations = {
     'more-gateways': 'More Gateways',
     'copyright-text': '© {year} IPFSBED - Decentralized IPFS File Hosting Service',
     'upload-list': 'Upload List',
+    'file-mode': 'File Mode',
+    'folder-mode': 'Folder Mode',
   },
   'de': {
     'meta-title': 'IPFSBED - Dezentraler IPFS-Dateihosting-Dienst',
@@ -155,6 +159,8 @@ const translations = {
     'more-gateways': 'Weitere Gateways',
     'copyright-text': '© {year} IPFSBED - Dezentraler IPFS-Dateihosting-Dienst',
     'upload-list': 'Upload-Liste',
+    'file-mode': 'Dateimodus',
+    'folder-mode': 'Ordnermodus',
   },
   'ru': {
     'meta-title': 'IPFSBED - Децентрализованный сервис хостинга файлов IPFS',
@@ -206,6 +212,8 @@ const translations = {
     'more-gateways': 'Больше шлюзов',
     'copyright-text': '© {year} IPFSBED - Децентрализованный сервис хостинга файлов IPFS',
     'upload-list': 'Список загрузок',
+    'file-mode': 'Режим файла',
+    'folder-mode': 'Режим папки',
   },
   'fr': {
     'meta-title': 'IPFSBED - Service d\'hébergement de fichiers IPFS décentralisé',
@@ -257,6 +265,8 @@ const translations = {
     'more-gateways': 'Plus de passerelles',
     'copyright-text': '© {year} IPFSBED - Service d\'hébergement de fichiers IPFS décentralisé',
     'upload-list': 'Liste des téléchargements',
+    'file-mode': 'Mode fichier',
+    'folder-mode': 'Mode dossier',
   },
   'es': {
     'meta-title': 'IPFSBED - Servicio de alojamiento de archivos IPFS descentralizado',
@@ -308,6 +318,8 @@ const translations = {
     'more-gateways': 'Más puertas de enlace',
     'copyright-text': '© {year} IPFSBED - Servicio de alojamiento de archivos IPFS descentralizado',
     'upload-list': 'Lista de subidas',
+    'file-mode': 'Modo archivo',
+    'folder-mode': 'Modo carpeta',
   },
   'ar': {
     'meta-title': 'IPFSBED - خدمة استضافة ملفات IPFS اللامركزية',
@@ -359,6 +371,8 @@ const translations = {
     'more-gateways': 'المزيد من البوابات',
     'copyright-text': '© {year} IPFSBED - خدمة استضافة ملفات IPFS اللامركزية',
     'upload-list': 'قائمة التحميل',
+    'file-mode': 'وضع الملف',
+    'folder-mode': 'وضع المجلد',
   },
   'fa': {
     'meta-title': 'IPFSBED - سرویس میزبانی فایل IPFS غیرمتمرکز',
@@ -410,6 +424,8 @@ const translations = {
     'more-gateways': 'دروازه‌های بیشتر',
     'copyright-text': '© {year} IPFSBED - سرویس میزبانی فایل IPFS غیرمتمرکز',
     'upload-list': 'لیست آپلودها',
+    'file-mode': 'حالت فایل',
+    'folder-mode': 'حالت پوشه',
   },
   'tr': {
     'meta-title': 'IPFSBED - Merkezi Olmayan IPFS Dosya Barındırma Hizmeti',
@@ -461,6 +477,8 @@ const translations = {
     'more-gateways': 'Daha Fazla Ağ Geçidi',
     'copyright-text': '© {year} IPFSBED - Merkezi Olmayan IPFS Dosya Barındırma Hizmeti',
     'upload-list': 'Yükleme Listesi',
+    'file-mode': 'Dosya Modu',
+    'folder-mode': 'Klasör Modu',
   },
   'pt': {
     'meta-title': 'IPFSBED - Serviço de Hospedagem de Arquivos IPFS Descentralizado',
@@ -512,6 +530,8 @@ const translations = {
     'more-gateways': 'Mais Gateways',
     'copyright-text': '© {year} IPFSBED - Serviço de Hospedagem de Arquivos IPFS Descentralizado',
     'upload-list': 'Lista de Uploads',
+    'file-mode': 'Modo Arquivo',
+    'folder-mode': 'Modo Pasta',
   },
   'ko': {
     'meta-title': 'IPFSBED - 분산형 IPFS 파일 호스팅 서비스',
@@ -563,6 +583,8 @@ const translations = {
     'more-gateways': '더 많은 게이트웨이',
     'copyright-text': '© {year} IPFSBED - 분산형 IPFS 파일 호스팅 서비스',
     'upload-list': '업로드 목록',
+    'file-mode': '파일 모드',
+    'folder-mode': '폴더 모드',
   },
   'ja': {
     'meta-title': 'IPFSBED - 分散型IPFSファイルホスティングサービス',
@@ -614,6 +636,8 @@ const translations = {
     'more-gateways': '他のゲートウェイ',
     'copyright-text': '© {year} IPFSBED - 分散型IPFSファイルホスティングサービス',
     'upload-list': 'アップロードリスト',
+    'file-mode': 'ファイルモード',
+    'folder-mode': 'フォルダモード',
   }
 };
 

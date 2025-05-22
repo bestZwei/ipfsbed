@@ -12,12 +12,70 @@ $(document).ready(() => {
 
     function initEventListeners() {
         $(document).on('paste', handlePasteUpload);
-        $('.upload .content').on('click', () => $('#file').click());
-        $('#file').on('change', () => upload($('#file')[0].files));
+        
+        // Upload mode toggle handler
+        $('#uploadModeToggle').on('change', function() {
+            const isDirectoryMode = $(this).prop('checked');
+            localStorage.setItem('ipfsbed_directory_mode', isDirectoryMode ? 'true' : 'false');
+            
+            // Configure file inputs based on mode
+            if (isDirectoryMode) {
+                $('#directory').attr('webkitdirectory', '').attr('directory', '');
+                $('#file').removeAttr('webkitdirectory').removeAttr('directory');
+            } else {
+                $('#directory').removeAttr('webkitdirectory').removeAttr('directory');
+                $('#file').removeAttr('webkitdirectory').removeAttr('directory');
+            }
+            
+            // Both inputs should remain hidden until triggered by click
+            $('#file, #directory').hide();
+        });
+        
+        // Try to restore toggle state from localStorage
+        const savedDirectoryMode = localStorage.getItem('ipfsbed_directory_mode');
+        if (savedDirectoryMode === 'true') {
+            $('#uploadModeToggle').prop('checked', true);
+        }
+        
+        // Update click handler to use correct input based on mode
+        $('.upload .content').on('click', () => {
+            const isDirectoryMode = $('#uploadModeToggle').prop('checked');
+            if (isDirectoryMode) {
+                $('#directory').click();
+            } else {
+                $('#file').click();
+            }
+        });
+        
+        // Handle file input change
+        $('#file').on('change', () => {
+            const files = $('#file')[0].files;
+            upload(files);
+        });
+        
+        // Handle directory input change
+        $('#directory').on('change', () => {
+            const files = $('#directory')[0].files;
+            uploadDirectory(files);
+        });
+        
         $('#dragbox').on('dragover', e => e.preventDefault())
                      .on('dragenter', handleDragEnter)
                      .on('dragleave', handleDragLeave)
-                     .on('drop', handleDropUpload);
+                     .on('drop', function(e) {
+            e.preventDefault();
+            $('.upload').removeClass('dragenter');
+            $('.upload .content .icon').css('transform', '');
+            $('.upload .content .desc').css('transform', '');
+            const items = e.originalEvent.dataTransfer.items;
+            if (items && items.length && hasDirectory(items)) {
+                getFilesFromDataTransferItems(items).then(files => {
+                    uploadDirectory(files);
+                });
+            } else {
+                upload(e.originalEvent.dataTransfer.files);
+            }
+        });
         // For shared link access
         $('#submitAccessPassphrase').on('click', () => {
             const encryptedPayload = $('#shareAccessPrompt').data('payload');
@@ -374,7 +432,7 @@ $(document).ready(() => {
                 // Encryption failed, fallback to direct link and notify user
                 showToast(_t('encryption-failed') + " " + _t('file-will-be-public'), 'error');
                 // Use public share link without passphrase
-                shareUrl = `${window.location.origin}${window.location.pathname.replace('index.html', '')}share.html?cid=${res.Hash}&filename=${fileName}&size=${file.size}`;
+                shareUrl = `${window.origin}${window.location.pathname.replace('index.html', '')}share.html?cid=${res.Hash}&filename=${fileName}&size=${file.size}`;
                 displaySrc = shareUrl;
                 
                 const itemElement = $(`.${randomClass}`);
@@ -821,5 +879,205 @@ function updateShareSelectedButtonState() {
     }
 }
 
-// Remove or modify the old function that hid/showed the buttons
-// And replace with appropriate calls to updateShareSelectedButtonState()
+// 判断是否为文件夹上传
+function isDirectoryUpload(fileList) {
+    if (!fileList || !fileList.length) return false;
+    // webkitRelativePath 有值说明是文件夹上传
+    return Array.from(fileList).some(f => f.webkitRelativePath && f.webkitRelativePath.length > 0);
+}
+
+// 检查拖拽项是否包含目录
+function hasDirectory(items) {
+    for (let i = 0; i < items.length; i++) {
+        if (items[i].webkitGetAsEntry && items[i].webkitGetAsEntry().isDirectory) {
+            return true;
+        }
+    }
+    return false;
+}
+
+// 递归获取拖拽文件夹下所有文件
+function getFilesFromDataTransferItems(items) {
+    return new Promise(resolve => {
+        let files = [];
+        let pending = 0;
+        function traverse(entry, path = '') {
+            if (entry.isFile) {
+                pending++;
+                entry.file(file => {
+                    file.webkitRelativePath = path + file.name;
+                    files.push(file);
+                    pending--;
+                    if (pending === 0) resolve(files);
+                });
+            } else if (entry.isDirectory) {
+                const reader = entry.createReader();
+                pending++;
+                reader.readEntries(entries => {
+                    entries.forEach(e => traverse(e, path + entry.name + '/'));
+                    pending--;
+                    if (pending === 0) resolve(files);
+                });
+            }
+        }
+        for (let i = 0; i < items.length; i++) {
+            const entry = items[i].webkitGetAsEntry && items[i].webkitGetAsEntry();
+            if (entry) traverse(entry, '');
+        }
+    });
+}
+
+// 文件夹上传
+function uploadDirectory(fileList) {
+    if (!fileList || !fileList.length) return;
+    // 文件夹名取第一个文件的 webkitRelativePath 的首目录
+    const firstPath = fileList[0].webkitRelativePath || fileList[0].name;
+    const folderName = firstPath.split('/')[0];
+    // 计算总大小
+    let totalSize = 0;
+    Array.from(fileList).forEach(f => totalSize += f.size);
+
+    // 构建 FormData
+    const formData = new FormData();
+    Array.from(fileList).forEach(f => {
+        // 保持相对路径
+        formData.append('file', f, f.webkitRelativePath || f.name);
+    });
+
+    // 显示上传条目
+    const randomClass = Date.now().toString(36) + '_dir';
+    $('.filelist .list').append(createDirectoryItem(folderName, totalSize, randomClass));
+    $(`.${randomClass}`).addClass('uploading');
+
+    // 上传到 IPFS
+    const apis = [
+        'https://gw.ipfsbed.is-an.org/api/v0/add?pin=false&recursive=true&wrap-with-directory=true',
+        'https://2ipfs.zone.id/api/v0/add?pin=false&recursive=true&wrap-with-directory=true',
+        'https://api.img2ipfs.org/api/v0/add?pin=true&recursive=true&wrap-with-directory=true'
+    ];
+    const tryUpload = (apiIndex = 0, retryCount = 0) => {
+        if (apiIndex >= apis.length) {
+            handleError(randomClass, _t('all-apis-failed'));
+            return;
+        }
+        $.ajax({
+            url: apis[apiIndex],
+            type: 'post',
+            dataType: 'text' // IPFS 返回多行 JSON
+            ,
+            processData: false,
+            contentType: false,
+            data: formData,
+            timeout: 300000, // 5分钟
+            xhr: () => {
+                const xhr = $.ajaxSettings.xhr();
+                if (xhr.upload) {
+                    xhr.upload.addEventListener('progress', e => updateProgress(e, randomClass), false);
+                }
+                return xhr;
+            },
+            success: res => {
+                // 解析最后一行为文件夹
+                const lines = res.trim().split('\n');
+                let dirObj = null;
+                for (let i = lines.length - 1; i >= 0; i--) {
+                    try {
+                        const obj = JSON.parse(lines[i]);
+                        // 目录对象的 Name 等于文件夹名
+                        if (obj.Name === folderName) {
+                            dirObj = obj;
+                            break;
+                        }
+                    } catch {}
+                }
+                if (dirObj && dirObj.Hash) {
+                    handleDirectoryUploadSuccess(dirObj, folderName, totalSize, randomClass);
+                    setTimeout(() => seeding(dirObj), 1000);
+                } else {
+                    if (retryCount < 2) {
+                        setTimeout(() => tryUpload(apiIndex, retryCount + 1), 1000);
+                    } else {
+                        tryUpload(apiIndex + 1, 0);
+                    }
+                }
+            },
+            error: (xhr, status) => {
+                if (status === 'timeout') {
+                    tryUpload(apiIndex + 1, 0);
+                } else if (retryCount < 2) {
+                    setTimeout(() => tryUpload(apiIndex, retryCount + 1), 1000);
+                } else {
+                    tryUpload(apiIndex + 1, 0);
+                }
+            }
+        });
+    };
+    tryUpload();
+}
+
+// 创建文件夹上传条目
+function createDirectoryItem(folderName, totalSize, randomClass) {
+    // Remove trailing slash for display only
+    const displayName = folderName.endsWith('/') ? folderName.slice(0, -1) : folderName;
+    return `
+        <div class="item ${randomClass}">
+            <div class="file">
+                <input type="checkbox" class="file-select-checkbox" title="${_t('select-for-batch-sharing')}">
+                <svg class="icon" viewBox="0 0 24 24" width="32" height="32"><path d="M10 4H2v16h20V6H12l-2-2z" fill="#f7ba2a"/><path d="M2 20V4h8l2 2h10v14z" fill="none"/></svg>
+                <div class="desc">
+                    <div class="desc__name">${displayName}</div>
+                    <div class="desc__size">${_t('file-size', {size: formatBytes(totalSize)})}</div>
+                </div>
+                <a href="javascript:void(0);" class="link copy-primary-link" title="${_t('copy-share-link')}" onclick="copyLinkUrl(this); return false;">
+                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" class="icon-copy">
+                        <path d="M19,21H8V7H19M19,5H8A2,2 0 0,0 6,7V21A2,2 0 0,0 8,23H19A2,2 0 0,0 21,21V7A2,2 0 0,0 19,5M16,1H4A2,2 0 0,0 2,3V17H4V3H16V1Z" fill="#909399"/>
+                    </svg>
+                </a>
+                <a href="javascript:void(0);" class="link" title="CID" onclick="copyCID(this); return false;">
+                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" class="icon-copy-cid">
+                        <path d="M14,8H10V6H14V8M20,4V20C20,21.1 19.1,22 18,22H6C4.9,22 4,21.1 4,20V4C4,2.9 4.9,2 6,2H18C19.1,2 20,2.9 20,4M18,13H6V20H18V13M18,4H6V11H18V4H14,15H10V17H14V15Z" fill="#909399"/>
+                    </svg>
+                </a>
+                <a title="delete" class="link" onclick="deleteItem(this); return false;">
+                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" class="icon-delete">
+                        <path d="M19,4H15.5L14.5,3H9.5L8.5,4H5V6H19M6,19A2,2 0 0,0 8,21H16A2,2 0 0,0 18,19V7H6V19Z" fill="#909399"/>
+                    </svg>
+                </a>
+            </div>
+            <div class="progress">
+                <div class="progress-bar">
+                    <div class="progress-inner"></div>
+                </div>
+                <div class="progress-status">0%</div>
+            </div>
+            <div class="url-display" style="display: none; margin-top: 8px;">
+                <input type="text" class="file-url-input" style="width: 100%; padding: 6px; border: 1px solid #dcdfe6; border-radius: 4px; box-sizing: border-box;" readonly>
+            </div>
+            <input type="hidden" class="data-url" value="">
+            <input type="hidden" class="data-cid" value="">
+            <input type="hidden" class="data-filename" value="${folderName}">
+            <input type="hidden" class="data-passphrase-protected" value="false">
+        </div>
+    `;
+}
+
+// 文件夹上传成功处理
+function handleDirectoryUploadSuccess(dirObj, folderName, totalSize, randomClass) {
+    const shareUrl = `${window.location.origin}${window.location.pathname.replace('index.html', '')}share.html?cid=${dirObj.Hash}&filename=${encodeURIComponent(folderName + '/')}&size=${totalSize}`;
+    $('#file').val(null);
+    $(`.${randomClass}`).find('.progress-inner').addClass('success');
+    $(`.${randomClass}`).find('.progress').fadeOut(500, function() {
+        $(`.${randomClass}`).removeClass('uploading');
+        const urlDisplay = $(`.${randomClass}`).find('.url-display');
+        const fileUrlInput = $(`.${randomClass}`).find('.file-url-input');
+        fileUrlInput.val(shareUrl);
+        urlDisplay.fadeIn(300);
+    });
+    $(`.${randomClass}`).find('.data-url').val(shareUrl);
+    $(`.${randomClass}`).find('.data-cid').val(dirObj.Hash);
+    $(`.${randomClass}`).find('.data-filename').val(folderName);
+    $('.copyall').removeClass('disabled');
+    showToast(_t('upload-success'), 'success');
+    updateShareSelectedButtonState();
+}
+

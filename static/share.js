@@ -2,6 +2,7 @@
 
 let currentCid = null;
 let currentFilename = null;
+let currentFilesize = null;
 
 // Update page language elements specific to share page
 function updateSharePageLanguage() {
@@ -91,17 +92,24 @@ function processShareUrl() {
 function displayFileDetails(cid, filename, filesize) {
     currentCid = cid;
     currentFilename = filename;
+    currentFilesize = filesize;
 
     // Hide passphrase form if it was shown
     document.getElementById('passphraseForm').style.display = 'none';
     document.getElementById('loadingIndicator').style.display = 'none';
     
-    // Get icon based on file type
-    const fileIcon = getFileTypeIcon(filename);
+    // Get icon based on file type or folder
+    let fileIcon;
+    if (filename.endsWith('/')) {
+        fileIcon = '<svg class="icon" viewBox="0 0 24 24" width="48" height="48"><path d="M10 4H2v16h20V6H12l-2-2z" fill="#f7ba2a"/><path d="M2 20V4h8l2 2h10v14z" fill="none"/></svg>';
+    } else {
+        fileIcon = getFileTypeIcon(filename);
+    }
     document.getElementById('fileIcon').innerHTML = fileIcon;
     
-    // Set file details
-    document.getElementById('fileName').textContent = filename;
+    // Set file details (strip trailing slash for display if folder)
+    let displayName = filename.endsWith('/') ? filename.slice(0, -1) : filename;
+    document.getElementById('fileName').textContent = displayName;
     if (filesize && filesize > 0) {
         document.getElementById('fileSize').textContent = _t('file-size', { size: formatBytes(filesize) });
     } else {
