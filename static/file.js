@@ -13,7 +13,7 @@ $(document).ready(() => {
     function initEventListeners() {
         $(document).on('paste', handlePasteUpload);
         $('.upload .content').on('click', () => $('#file').click());
-        $('#file').on('change', () => upload($('#file')[0].files));
+        $('#file').on('change', () => upload($('#file')[0].files)); // Pass FileList
         $('#dragbox').on('dragover', e => e.preventDefault())
                      .on('dragenter', handleDragEnter)
                      .on('dragleave', handleDragLeave)
@@ -93,7 +93,7 @@ $(document).ready(() => {
         if (!clipboardData || !clipboardData.items) return showToast(_t('clipboard-empty'), 'error');
         const file = Array.from(clipboardData.items).find(item => item.type.indexOf('image') !== -1)?.getAsFile();
         if (!file) return showToast(_t('clipboard-no-file'), 'error');
-        upload([file]);
+        upload([file]); // Pass array of File
     }
 
     function handleDropUpload(e) {
@@ -101,10 +101,108 @@ $(document).ready(() => {
         $('.upload').removeClass('dragenter');
         $('.upload .content .icon').css('transform', '');
         $('.upload .content .desc').css('transform', '');
-        upload(e.originalEvent.dataTransfer.files);
+        upload(e.originalEvent.dataTransfer.items); // Pass DataTransferItemList
     }
 
-    function upload(files) {
+    async function collectFilesFromEntry(entry, currentPath = "") {
+        let files = [];
+        if (entry.isFile) {
+            return new Promise((resolve, reject) => {
+                entry.file(file => {
+                    // Ensure webkitRelativePath is set for consistent handling if needed later for UI
+                    // For uploads, file.name is primary.
+                    if (!file.webkitRelativePath && currentPath) {
+                        try {
+                            Object.defineProperty(file, 'webkitRelativePath', {
+                                value: currentPath + file.name,
+                                configurable: true,
+                                writable: true
+                            });
+                        } catch (e) {
+                            console.warn("Could not set webkitRelativePath on file from entry: ", e);
+                        }
+                    }
+                    resolve([file]);
+                }, reject);
+            });
+        } else if (entry.isDirectory) {
+            return new Promise((resolve, reject) => {
+                const dirReader = entry.createReader();
+                let allEntries = [];
+                const readAllEntries = () => {
+                    dirReader.readEntries(async (entries) => {
+                        if (entries.length === 0) {
+                            // All entries read for this directory
+                            let collectedSubFiles = [];
+                            for (const subEntry of allEntries) {
+                                const subFiles = await collectFilesFromEntry(subEntry, currentPath + entry.name + "/");
+                                collectedSubFiles = collectedSubFiles.concat(subFiles);
+                            }
+                            resolve(collectedSubFiles);
+                        } else {
+                            allEntries = allEntries.concat(entries);
+                            readAllEntries(); // Read more entries
+                        }
+                    }, reject);
+                };
+                readAllEntries();
+            });
+        }
+        return files; // Should be unreachable if entry is file or directory
+    }
+
+
+    async function upload(source) {
+        let filesToProcess = [];
+
+        if (source instanceof FileList) { // From <input type="file">
+            filesToProcess = Array.from(source);
+        } else if (source instanceof DataTransferItemList) { // From drag & drop
+            const promises = [];
+            for (let i = 0; i < source.length; i++) {
+                const item = source[i];
+                if (item.kind === 'file') {
+                    const entry = item.webkitGetAsEntry();
+                    if (entry) {
+                        promises.push(collectFilesFromEntry(entry));
+                    } else {
+                        // Fallback for items that are not entries (e.g. files from some browsers/OS)
+                        const file = item.getAsFile();
+                        if (file) {
+                             // Wrap single file in an array to be consistent with collectFilesFromEntry
+                            promises.push(Promise.resolve([file]));
+                        }
+                    }
+                }
+            }
+            if (promises.length > 0) {
+                try {
+                    const nestedFileArrays = await Promise.all(promises);
+                    filesToProcess = [].concat(...nestedFileArrays); // Flatten array of arrays
+                } catch (error) {
+                    console.error("Error collecting files from dropped items:", error);
+                    showToast(_t('upload-error') + (error.message ? `: ${error.message}` : ''), 'error');
+                    return;
+                }
+            }
+        } else if (Array.isArray(source) && source.every(item => item instanceof File)) { // From paste
+            filesToProcess = source;
+        } else {
+            console.warn("Unknown source type for upload:", source);
+            if (source && source.length === 0) { // e.g. empty FileList or DataTransferItemList
+                 // No files to process, can return or let the loop handle it.
+            } else {
+                showToast(_t('upload-error'), 'error'); // Generic error for unknown type
+            }
+            return;
+        }
+
+        if (filesToProcess.length === 0) {
+            // This might happen if no files were selected or dropped.
+            // Depending on desired behavior, a toast could be shown here.
+            // For now, let it proceed; the forEach loop won't execute.
+        }
+        
         const maxSize = 5242880 * 20; // 100MB
         const allowedExtensions = [
             // 图片格式
@@ -170,7 +268,7 @@ $(document).ready(() => {
             '.TORRENT', '.ICS', '.VCF'
         ];
 
-        Array.from(files).forEach(file => {
+        Array.from(filesToProcess).forEach(file => {
             const fileExtension = file.name.substring(file.name.lastIndexOf('.')).toUpperCase();
 
             if (!allowedExtensions.includes(fileExtension)) {
