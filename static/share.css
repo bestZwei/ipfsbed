@@ -307,10 +307,6 @@
     font-weight: 500;
     margin-top: 15px;
     text-align: center;
-    background-color: white;
-    padding: 8px 20px;
-    border-radius: 8px;
-    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
 }
 
 .return-home {
