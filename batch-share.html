@@ -15,7 +15,7 @@
     <script src="https://cdn.jsdelivr.net/npm/file-saver@2.0.5/dist/FileSaver.min.js"></script>
     <script src="./static/langs.js"></script>
     <script src="./static/common.js"></script>
-    <script src="./static/batch-share.js" defer></script>
+    <script src="./static/batch-share.js"></script>
 </head>
 <body>
     <div class="batch-share-container">
@@ -81,6 +81,16 @@
             </div>
         </div>
         
+        <div class="sponsors-section">
+            <div class="sponsors-text">
+                <span data-translate="sponsors-text">本项目由</span> 
+                <a href="https://yxvm.com/" target="_blank" rel="noopener noreferrer">YXVM</a> 
+                <span data-translate="sponsors-and">和</span> 
+                <a href="https://support.nodeseek.com/" target="_blank" rel="noopener noreferrer">NodeSupport</a> 
+                <span data-translate="sponsors-suffix">赞助</span>
+            </div>
+        </div>
+        
         <div class="return-home">
             <a href="./index.html"><i class="fas fa-home"></i><span id="batchReturnHomeText"></span></a>
         </div>
@@ -95,28 +105,6 @@
             </div>
             <div class="download-status" id="downloadStatus"></div>
             <button class="download-cancel" id="downloadCancel"></button>
-        </div>
-    </div>
-
-    <!-- Add sponsor information section -->
-    <div class="sponsor-section">
-        <div class="sponsor-content">
-            <span data-translate="sponsor-text">本项目由</span>
-            <a href="https://yxvm.com/" target="_blank" rel="noopener noreferrer" class="sponsor-link">YXVM</a>
-            <span data-translate="sponsor-and">和</span>
-            <a href="https://support.nodeseek.com/" target="_blank" rel="noopener noreferrer" class="sponsor-link">NodeSupport</a>
-            <span data-translate="sponsor-sponsored">赞助</span>
-        </div>
-    </div>
-    
-    <!-- Footer -->
-    <div id="footer">
-        <div>
-            <div class="info">
-                <a href="https://github.com/bestZwei/ipfsbed"><i class="fab fa-github" style="margin-right: 5px;"></i><span data-translate="project-repo">项目地址</span></a> | 
-                <a href="https://check.ipfs.winx.run/"><i class="fas fa-network-wired" style="margin-right: 5px;"></i><span data-translate="more-gateways">更多网关</span></a>
-            </div>
-            <span data-translate="copyright-text">© 2021-2025 IPFSBED - 基于IPFS的去中心化文件托管服务</span>
         </div>
     </div>
 

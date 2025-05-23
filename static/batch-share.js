@@ -20,6 +20,12 @@ function updateBatchSharePageLanguage() {
     document.getElementById('downloadDialogTitle').textContent = _t('download-progress') || 'Downloading Files';
     document.getElementById('downloadCancel').textContent = _t('batch-share-cancel');
     
+    // Update sponsor text elements
+    document.querySelectorAll('.sponsors-section [data-translate]').forEach(element => {
+        const key = element.getAttribute('data-translate');
+        element.textContent = _t(key);
+    });
+    
     // Set password toggle button title
     const passwordToggle = document.querySelector('.password-toggle');
     if (passwordToggle) {
@@ -373,48 +379,3 @@ document.addEventListener('DOMContentLoaded', function() {
     updateBatchSharePageLanguage();
     processBatchShare();
 });
-
-$(document).ready(function() {
-    // Initialize language
-    updatePageLanguage();
-    
-    // Parse URL parameters to get batch file information
-    const urlParams = new URLSearchParams(window.location.search);
-    const shareData = urlParams.get('share');
-    const filesData = urlParams.get('files');
-    
-    if (shareData) {
-        // Handle encrypted batch share data
-        handleEncryptedBatchShare(shareData);
-    } else if (filesData) {
-        // Handle direct batch file access
-        try {
-            const files = JSON.parse(decodeURIComponent(filesData));
-            displayBatchFiles(files);
-        } catch (e) {
-            showError('Invalid batch share link');
-        }
-    } else {
-        // Invalid URL parameters
-        showError('Invalid batch share link');
-    }
-});
-
-function handleEncryptedBatchShare(encryptedData) {
-    // Show passphrase prompt for batch share
-    showBatchPassphrasePrompt(encryptedData);
-}
-
-function showBatchPassphrasePrompt(encryptedData) {
-    // Implementation for batch passphrase prompt
-    // This would be expanded based on the actual UI requirements
-}
-
-function displayBatchFiles(files) {
-    // Implementation for displaying the batch files
-    // This would be expanded based on the actual UI requirements
-}
-
-function showError(message) {
-    showToast(message, 'error');
-}

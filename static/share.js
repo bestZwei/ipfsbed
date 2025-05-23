@@ -26,6 +26,12 @@ function updateSharePageLanguage() {
     if (passwordToggle) {
         passwordToggle.title = _t('show-password');
     }
+    
+    // Update sponsor text elements
+    document.querySelectorAll('.sponsors-section [data-translate]').forEach(element => {
+        const key = element.getAttribute('data-translate');
+        element.textContent = _t(key);
+    });
 }
 
 // Check URL parameters and determine if it's an encrypted share or direct CID
@@ -216,45 +222,3 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 });
-
-$(document).ready(function() {
-    // Initialize language
-    updatePageLanguage();
-    
-    // Parse URL parameters to get file information
-    const urlParams = new URLSearchParams(window.location.search);
-    const cid = urlParams.get('cid');
-    const filename = urlParams.get('filename');
-    const size = urlParams.get('size');
-    const shareData = urlParams.get('share');
-    
-    if (shareData) {
-        // Handle encrypted share data
-        handleEncryptedShare(shareData);
-    } else if (cid && filename) {
-        // Handle direct file access
-        displayFile(cid, filename, size);
-    } else {
-        // Invalid URL parameters
-        showError('Invalid share link');
-    }
-});
-
-function handleEncryptedShare(encryptedData) {
-    // Show passphrase prompt
-    showPassphrasePrompt(encryptedData);
-}
-
-function showPassphrasePrompt(encryptedData) {
-    // Implementation for passphrase prompt
-    // This would be expanded based on the actual UI requirements
-}
-
-function displayFile(cid, filename, size) {
-    // Implementation for displaying the file
-    // This would be expanded based on the actual UI requirements
-}
-
-function showError(message) {
-    showToast(message, 'error');
-}

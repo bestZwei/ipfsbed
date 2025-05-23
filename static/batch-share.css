@@ -542,61 +542,36 @@ body {
     transform: translateY(0);
 }
 
-/* Container styles */
-.container {
-    max-width: 800px;
-    margin: 20px auto;
-    padding: 0 20px;
-}
-
-/* Sponsor section styles */
-.sponsor-section {
-    background-color: #f8f9fa;
-    border: 1px solid #e9ecef;
-    border-radius: 8px;
-    padding: 16px;
-    margin: 20px auto;
-    max-width: 600px;
+/* Sponsor section */
+.sponsors-section {
     text-align: center;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    margin: 20px 0 10px;
+    padding: 8px 0;
+    font-size: 0.85rem;
+    color: #909399;
+    border-top: 1px solid #ebeef5;
 }
 
-.sponsor-content {
-    font-size: 14px;
-    color: #666;
-    line-height: 1.5;
+.sponsors-text {
+    display: inline-block;
+    padding: 5px 15px;
+    border-radius: 20px;
+    background-color: #f8f9fa;
 }
 
-.sponsor-link {
+.sponsors-section a {
     color: #409eff;
     text-decoration: none;
     font-weight: 500;
-    margin: 0 4px;
-    transition: all 0.3s ease;
+    transition: all 0.2s;
 }
 
-.sponsor-link:hover {
+.sponsors-section a:hover {
     color: #66b1ff;
     text-decoration: underline;
 }
 
-/* Mobile responsive */
-@media (max-width: 480px) {
-    .container {
-        padding: 0 10px;
-    }
-    
-    .sponsor-section {
-        margin: 15px 10px;
-        padding: 12px;
-        border-radius: 6px;
-    }
-    
-    .sponsor-content {
-        font-size: 13px;
-    }
-}
-
+/* Responsive adjustments */
 @media (max-width: 767px) {
     .batch-share-container {
         padding: 20px 15px;
@@ -646,5 +621,31 @@ body {
     
     .passphrase-input-wrapper {
         width: 100%;
+    }
+}
+
+@media (max-width: 480px) {
+    .file-item {
+        flex-wrap: wrap;
+    }
+    
+    .file-details {
+        width: 100%;
+        margin: 10px 0;
+        padding-left: 30px;
+    }
+    
+    .file-actions {
+        width: 100%;
+        justify-content: flex-end;
+        margin-top: 10px;
+    }
+    
+    .sponsors-section {
+        margin: 12px 0 6px;
+        font-size: 0.75rem;
+    }
+    .sponsors-text {
+        padding: 4px 10px;
     }
 }
