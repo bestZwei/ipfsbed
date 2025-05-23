@@ -591,9 +591,7 @@ function seeding(res) {
         'https://ipfs.dekart.io/ipfs/',
         'https://ipfs.allgram.best/ipfs/',
         'https://ipfs.metaversis.io/ipfs/',
-        'https://ipfs-internal.xnftdata.com/ipfs/',
-        'https://ipfs-12.yoghourt.cloud/ipfs/',
-        'https://ipfs.fleek.co/ipfs/'
+        'https://ipfs-internal.xnftdata.com/ipfs/'
 ,
     ];
     gateways.forEach(gateway => {
