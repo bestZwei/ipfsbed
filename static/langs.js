@@ -55,6 +55,9 @@ const translations = {
     'upload-list': '上传列表',
     'file-mode': '文件模式',
     'folder-mode': '文件夹模式',
+    'sponsor-text': '本项目由',
+    'sponsor-and': '和',
+    'sponsor-sponsored': '赞助',
   },
   'en': {
     'meta-title': 'IPFSBED - Decentralized IPFS File Hosting Service',
@@ -108,6 +111,9 @@ const translations = {
     'upload-list': 'Upload List',
     'file-mode': 'File Mode',
     'folder-mode': 'Folder Mode',
+    'sponsor-text': 'This project is sponsored by',
+    'sponsor-and': 'and',
+    'sponsor-sponsored': '',
   },
   'de': {
     'meta-title': 'IPFSBED - Dezentraler IPFS-Dateihosting-Dienst',
@@ -161,6 +167,9 @@ const translations = {
     'upload-list': 'Upload-Liste',
     'file-mode': 'Dateimodus',
     'folder-mode': 'Ordnermodus',
+    'sponsor-text': 'Dieses Projekt wird gesponsert von',
+    'sponsor-and': 'und',
+    'sponsor-sponsored': '',
   },
   'ru': {
     'meta-title': 'IPFSBED - Децентрализованный сервис хостинга файлов IPFS',
@@ -214,6 +223,9 @@ const translations = {
     'upload-list': 'Список загрузок',
     'file-mode': 'Режим файла',
     'folder-mode': 'Режим папки',
+    'sponsor-text': 'Этот проект спонсируется',
+    'sponsor-and': 'и',
+    'sponsor-sponsored': '',
   },
   'fr': {
     'meta-title': 'IPFSBED - Service d\'hébergement de fichiers IPFS décentralisé',
@@ -267,6 +279,9 @@ const translations = {
     'upload-list': 'Liste des téléchargements',
     'file-mode': 'Mode fichier',
     'folder-mode': 'Mode dossier',
+    'sponsor-text': 'Ce projet est sponsorisé par',
+    'sponsor-and': 'et',
+    'sponsor-sponsored': '',
   },
   'es': {
     'meta-title': 'IPFSBED - Servicio de alojamiento de archivos IPFS descentralizado',
@@ -320,6 +335,9 @@ const translations = {
     'upload-list': 'Lista de subidas',
     'file-mode': 'Modo archivo',
     'folder-mode': 'Modo carpeta',
+    'sponsor-text': 'Este proyecto está patrocinado por',
+    'sponsor-and': 'y',
+    'sponsor-sponsored': '',
   },
   'ar': {
     'meta-title': 'IPFSBED - خدمة استضافة ملفات IPFS اللامركزية',
@@ -373,6 +391,9 @@ const translations = {
     'upload-list': 'قائمة التحميل',
     'file-mode': 'وضع الملف',
     'folder-mode': 'وضع المجلد',
+    'sponsor-text': 'هذا المشروع مدعوم من قبل',
+    'sponsor-and': 'و',
+    'sponsor-sponsored': '',
   },
   'fa': {
     'meta-title': 'IPFSBED - سرویس میزبانی فایل IPFS غیرمتمرکز',
@@ -426,6 +447,9 @@ const translations = {
     'upload-list': 'لیست آپلودها',
     'file-mode': 'حالت فایل',
     'folder-mode': 'حالت پوشه',
+    'sponsor-text': 'این پروژه توسط',
+    'sponsor-and': 'و',
+    'sponsor-sponsored': 'حمایت می‌شود',
   },
   'tr': {
     'meta-title': 'IPFSBED - Merkezi Olmayan IPFS Dosya Barındırma Hizmeti',
@@ -479,6 +503,9 @@ const translations = {
     'upload-list': 'Yükleme Listesi',
     'file-mode': 'Dosya Modu',
     'folder-mode': 'Klasör Modu',
+    'sponsor-text': 'Bu proje',
+    'sponsor-and': 've',
+    'sponsor-sponsored': 'tarafından desteklenmektedir',
   },
   'pt': {
     'meta-title': 'IPFSBED - Serviço de Hospedagem de Arquivos IPFS Descentralizado',
@@ -532,6 +559,9 @@ const translations = {
     'upload-list': 'Lista de Uploads',
     'file-mode': 'Modo Arquivo',
     'folder-mode': 'Modo Pasta',
+    'sponsor-text': 'Este projeto é patrocinado por',
+    'sponsor-and': 'e',
+    'sponsor-sponsored': '',
   },
   'ko': {
     'meta-title': 'IPFSBED - 분산형 IPFS 파일 호스팅 서비스',
@@ -585,6 +615,9 @@ const translations = {
     'upload-list': '업로드 목록',
     'file-mode': '파일 모드',
     'folder-mode': '폴더 모드',
+    'sponsor-text': '이 프로젝트는',
+    'sponsor-and': '와',
+    'sponsor-sponsored': '에서 후원합니다',
   },
   'ja': {
     'meta-title': 'IPFSBED - 分散型IPFSファイルホスティングサービス',
@@ -638,6 +671,9 @@ const translations = {
     'upload-list': 'アップロードリスト',
     'file-mode': 'ファイルモード',
     'folder-mode': 'フォルダモード',
+    'sponsor-text': 'このプロジェクトは',
+    'sponsor-and': 'と',
+    'sponsor-sponsored': 'によってスポンサーされています',
   }
 };
 

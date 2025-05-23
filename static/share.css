@@ -345,6 +345,37 @@
     margin-right: 8px;
 }
 
+/* Sponsor section styles */
+.sponsor-section {
+    background-color: #f8f9fa;
+    border: 1px solid #e9ecef;
+    border-radius: 8px;
+    padding: 16px;
+    margin: 20px auto;
+    max-width: 600px;
+    text-align: center;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.sponsor-content {
+    font-size: 14px;
+    color: #666;
+    line-height: 1.5;
+}
+
+.sponsor-link {
+    color: #409eff;
+    text-decoration: none;
+    font-weight: 500;
+    margin: 0 4px;
+    transition: all 0.3s ease;
+}
+
+.sponsor-link:hover {
+    color: #66b1ff;
+    text-decoration: underline;
+}
+
 /* Responsive adjustments */
 @media (max-width: 767px) {
     .share-container {
@@ -460,5 +491,14 @@
         font-size: 12px;
         padding: 4px 8px;
         border-radius: 5px;
+    }
+    .sponsor-section {
+        margin: 15px 10px;
+        padding: 12px;
+        border-radius: 6px;
+    }
+    
+    .sponsor-content {
+        font-size: 13px;
     }
 }

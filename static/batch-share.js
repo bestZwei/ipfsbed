@@ -373,3 +373,48 @@ document.addEventListener('DOMContentLoaded', function() {
     updateBatchSharePageLanguage();
     processBatchShare();
 });
+
+$(document).ready(function() {
+    // Initialize language
+    updatePageLanguage();
+    
+    // Parse URL parameters to get batch file information
+    const urlParams = new URLSearchParams(window.location.search);
+    const shareData = urlParams.get('share');
+    const filesData = urlParams.get('files');
+    
+    if (shareData) {
+        // Handle encrypted batch share data
+        handleEncryptedBatchShare(shareData);
+    } else if (filesData) {
+        // Handle direct batch file access
+        try {
+            const files = JSON.parse(decodeURIComponent(filesData));
+            displayBatchFiles(files);
+        } catch (e) {
+            showError('Invalid batch share link');
+        }
+    } else {
+        // Invalid URL parameters
+        showError('Invalid batch share link');
+    }
+});
+
+function handleEncryptedBatchShare(encryptedData) {
+    // Show passphrase prompt for batch share
+    showBatchPassphrasePrompt(encryptedData);
+}
+
+function showBatchPassphrasePrompt(encryptedData) {
+    // Implementation for batch passphrase prompt
+    // This would be expanded based on the actual UI requirements
+}
+
+function displayBatchFiles(files) {
+    // Implementation for displaying the batch files
+    // This would be expanded based on the actual UI requirements
+}
+
+function showError(message) {
+    showToast(message, 'error');
+}

@@ -542,7 +542,61 @@ body {
     transform: translateY(0);
 }
 
-/* Responsive adjustments */
+/* Container styles */
+.container {
+    max-width: 800px;
+    margin: 20px auto;
+    padding: 0 20px;
+}
+
+/* Sponsor section styles */
+.sponsor-section {
+    background-color: #f8f9fa;
+    border: 1px solid #e9ecef;
+    border-radius: 8px;
+    padding: 16px;
+    margin: 20px auto;
+    max-width: 600px;
+    text-align: center;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.sponsor-content {
+    font-size: 14px;
+    color: #666;
+    line-height: 1.5;
+}
+
+.sponsor-link {
+    color: #409eff;
+    text-decoration: none;
+    font-weight: 500;
+    margin: 0 4px;
+    transition: all 0.3s ease;
+}
+
+.sponsor-link:hover {
+    color: #66b1ff;
+    text-decoration: underline;
+}
+
+/* Mobile responsive */
+@media (max-width: 480px) {
+    .container {
+        padding: 0 10px;
+    }
+    
+    .sponsor-section {
+        margin: 15px 10px;
+        padding: 12px;
+        border-radius: 6px;
+    }
+    
+    .sponsor-content {
+        font-size: 13px;
+    }
+}
+
 @media (max-width: 767px) {
     .batch-share-container {
         padding: 20px 15px;
@@ -592,23 +646,5 @@ body {
     
     .passphrase-input-wrapper {
         width: 100%;
-    }
-}
-
-@media (max-width: 480px) {
-    .file-item {
-        flex-wrap: wrap;
-    }
-    
-    .file-details {
-        width: 100%;
-        margin: 10px 0;
-        padding-left: 30px;
-    }
-    
-    .file-actions {
-        width: 100%;
-        justify-content: flex-end;
-        margin-top: 10px;
     }
 }
