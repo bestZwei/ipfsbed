@@ -402,48 +402,31 @@ $(document).ready(() => {
     }
 
     function handleUploadSuccess(res, randomClass, file) { // Added file parameter
-        // const gateway = $('#gatewaySelect').val() || 'https://cdn.ipfsscan.io'; // Removed, gateway selection moved to share.html
-        const fileName = encodeURIComponent(file.name); // Use original file.name
-        // const directIpfsSrc = `${gateway}/ipfs/${res.Hash}?filename=${fileName}`; // Removed
+        const fileName = encodeURIComponent(file.name);
         
         const passphrase = $('#passphraseInput').val();
-        let displaySrc; // Will be the shareUrl
+        let displaySrc;
         let shareUrl;
 
         if (passphrase) {
-            const payloadToEncrypt = { 
-                cid: res.Hash, 
+            // Encrypted share link (keep existing format for encrypted files)
+            const fileData = {
+                cid: res.Hash,
                 filename: file.name,
-                size: file.size  // Add file size to the encrypted payload
+                size: file.size
             };
-            const encryptedPayload = encryptData(payloadToEncrypt, passphrase);
-            if (encryptedPayload) {
-                // Create share URL pointing to share.html instead of using hash
-                shareUrl = `${window.location.origin}${window.location.pathname.replace('index.html', '')}share.html?share=${encodeURIComponent(encryptedPayload)}`;
-                displaySrc = shareUrl;
-                
-                // Update copy button for this item if it was created before passphrase was known to be used
-                const itemElement = $(`.${randomClass}`);
-                itemElement.find('.copy-primary-link')
-                    .attr('title', _t('copy-share-link'))
-                    .attr('onclick', `copyShareLink(this); return false;`);
-                itemElement.find('.data-passphrase-protected').val('true');
-            } else {
-                // Encryption failed, fallback to direct link and notify user
-                showToast(_t('encryption-failed') + " " + _t('file-will-be-public'), 'error');
-                // Use public share link without passphrase
-                shareUrl = `${window.origin}${window.location.pathname.replace('index.html', '')}share.html?cid=${res.Hash}&filename=${fileName}&size=${file.size}`;
-                displaySrc = shareUrl;
-                
-                const itemElement = $(`.${randomClass}`);
-                itemElement.find('.copy-primary-link')
-                    .attr('title', _t('copy-link'))
-                    .attr('onclick', `copyLinkUrl(this); return false;`);
-                itemElement.find('.data-passphrase-protected').val('false');
-            }
+            const encryptedData = encryptData(fileData, passphrase);
+            shareUrl = `${window.location.origin}${window.location.pathname.replace('index.html', '')}share.html?share=${encodeURIComponent(encryptedData)}`;
+            displaySrc = shareUrl;
         } else {
-            // Public file - create share URL without encryption
-            shareUrl = `${window.location.origin}${window.location.pathname.replace('index.html', '')}share.html?cid=${res.Hash}&filename=${fileName}&size=${file.size}`;
+            // Use new compressed format for public files
+            const fileData = {
+                c: res.Hash,        // cid
+                f: file.name,       // filename  
+                s: file.size        // size
+            };
+            const compressedData = base64UrlEncode(JSON.stringify(fileData));
+            shareUrl = `${window.location.origin}${window.location.pathname.replace('index.html', '')}share.html?d=${compressedData}`;
             displaySrc = shareUrl;
         }
         
@@ -451,18 +434,16 @@ $(document).ready(() => {
         $(`.${randomClass}`).find('.progress-inner').addClass('success');
         $(`.${randomClass}`).find('.progress').fadeOut(500, function() {
             $(`.${randomClass}`).removeClass('uploading');
-            
-            // Show and populate the URL display
             const urlDisplay = $(`.${randomClass}`).find('.url-display');
             const fileUrlInput = $(`.${randomClass}`).find('.file-url-input');
-            fileUrlInput.val(displaySrc); // Show share link
+            fileUrlInput.val(displaySrc);
             urlDisplay.fadeIn(300);
         });
         
         // Store the URL and CID values in hidden inputs
-        $(`.${randomClass}`).find('.data-url').val(displaySrc); // Store share link
+        $(`.${randomClass}`).find('.data-url').val(displaySrc);
         $(`.${randomClass}`).find('.data-cid').val(res.Hash);
-        $(`.${randomClass}`).find('.data-filename').val(file.name); // Store original filename
+        $(`.${randomClass}`).find('.data-filename').val(file.name);
         
         // Enable buttons since we have uploaded files
         $('.copyall').removeClass('disabled');
@@ -1061,7 +1042,15 @@ function createDirectoryItem(folderName, totalSize, randomClass) {
 
 // 文件夹上传成功处理
 function handleDirectoryUploadSuccess(dirObj, folderName, totalSize, randomClass) {
-    const shareUrl = `${window.location.origin}${window.location.pathname.replace('index.html', '')}share.html?cid=${dirObj.Hash}&filename=${encodeURIComponent(folderName + '/')}&size=${totalSize}`;
+    // Use compressed format for directory shares too
+    const fileData = {
+        c: dirObj.Hash,
+        f: folderName + '/',
+        s: totalSize
+    };
+    const compressedData = base64UrlEncode(JSON.stringify(fileData));
+    const shareUrl = `${window.location.origin}${window.location.pathname.replace('index.html', '')}share.html?d=${compressedData}`;
+    
     $('#file').val(null);
     $(`.${randomClass}`).find('.progress-inner').addClass('success');
     $(`.${randomClass}`).find('.progress').fadeOut(500, function() {
@@ -1077,5 +1066,21 @@ function handleDirectoryUploadSuccess(dirObj, folderName, totalSize, randomClass
     $('.copyall').removeClass('disabled');
     showToast(_t('upload-success'), 'success');
     updateShareSelectedButtonState();
+}
+
+// Add Base64URL functions at the top of the file
+function base64UrlEncode(str) {
+    return btoa(unescape(encodeURIComponent(str)))
+        .replace(/\+/g, '-')
+        .replace(/\//g, '_')
+        .replace(/=/g, '');
+}
+
+function base64UrlDecode(str) {
+    // Add padding
+    str += '='.repeat((4 - str.length % 4) % 4);
+    // Replace URL-safe characters
+    str = str.replace(/-/g, '+').replace(/_/g, '/');
+    return decodeURIComponent(escape(atob(str)));
 }
 

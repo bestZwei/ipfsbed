@@ -33,12 +33,69 @@ function updateBatchSharePageLanguage() {
     }
 }
 
+// Modified function to accept passphrase as an argument
+function shareBatchFiles(passphrase) { // passphrase is now an argument
+    const selectedItems = $('.file-select-checkbox:checked').closest('.item');
+    
+    // This check is technically redundant if promptBatchSharePassphrase already checks,
+    // but good for safety if shareBatchFiles is ever called directly.
+    if (selectedItems.length === 0) {
+        showToast(_t('no-files-selected'), 'error');
+        return;
+    }
+    
+    // Collect file data
+    const files = [];
+    selectedItems.each(function() {
+        const item = $(this);
+        const cid = item.find('.data-cid').val();
+        const filename = item.find('.data-filename').val();
+        const size = parseInt(item.find('.desc__size').text().match(/\d+/g)?.[0]) || 0;
+        const isProtected = item.find('.data-passphrase-protected').val() === 'true';
+        
+        if (cid && filename) {
+            files.push({
+                cid: cid,
+                filename: filename,
+                size: size,
+                protected: isProtected
+            });
+        }
+    });
+    
+    if (files.length === 0) {
+        showToast(_t('selected-files-invalid'), 'error');
+        return;
+    }
+    
+    // Create batch share
+    if (passphrase) {
+        // Encrypt the batch data with passphrase (keep existing format for encrypted)
+        const encryptedBatch = encryptData(files, passphrase);
+        if (encryptedBatch) {
+            const batchShareUrl = `${window.location.origin}${window.location.pathname.replace('index.html', '')}batch-share.html?share=${encodeURIComponent(encryptedBatch)}`;
+            copyToClipboard(batchShareUrl);
+            showToast(_t('batch-share-link-copied'), 'success');
+        } else {
+            showToast(_t('batch-encryption-failed'), 'error');
+        }
+    } else {
+        // Use compressed format for non-encrypted batch shares
+        const compressedData = base64UrlEncode(JSON.stringify(files));
+        const batchShareUrl = `${window.location.origin}${window.location.pathname.replace('index.html', '')}batch-share.html?d=${compressedData}`;
+        
+        copyToClipboard(batchShareUrl);
+        showToast(_t('batch-share-link-copied'), 'success');
+    }
+}
+
 // Function to parse URL parameters and process the batch share
 function processBatchShare() {
     const urlParams = new URLSearchParams(window.location.search);
     document.getElementById('loadingIndicator').style.display = 'flex';
     
     if (urlParams.has('share')) {
+        // Encrypted share (existing format)
         const encryptedPayload = urlParams.get('share');
         document.getElementById('passphraseForm').style.display = 'block';
         document.getElementById('loadingIndicator').style.display = 'none';
@@ -63,7 +120,23 @@ function processBatchShare() {
                 document.getElementById('unlockButton').click();
             }
         });
+    } else if (urlParams.has('d')) {
+        // New compressed format
+        try {
+            const compressedData = urlParams.get('d');
+            const decodedJson = base64UrlDecode(compressedData);
+            const filesData = JSON.parse(decodedJson);
+            if (Array.isArray(filesData) && filesData.length > 0) {
+                displayBatchFiles(filesData);
+            } else {
+                showError(_t('selected-files-invalid'));
+            }
+        } catch (e) {
+            showError(_t('decryption-failed'));
+            console.error(e);
+        }
     } else if (urlParams.has('files')) {
+        // Legacy format (keep for backward compatibility)
         try {
             const filesData = JSON.parse(decodeURIComponent(urlParams.get('files')));
             if (Array.isArray(filesData) && filesData.length > 0) {
@@ -78,6 +151,22 @@ function processBatchShare() {
     } else {
         showError(_t('selected-files-invalid'));
     }
+}
+
+// Add Base64URL functions
+function base64UrlEncode(str) {
+    return btoa(unescape(encodeURIComponent(str)))
+        .replace(/\+/g, '-')
+        .replace(/\//g, '_')
+        .replace(/=/g, '');
+}
+
+function base64UrlDecode(str) {
+    // Add padding
+    str += '='.repeat((4 - str.length % 4) % 4);
+    // Replace URL-safe characters
+    str = str.replace(/-/g, '+').replace(/_/g, '/');
+    return decodeURIComponent(escape(atob(str)));
 }
 
 // Display error message when batch share is invalid
