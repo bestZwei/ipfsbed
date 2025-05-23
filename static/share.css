@@ -1,8 +1,8 @@
 .share-container {
     width: 600px;
     max-width: 90%;
-    margin: 50px auto;
-    padding: 30px;
+    margin: 20px auto;
+    padding: 15px;
     background-color: #fff;
     border-radius: 10px;
     box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
@@ -11,13 +11,15 @@
 
 .share-header {
     text-align: center;
-    margin-bottom: 25px;
+    margin-bottom: 20px;
     display: flex;
     align-items: center;
     justify-content: center;
 }
 
 .share-header img {
+    width: 24px;
+    height: 24px;
     vertical-align: middle;
     margin-right: 10px;
     transition: transform 0.3s ease;
@@ -28,14 +30,15 @@
 }
 
 .share-header h1 {
-    font-size: 24px;
+    font-size: 1.5rem;
     font-weight: 600;
     color: #303133;
-    margin: 0;
+    margin: 8px 0;
 }
 
 .share-content {
     padding: 25px;
+    margin-bottom: 20px;
     border-radius: 8px;
     background-color: #f8f9fa;
     box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.05);
@@ -44,22 +47,24 @@
 .passphrase-form {
     text-align: center;
     position: relative;
+    padding: 20px;
+    margin-bottom: 15px;
 }
 
 .passphrase-input-wrapper {
     position: relative;
     display: inline-block;
     width: 70%;
-    margin-bottom: 20px;
+    margin-bottom: 12px;
 }
 
 .passphrase-form input {
     width: 100%;
-    padding: 14px;
+    padding: 8px 12px;
     padding-right: 45px;
     border: 1px solid #dcdfe6;
     border-radius: 6px;
-    font-size: 16px;
+    font-size: 0.9rem;
     transition: all 0.3s;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
 }
@@ -79,7 +84,7 @@
     border: none;
     color: #909399;
     cursor: pointer;
-    padding: 5px;
+    padding: 8px 10px;
     z-index: 2;
     transition: all 0.2s;
 }
@@ -92,13 +97,15 @@
 .error-message {
     color: #f56c6c;
     margin: 15px 0;
-    font-size: 14px;
+    font-size: 0.8rem;
     min-height: 20px;
 }
 
 .file-details {
     display: none;
     margin-top: 25px;
+    text-align: center;
+    padding: 20px;
     animation: fadeIn 0.5s ease;
 }
 
@@ -110,7 +117,7 @@
 .file-icon {
     width: 70px;
     height: 70px;
-    margin: 0 auto 20px;
+    margin: 0 auto 12px;
     display: block;
     transition: transform 0.3s ease;
 }
@@ -126,9 +133,9 @@
 }
 
 .file-name {
-    font-size: 20px;
+    font-size: 1.2rem;
     font-weight: 500;
-    margin-bottom: 10px;
+    margin: 8px 0;
     text-align: center;
     word-break: break-word;
     overflow-wrap: break-word;
@@ -138,14 +145,13 @@
 
 .file-meta {
     color: #606266;
-    font-size: 15px;
+    font-size: 0.85rem;
     text-align: center;
-    margin-bottom: 25px;
+    margin-bottom: 15px;
 }
 
 .gateway-and-url-section {
-    margin-top: 25px;
-    margin-bottom: 25px;
+    margin: 15px 0;
     background-color: #fff;
     border-radius: 6px;
     padding: 15px;
@@ -155,22 +161,23 @@
 .gateway-selector-group {
     display: flex;
     align-items: center;
-    margin-bottom: 15px;
+    margin-bottom: 10px;
     flex-wrap: wrap;
 }
 
 .gateway-selector-group label {
     margin-right: 10px;
-    font-size: 14px;
+    font-size: 0.85rem;
     color: #303133;
     font-weight: 500;
+    margin-bottom: 4px;
 }
 
 .gateway-selector-group select {
-    padding: 10px 12px;
+    padding: 6px 8px;
     border: 1px solid #dcdfe6;
     border-radius: 6px;
-    font-size: 14px;
+    font-size: 0.85rem;
     flex-grow: 1;
     min-width: 150px;
     background-color: #f5f7fa;
@@ -200,10 +207,10 @@
 
 .file-url-display-wrapper input[type="text"] {
     width: 100%;
-    padding: 12px;
+    padding: 6px 8px;
     border: 1px solid #dcdfe6;
     border-radius: 6px;
-    font-size: 14px;
+    font-size: 0.8rem;
     background-color: #f5f7fa;
     color: #303133;
     box-sizing: border-box;
@@ -218,13 +225,13 @@
 .download-button {
     display: block;
     width: 80%;
-    margin: 25px auto 0;
-    padding: 14px;
+    margin: 15px auto 0;
+    padding: 10px 20px;
     background-color: #409eff;
     color: white;
     border: none;
     border-radius: 6px;
-    font-size: 16px;
+    font-size: 0.9rem;
     cursor: pointer;
     transition: all 0.3s;
     text-align: center;
@@ -249,12 +256,12 @@
 }
 
 .unlock-button {
-    padding: 12px 28px;
+    padding: 8px 16px;
     background-color: #409eff;
     color: white;
     border: none;
     border-radius: 6px;
-    font-size: 16px;
+    font-size: 0.9rem;
     cursor: pointer;
     transition: all 0.3s;
     box-shadow: 0 4px 12px rgba(64, 158, 255, 0.2);
@@ -284,16 +291,18 @@
     align-items: center;
     backdrop-filter: blur(3px);
     display: none; /* Hidden by default, JS will toggle to 'flex' */
+    text-align: center;
+    padding: 20px;
 }
 
 .spinner {
     border: 5px solid rgba(0, 0, 0, 0.1); /* Thicker border */
-    width: 60px; /* Larger spinner */
-    height: 60px; /* Larger spinner */
+    width: 30px; /* Larger spinner */
+    height: 30px; /* Larger spinner */
     border-radius: 50%;
     border-left-color: #409eff;
     animation: spin 1s linear infinite;
-    margin-bottom: 20px; /* Adjusted margin for spacing */
+    margin: 0 auto 10px;
 }
 
 @keyframes spin {
@@ -302,17 +311,17 @@
 }
 
 .loading p {
-    font-size: 16px;
+    font-size: 0.9rem;
     color: #303133;
     font-weight: 500;
-    margin-top: 15px;
+    margin: 10px 0;
     text-align: center;
 }
 
 .return-home {
     text-align: center;
-    margin-top: 25px;
-    padding-top: 15px;
+    margin-top: 15px;
+    padding-top: 8px;
     border-top: 1px solid #ebeef5;
 }
 
@@ -324,6 +333,7 @@
     border-radius: 4px;
     display: inline-flex;
     align-items: center;
+    font-size: 0.85rem;
 }
 
 .return-home a:hover {
@@ -333,28 +343,6 @@
 
 .return-home a i {
     margin-right: 8px;
-}
-
-/* Sponsor information styles */
-.sponsor-info {
-    margin-top: 20px;
-    text-align: center;
-    font-size: 14px;
-    color: #666;
-    padding: 10px;
-    border-top: 1px solid #eee;
-}
-
-.sponsor-info a {
-    color: #4285f4;
-    text-decoration: none;
-    font-weight: bold;
-    transition: color 0.2s;
-}
-
-.sponsor-info a:hover {
-    color: #2b5cd9;
-    text-decoration: underline;
 }
 
 /* Responsive adjustments */
