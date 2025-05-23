@@ -20,6 +20,12 @@ function updateBatchSharePageLanguage() {
     document.getElementById('downloadDialogTitle').textContent = _t('download-progress') || 'Downloading Files';
     document.getElementById('downloadCancel').textContent = _t('batch-share-cancel');
     
+    // Update sponsor text elements
+    document.querySelectorAll('.sponsors-section [data-translate]').forEach(element => {
+        const key = element.getAttribute('data-translate');
+        element.textContent = _t(key);
+    });
+    
     // Set password toggle button title
     const passwordToggle = document.querySelector('.password-toggle');
     if (passwordToggle) {

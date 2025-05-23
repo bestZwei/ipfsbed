@@ -26,6 +26,12 @@ function updateSharePageLanguage() {
     if (passwordToggle) {
         passwordToggle.title = _t('show-password');
     }
+    
+    // Update sponsor text elements
+    document.querySelectorAll('.sponsors-section [data-translate]').forEach(element => {
+        const key = element.getAttribute('data-translate');
+        element.textContent = _t(key);
+    });
 }
 
 // Check URL parameters and determine if it's an encrypted share or direct CID

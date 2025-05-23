@@ -3,10 +3,9 @@ body {
 }
 
 .batch-share-container {
-    width: 800px;
-    max-width: 95%;
-    margin: 50px auto;
-    padding: 30px;
+    max-width: 600px;
+    margin: 20px auto;
+    padding: 15px;
     background-color: #fff;
     border-radius: 12px;
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
@@ -15,7 +14,7 @@ body {
 
 .batch-share-header {
     text-align: center;
-    margin-bottom: 25px;
+    margin-bottom: 20px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -24,15 +23,17 @@ body {
 }
 
 .batch-share-header img {
+    width: 28px;
+    height: 28px;
     margin-right: 15px;
     transition: transform 0.3s ease;
 }
 
 .batch-share-header h1 {
-    font-size: 24px;
+    font-size: 1.5rem;
+    margin: 8px 0;
     font-weight: 600;
     color: #303133;
-    margin: 0;
 }
 
 .batch-share-header:hover img {
@@ -40,6 +41,7 @@ body {
 }
 
 .batch-share-content {
+    margin-bottom: 20px;
     padding: 25px;
     border-radius: 10px;
     background-color: #f8f9fa;
@@ -47,9 +49,10 @@ body {
 }
 
 .passphrase-form {
+    padding: 20px;
     text-align: center;
     position: relative;
-    margin-bottom: 30px;
+    margin-bottom: 15px;
     animation: fadeIn 0.5s ease;
 }
 
@@ -59,8 +62,8 @@ body {
 }
 
 .passphrase-form h3 {
-    font-size: 18px;
-    margin-bottom: 20px;
+    font-size: 1.1rem;
+    margin-bottom: 12px;
     color: #303133;
 }
 
@@ -68,16 +71,16 @@ body {
     position: relative;
     display: inline-block;
     width: 70%;
-    margin-bottom: 20px;
+    margin-bottom: 12px;
 }
 
 .passphrase-form input {
     width: 100%;
-    padding: 14px;
+    padding: 8px 12px;
     padding-right: 45px;
     border: 1px solid #dcdfe6;
     border-radius: 6px;
-    font-size: 16px;
+    font-size: 0.9rem;
     transition: all 0.3s;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
 }
@@ -97,7 +100,7 @@ body {
     border: none;
     color: #909399;
     cursor: pointer;
-    padding: 5px;
+    padding: 8px 10px;
     z-index: 2;
     transition: all 0.2s;
 }
@@ -110,7 +113,7 @@ body {
 .error-message {
     color: #f56c6c;
     margin: 15px 0;
-    font-size: 14px;
+    font-size: 0.8rem;
     min-height: 20px;
 }
 
@@ -127,16 +130,18 @@ body {
     justify-content: center;
     align-items: center;
     backdrop-filter: blur(3px);
+    text-align: center;
+    padding: 20px;
 }
 
 .spinner {
     border: 4px solid rgba(0, 0, 0, 0.1);
-    width: 50px;
-    height: 50px;
+    width: 30px;
+    height: 30px;
     border-radius: 50%;
     border-left-color: #409eff;
     animation: spin 1s linear infinite;
-    margin: 0 auto 15px;
+    margin: 0 auto 10px;
 }
 
 @keyframes spin {
@@ -145,15 +150,16 @@ body {
 }
 
 .loading p {
-    font-size: 16px;
+    margin: 10px 0;
+    font-size: 0.9rem;
     color: #303133;
     font-weight: 500;
-    margin-top: 15px;
     text-align: center;
 }
 
 #batchFilesContainer {
     animation: slideUp 0.5s ease;
+    padding: 15px;
 }
 
 @keyframes slideUp {
@@ -162,9 +168,9 @@ body {
 }
 
 .files-info {
-    margin-bottom: 25px;
+    margin-bottom: 12px;
     text-align: center;
-    font-size: 16px;
+    font-size: 0.9rem;
     background-color: #ecf5ff;
     padding: 12px;
     border-radius: 6px;
@@ -176,7 +182,7 @@ body {
 .gateway-selector-group {
     display: flex;
     align-items: center;
-    margin-bottom: 25px;
+    margin-bottom: 15px;
     flex-wrap: wrap;
     background-color: #fff;
     padding: 15px;
@@ -186,16 +192,17 @@ body {
 
 .gateway-selector-group label {
     margin-right: 15px;
-    font-size: 15px;
+    font-size: 0.85rem;
+    margin-bottom: 4px;
     color: #303133;
     font-weight: 500;
 }
 
 .gateway-selector-group select {
-    padding: 10px 12px;
+    padding: 6px 8px;
     border: 1px solid #dcdfe6;
     border-radius: 6px;
-    font-size: 14px;
+    font-size: 0.85rem;
     flex-grow: 1;
     min-width: 150px;
     background-color: #f5f7fa;
@@ -219,9 +226,9 @@ body {
 }
 
 .file-list {
-    max-height: 400px;
+    max-height: 300px;
     overflow-y: auto;
-    margin-bottom: 25px;
+    margin-bottom: 15px;
     border: 1px solid #ebeef5;
     border-radius: 8px;
     background-color: #fff;
@@ -246,7 +253,8 @@ body {
 .file-item {
     display: flex;
     align-items: center;
-    padding: 14px;
+    padding: 8px 12px;
+    margin-bottom: 6px;
     border-bottom: 1px solid #ebeef5;
     transition: all 0.2s ease;
 }
@@ -298,10 +306,11 @@ body {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+    font-size: 0.9rem;
 }
 
-.file-size {
-    font-size: 12px;
+.file-meta {
+    font-size: 0.75rem;
     color: #909399;
 }
 
@@ -321,6 +330,7 @@ body {
     justify-content: center;
     transition: all 0.2s;
     color: #606266;
+    font-size: 0.85rem;
 }
 
 .file-action-btn:hover {
@@ -333,17 +343,17 @@ body {
 .batch-actions {
     display: flex;
     flex-wrap: wrap;
-    gap: 12px;
+    gap: 8px;
     justify-content: center;
     margin-top: 30px;
 }
 
 .batch-button {
-    padding: 12px 20px;
+    padding: 8px 12px;
     border-radius: 6px;
     border: none;
     cursor: pointer;
-    font-size: 16px;
+    font-size: 0.85rem;
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -406,19 +416,18 @@ body {
 
 .return-home {
     text-align: center;
-    margin-top: 25px;
-    padding-top: 15px;
-    border-top: 1px solid #ebeef5;
+    margin-top: 15px;
 }
 
 .return-home a {
     color: #909399;
     text-decoration: none;
     transition: all 0.3s;
-    padding: 8px 15px;
+    padding: 6px 12px;
     border-radius: 6px;
     display: inline-flex;
     align-items: center;
+    font-size: 0.85rem;
 }
 
 .return-home a:hover {
@@ -448,7 +457,7 @@ body {
 
 .dialog-content {
     background-color: white;
-    padding: 30px;
+    padding: 20px;
     border-radius: 10px;
     width: 400px;
     max-width: 90%;
@@ -465,7 +474,8 @@ body {
 .dialog-content h3 {
     margin-top: 0;
     color: #303133;
-    font-size: 20px;
+    font-size: 1.1rem;
+    margin-bottom: 15px;
 }
 
 .download-progress {
@@ -505,12 +515,13 @@ body {
 
 .download-status {
     margin: 15px 0;
-    font-size: 15px;
+    font-size: 0.85rem;
     color: #606266;
+    margin-bottom: 15px;
 }
 
 .download-cancel {
-    padding: 10px 20px;
+    padding: 6px 12px;
     background-color: #f56c6c;
     color: white;
     border: none;
@@ -518,7 +529,7 @@ body {
     cursor: pointer;
     margin-top: 15px;
     transition: all 0.3s;
-    font-size: 15px;
+    font-size: 0.85rem;
 }
 
 .download-cancel:hover {
@@ -529,6 +540,35 @@ body {
 
 .download-cancel:active {
     transform: translateY(0);
+}
+
+/* Sponsor section */
+.sponsors-section {
+    text-align: center;
+    margin: 20px 0 10px;
+    padding: 8px 0;
+    font-size: 0.85rem;
+    color: #909399;
+    border-top: 1px solid #ebeef5;
+}
+
+.sponsors-text {
+    display: inline-block;
+    padding: 5px 15px;
+    border-radius: 20px;
+    background-color: #f8f9fa;
+}
+
+.sponsors-section a {
+    color: #409eff;
+    text-decoration: none;
+    font-weight: 500;
+    transition: all 0.2s;
+}
+
+.sponsors-section a:hover {
+    color: #66b1ff;
+    text-decoration: underline;
 }
 
 /* Responsive adjustments */
@@ -599,5 +639,13 @@ body {
         width: 100%;
         justify-content: flex-end;
         margin-top: 10px;
+    }
+    
+    .sponsors-section {
+        margin: 12px 0 6px;
+        font-size: 0.75rem;
+    }
+    .sponsors-text {
+        padding: 4px 10px;
     }
 }

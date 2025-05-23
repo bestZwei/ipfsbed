@@ -55,6 +55,9 @@ const translations = {
     'upload-list': '上传列表',
     'file-mode': '文件模式',
     'folder-mode': '文件夹模式',
+    'sponsors-text': '本项目由',
+    'sponsors-and': '和',
+    'sponsors-suffix': '赞助',
   },
   'en': {
     'meta-title': 'IPFSBED - Decentralized IPFS File Hosting Service',
@@ -108,6 +111,9 @@ const translations = {
     'upload-list': 'Upload List',
     'file-mode': 'File Mode',
     'folder-mode': 'Folder Mode',
+    'sponsors-text': 'Sponsored by',
+    'sponsors-and': 'and',
+    'sponsors-suffix': '',
   },
   'de': {
     'meta-title': 'IPFSBED - Dezentraler IPFS-Dateihosting-Dienst',
@@ -161,6 +167,9 @@ const translations = {
     'upload-list': 'Upload-Liste',
     'file-mode': 'Dateimodus',
     'folder-mode': 'Ordnermodus',
+    'sponsors-text': 'Gesponsert von',
+    'sponsors-and': 'und',
+    'sponsors-suffix': '',
   },
   'ru': {
     'meta-title': 'IPFSBED - Децентрализованный сервис хостинга файлов IPFS',
@@ -214,13 +223,16 @@ const translations = {
     'upload-list': 'Список загрузок',
     'file-mode': 'Режим файла',
     'folder-mode': 'Режим папки',
+    'sponsors-text': 'Спонсировано',
+    'sponsors-and': 'и',
+    'sponsors-suffix': '',
   },
   'fr': {
     'meta-title': 'IPFSBED - Service d\'hébergement de fichiers IPFS décentralisé',
     'upload-title': 'Télécharger des fichiers',
     'file-list': 'fichiers',
     'drop-zone': 'Cliquez / Collez / Glissez-déposez pour télécharger',
-    'drop-zone-desc': 'Sauvegarde et partage de fichiers décentralisés',
+    'drop-zone-desc': 'Sauvegarde и partage de fichiers décentralisés',
     'gateway-selector': 'Sélectionner la passerelle:',
     'copy-link': 'Copier le lien',
     'copy-share-link': 'Copier le lien de partage',
@@ -267,6 +279,9 @@ const translations = {
     'upload-list': 'Liste des téléchargements',
     'file-mode': 'Mode fichier',
     'folder-mode': 'Mode dossier',
+    'sponsors-text': 'Sponsorisé par',
+    'sponsors-and': 'et',
+    'sponsors-suffix': '',
   },
   'es': {
     'meta-title': 'IPFSBED - Servicio de alojamiento de archivos IPFS descentralizado',
@@ -320,6 +335,9 @@ const translations = {
     'upload-list': 'Lista de subidas',
     'file-mode': 'Modo archivo',
     'folder-mode': 'Modo carpeta',
+    'sponsors-text': 'Patrocinado por',
+    'sponsors-and': 'y',
+    'sponsors-suffix': '',
   },
   'ar': {
     'meta-title': 'IPFSBED - خدمة استضافة ملفات IPFS اللامركزية',
@@ -373,6 +391,9 @@ const translations = {
     'upload-list': 'قائمة التحميل',
     'file-mode': 'وضع الملف',
     'folder-mode': 'وضع المجلد',
+    'sponsors-text': 'برعاية',
+    'sponsors-and': 'و',
+    'sponsors-suffix': '',
   },
   'fa': {
     'meta-title': 'IPFSBED - سرویس میزبانی فایل IPFS غیرمتمرکز',
@@ -426,6 +447,9 @@ const translations = {
     'upload-list': 'لیست آپلودها',
     'file-mode': 'حالت فایل',
     'folder-mode': 'حالت پوشه',
+    'sponsors-text': 'حمایت شده توسط',
+    'sponsors-and': 'و',
+    'sponsors-suffix': '',
   },
   'tr': {
     'meta-title': 'IPFSBED - Merkezi Olmayan IPFS Dosya Barındırma Hizmeti',
@@ -479,6 +503,9 @@ const translations = {
     'upload-list': 'Yükleme Listesi',
     'file-mode': 'Dosya Modu',
     'folder-mode': 'Klasör Modu',
+    'sponsors-text': 'Sponsorlar:',
+    'sponsors-and': 've',
+    'sponsors-suffix': '',
   },
   'pt': {
     'meta-title': 'IPFSBED - Serviço de Hospedagem de Arquivos IPFS Descentralizado',
@@ -532,6 +559,9 @@ const translations = {
     'upload-list': 'Lista de Uploads',
     'file-mode': 'Modo Arquivo',
     'folder-mode': 'Modo Pasta',
+    'sponsors-text': 'Patrocinado por',
+    'sponsors-and': 'e',
+    'sponsors-suffix': '',
   },
   'ko': {
     'meta-title': 'IPFSBED - 분산형 IPFS 파일 호스팅 서비스',
@@ -585,6 +615,9 @@ const translations = {
     'upload-list': '업로드 목록',
     'file-mode': '파일 모드',
     'folder-mode': '폴더 모드',
+    'sponsors-text': '스폰서:',
+    'sponsors-and': '및',
+    'sponsors-suffix': '',
   },
   'ja': {
     'meta-title': 'IPFSBED - 分散型IPFSファイルホスティングサービス',
@@ -638,6 +671,9 @@ const translations = {
     'upload-list': 'アップロードリスト',
     'file-mode': 'ファイルモード',
     'folder-mode': 'フォルダモード',
+    'sponsors-text': 'スポンサー:',
+    'sponsors-and': 'と',
+    'sponsors-suffix': '',
   }
 };
 
