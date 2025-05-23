@@ -335,6 +335,28 @@
     margin-right: 8px;
 }
 
+/* Sponsor information styles */
+.sponsor-info {
+    margin-top: 20px;
+    text-align: center;
+    font-size: 14px;
+    color: #666;
+    padding: 10px;
+    border-top: 1px solid #eee;
+}
+
+.sponsor-info a {
+    color: #4285f4;
+    text-decoration: none;
+    font-weight: bold;
+    transition: color 0.2s;
+}
+
+.sponsor-info a:hover {
+    color: #2b5cd9;
+    text-decoration: underline;
+}
+
 /* Responsive adjustments */
 @media (max-width: 767px) {
     .share-container {
