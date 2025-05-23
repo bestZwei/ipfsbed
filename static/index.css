@@ -47,30 +47,33 @@
 .batch-actions {
     display: flex;
     align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 8px;
+    width: 100%;
 }
 
-.short-url-wrapper {
-    display: flex;
-    align-items: center;
-    margin-right: 10px;
-}
-
+.short-url-wrapper,
 .toggle-all-wrapper {
     display: flex;
     align-items: center;
-    margin-right: 10px;
+    white-space: nowrap;
 }
 
-#enableShortUrl, #toggleAllFiles {
+#enableShortUrl, 
+#toggleAllFiles {
     width: 16px;
     height: 16px;
     cursor: pointer;
+    flex-shrink: 0;
 }
 
-.short-url-label, .toggle-all-label {
+.short-url-label, 
+.toggle-all-label {
     margin-left: 5px;
     font-size: 14px;
     color: #606266;
+    white-space: nowrap;
 }
 
 /* Modal styles */
@@ -429,5 +432,89 @@ input:checked + .toggle-slider:before {
     
     .toggle-label {
         font-size: 12px;
+    }
+}
+
+/* Updated batch actions styles for better responsiveness */
+.batch-actions {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 8px;
+    width: 100%;
+}
+
+.short-url-wrapper,
+.toggle-all-wrapper {
+    display: flex;
+    align-items: center;
+    white-space: nowrap;
+}
+
+#enableShortUrl, 
+#toggleAllFiles {
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
+    flex-shrink: 0;
+}
+
+.short-url-label, 
+.toggle-all-label {
+    margin-left: 5px;
+    font-size: 14px;
+    color: #606266;
+    white-space: nowrap;
+}
+
+/* Responsive adjustments */
+@media (max-width: 480px) {
+    .batch-actions {
+        gap: 5px;
+    }
+    
+    .short-url-wrapper,
+    .toggle-all-wrapper {
+        margin-right: 4px;
+    }
+    
+    .short-url-label, 
+    .toggle-all-label {
+        font-size: 12px;
+        margin-left: 3px;
+    }
+    
+    #enableShortUrl, 
+    #toggleAllFiles {
+        width: 14px;
+        height: 14px;
+    }
+    
+    .action-button, 
+    .copyall {
+        font-size: 12px;
+        padding: 4px 6px;
+        min-height: 28px;
+    }
+}
+
+@media (max-width: 360px) {
+    .batch-actions {
+        gap: 3px;
+    }
+    
+    .action-button, 
+    .copyall {
+        font-size: 11px;
+        padding: 4px 5px;
+        min-width: 48px;
+    }
+    
+    .short-url-label, 
+    .toggle-all-label {
+        max-width: 40px;
+        overflow: hidden;
+        text-overflow: ellipsis;
     }
 }
