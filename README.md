@@ -100,38 +100,79 @@ The interface is available in multiple languages:
 
 Change language using the globe icon in the top-right corner.
 
-## Self-Hosting
+## Deployment with Cloudflare Pages
 
-### Basic Setup
+You can easily deploy your own instance of IPFSBED using Cloudflare Pages:
 
-You can self-host IPFSBED with minimal configuration:
+1. Fork this repository on GitHub
+2. Log in to your Cloudflare dashboard and navigate to Pages
+3. Click "Create a project" and select "Connect to Git"
+4. Select your forked repository and configure the build settings:
+   - Build command: `npm run build` (or leave empty if no build step)
+   - Build output directory: `/` (root directory)
+5. In the Environment Variables section, add the following if you want URL shortening:
+   - `YOURLS_SIGNATURE`: Your YOURLS API signature token (obtain it from `https://yourdomain.com/admin/tools.php`)
+   - `YOURLS_API_ENDPOINT`: Your YOURLS API endpoint URL (e.g., `https://yourdomain.com/yourls-api.php`)
 
-1. Clone this repository
-2. Serve the static files using any web server (Apache, Nginx, etc.)
-3. Customize the IPFS upload endpoints by modifying the `static/file.js` file:
+After deployment, your IPFSBED instance will be available at `your-project-name.pages.dev`. You can also configure a custom domain in the Cloudflare Pages settings.
+
+### Using Your Own IPFS Gateway
+
+For better performance and control, you have to deploy your own IPFS gateway:
+
+1. Set up your own IPFS node with a public gateway (e.g. using [Kubo](https://github.com/ipfs/kubo))
+2. Configure CORS settings on your IPFS gateway to allow requests from your frontend domain:
+   ```bash
+   ipfs config --json API.HTTPHeaders.Access-Control-Allow-Origin '["https://your-frontend-domain.com", "https://your-project-name.pages.dev"]'
+   ipfs config --json API.HTTPHeaders.Access-Control-Allow-Methods '["PUT", "POST", "GET"]'
+   ```
+3. If using a separate gateway domain, also configure CORS headers in your web server (Nginx example):
+   ```nginx
+   location /api/ {
+       proxy_pass http://localhost:5001/;
+       proxy_set_header Host $host;
+       
+       # CORS headers
+       add_header Access-Control-Allow-Origin "https://your-frontend-domain.com" always;
+       add_header Access-Control-Allow-Methods "GET, POST, PUT, OPTIONS" always;
+       add_header Access-Control-Allow-Headers "DNT,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Range,Authorization" always;
+       
+       # Handle preflight requests
+       if ($request_method = 'OPTIONS') {
+           add_header Access-Control-Allow-Origin "https://your-frontend-domain.com" always;
+           add_header Access-Control-Allow-Methods "GET, POST, PUT, OPTIONS" always;
+           add_header Access-Control-Allow-Headers "DNT,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Range,Authorization" always;
+           add_header Access-Control-Max-Age 1728000;
+           add_header Content-Type 'text/plain charset=UTF-8';
+           add_header Content-Length 0;
+           return 204;
+       }
+   }
+   ```
+
+### Customizing IPFS Upload Endpoints
+
+To use your custom gateway in the application, modify the `static/file.js` file:
 
 ```javascript
 function uploadToImg2IPFS(file) {
     // ...
     const apis = [
-        'https://your-custom-ipfs-node/api/v0/add?pin=true',
+        'https://your-gateway.com/api/v0/add?pin=true',
+        'https://your-backup-gateway.com/api/v0/add?pin=true',
         // Add more IPFS API endpoints
     ];
     // ...
 }
 ```
 
-### URL Shortener Integration
-
-IPFSBED can be integrated with YOURLS (Your Own URL Shortener) for generating short links:
-
-1. Set up a [YOURLS](https://yourls.org/) instance on your server
-2. For Cloudflare Pages hosting, configure environment variables:
-   - `YOURLS_SIGNATURE`: Your YOURLS API signature token
-   - `YOURLS_API_ENDPOINT`: URL to your YOURLS API endpoint (e.g., `https://yourdomain.com/yourls-api.php`)
-3. The application will automatically use your YOURLS instance for URL shortening
-
-For setting up your own IPFS gateway, refer to this [guide](https://forum.conflux.fun/t/ipfs/14771).
+Also update the gateway list in `static/common.js` to include your gateway for downloads:
+```javascript
+const commonGateways = [
+    { value: "https://your-gateway.com", text: "Your Gateway" },
+    // ...existing gateways...
+];
+```
 
 ## Contributing
 
