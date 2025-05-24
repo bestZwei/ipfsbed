@@ -100,38 +100,81 @@ IPFSBED提供多种IPFS网关来访问您的文件。根据您的位置和网络
 
 使用右上角的地球图标更改语言。
 
-## 自托管
+## 使用Cloudflare Pages部署
 
-### 基本设置
+您可以使用Cloudflare Pages轻松部署自己的IPFSBED实例：
 
-您可以通过最少的配置自托管IPFSBED：
+1. 在GitHub上fork此仓库
+2. 登录您的Cloudflare控制面板并导航至Pages
+3. 点击"创建项目"并选择"连接到Git"
+4. 选择您fork的仓库并配置构建设置：
+   - 构建命令：留空
+   - 构建输出目录：`/`（根目录）
+5. 在环境变量部分，如果要使用URL缩短功能，添加以下内容：
+   - `YOURLS_SIGNATURE`：您的YOURLS API签名令牌（在`https://yourdomain.com/admin/tools.php`获取）
+   - `YOURLS_API_ENDPOINT`：您的YOURLS API端点URL（例如，`https://yourdomain.com/yourls-api.php`）
+6. 点击"保存并部署"
 
-1. 克隆此仓库
-2. 使用任何Web服务器（Apache、Nginx等）提供静态文件服务
-3. 通过修改`static/file.js`文件来自定义IPFS上传端点：
+部署后，您的IPFSBED实例将在`your-project-name.pages.dev`上可用。您还可以在Cloudflare Pages设置中配置自定义域名。
+
+### 使用自己的IPFS网关
+
+为了获得更好的性能和控制，您务必部署自己的IPFS网关：
+
+1. 设置自己的IPFS节点并配置公共网关（例如使用[Kubo](https://github.com/ipfs/kubo)）
+2. 在IPFS网关上配置CORS设置，允许来自您前端域名的请求：
+   ```bash
+   ipfs config --json API.HTTPHeaders.Access-Control-Allow-Origin '["https://your-frontend-domain.com", "https://your-project-name.pages.dev"]'
+   ipfs config --json API.HTTPHeaders.Access-Control-Allow-Methods '["PUT", "POST", "GET"]'
+   ```
+3. 如果使用单独的网关域名，还需在您的Web服务器中配置CORS头（Nginx示例）：
+
+   ```nginx
+   location /api/ {
+       proxy_pass http://localhost:5001/;
+       proxy_set_header Host $host;
+       
+       # CORS头
+       add_header Access-Control-Allow-Origin "https://your-frontend-domain.com" always;
+       add_header Access-Control-Allow-Methods "GET, POST, PUT, OPTIONS" always;
+       add_header Access-Control-Allow-Headers "DNT,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Range,Authorization" always;
+       
+       # 处理预检请求
+       if ($request_method = 'OPTIONS') {
+           add_header Access-Control-Allow-Origin "https://your-frontend-domain.com" always;
+           add_header Access-Control-Allow-Methods "GET, POST, PUT, OPTIONS" always;
+           add_header Access-Control-Allow-Headers "DNT,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Range,Authorization" always;
+           add_header Access-Control-Max-Age 1728000;
+           add_header Content-Type 'text/plain charset=UTF-8';
+           add_header Content-Length 0;
+           return 204;
+       }
+   }
+   ```
+
+### 自定义IPFS上传端点
+
+要在应用程序中使用您的自定义网关，请修改`static/file.js`文件：
 
 ```javascript
 function uploadToImg2IPFS(file) {
     // ...
     const apis = [
-        'https://your-custom-ipfs-node/api/v0/add?pin=true',
+        'https://your-gateway.com/api/v0/add?pin=true',
+        'https://your-backup-gateway.com/api/v0/add?pin=true',
         // 添加更多IPFS API端点
     ];
     // ...
 }
 ```
 
-### URL缩短器集成
-
-IPFSBED可以与YOURLS（Your Own URL Shortener，您自己的URL缩短器）集成以生成短链接：
-
-1. 在您的服务器上设置[YOURLS](https://yourls.org/)实例
-2. 对于Cloudflare Pages托管，配置环境变量：
-   - `YOURLS_SIGNATURE`：您的YOURLS API签名令牌
-   - `YOURLS_API_ENDPOINT`：您的YOURLS API端点URL（例如，`https://yourdomain.com/yourls-api.php`）
-3. 应用程序将自动使用您的YOURLS实例进行URL缩短
-
-关于设置您自己的IPFS网关，请参考此[指南](https://forum.conflux.fun/t/ipfs/14771)。
+同时在`static/common.js`中更新网关列表，添加您的网关用于下载：
+```javascript
+const commonGateways = [
+    { value: "https://your-gateway.com", text: "您的网关" },
+    // ...现有网关...
+];
+```
 
 ## 贡献
 
