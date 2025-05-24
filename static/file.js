@@ -1,3 +1,45 @@
+// Move getShortUrl function to global scope (before $(document).ready)
+async function getShortUrl(longUrl) {
+    if (!$('#enableShortUrl').prop('checked')) {
+        return longUrl; // 如果未启用短网址，则返回原始URL
+    }
+
+    try {
+        // 这里的 '/api/shorten-url' 是您Cloudflare Worker的访问路径
+        // 您可能需要根据实际部署情况调整
+        const response = await fetch('/api/shorten-url', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ longUrl: longUrl }),
+        });
+
+        if (!response.ok) {
+            const errorData = await response.json().catch(() => ({ error: 'Failed to parse error response from shortener service' }));
+            console.error('Shortener service error:', response.status, errorData.error);
+            // 您需要添加 'shorten-url-failed-fallback' 到 langs.js
+            showToast(_t('shorten-url-failed-fallback', { default: '短链接获取失败，已使用原始链接。' }), 'error');
+            return longUrl; // 失败时回退到长链接
+        }
+
+        const data = await response.json();
+        if (data.shortUrl) {
+            // 您需要添加 'shorten-url-success' 到 langs.js
+            showToast(_t('shorten-url-success', { default: '短链接已生成。' }), 'success');
+            return data.shortUrl;
+        } else {
+            console.error('Shortener service did not return shortUrl:', data.error || 'Unknown error from shortener');
+            showToast(_t('shorten-url-failed-fallback', { default: '短链接获取失败，已使用原始链接。' }), 'error');
+            return longUrl; // 失败时回退到长链接
+        }
+    } catch (error) {
+        console.error('Error calling shortener service:', error);
+        showToast(_t('shorten-url-failed-fallback', { default: '短链接获取失败，已使用原始链接。' }), 'error');
+        return longUrl; // 失败时回退到长链接
+    }
+}
+
 $(document).ready(() => {
     // Directly start initialization of event listeners
     initEventListeners();
@@ -9,48 +51,6 @@ $(document).ready(() => {
 
     // Initialize buttons in disabled state
     $('.copyall, #shareSelected').addClass('disabled');
-
-    // 新增：获取短链接的函数
-    async function getShortUrl(longUrl) {
-        if (!$('#enableShortUrl').prop('checked')) {
-            return longUrl; // 如果未启用短网址，则返回原始URL
-        }
-
-        try {
-            // 这里的 '/api/shorten-url' 是您Cloudflare Worker的访问路径
-            // 您可能需要根据实际部署情况调整
-            const response = await fetch('/api/shorten-url', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ longUrl: longUrl }),
-            });
-
-            if (!response.ok) {
-                const errorData = await response.json().catch(() => ({ error: 'Failed to parse error response from shortener service' }));
-                console.error('Shortener service error:', response.status, errorData.error);
-                // 您需要添加 'shorten-url-failed-fallback' 到 langs.js
-                showToast(_t('shorten-url-failed-fallback', { default: '短链接获取失败，已使用原始链接。' }), 'error');
-                return longUrl; // 失败时回退到长链接
-            }
-
-            const data = await response.json();
-            if (data.shortUrl) {
-                // 您需要添加 'shorten-url-success' 到 langs.js
-                showToast(_t('shorten-url-success', { default: '短链接已生成。' }), 'success');
-                return data.shortUrl;
-            } else {
-                console.error('Shortener service did not return shortUrl:', data.error || 'Unknown error from shortener');
-                showToast(_t('shorten-url-failed-fallback', { default: '短链接获取失败，已使用原始链接。' }), 'error');
-                return longUrl; // 失败时回退到长链接
-            }
-        } catch (error) {
-            console.error('Error calling shortener service:', error);
-            showToast(_t('shorten-url-failed-fallback', { default: '短链接获取失败，已使用原始链接。' }), 'error');
-            return longUrl; // 失败时回退到长链接
-        }
-    }
 
     function initEventListeners() {
         $(document).on('paste', handlePasteUpload);

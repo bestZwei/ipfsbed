@@ -33,62 +33,6 @@ function updateBatchSharePageLanguage() {
     }
 }
 
-// Modified function to accept passphrase as an argument
-function shareBatchFiles(passphrase) { // passphrase is now an argument
-    const selectedItems = $('.file-select-checkbox:checked').closest('.item');
-    
-    // This check is technically redundant if promptBatchSharePassphrase already checks,
-    // but good for safety if shareBatchFiles is ever called directly.
-    if (selectedItems.length === 0) {
-        showToast(_t('no-files-selected'), 'error');
-        return;
-    }
-    
-    // Collect file data
-    const files = [];
-    selectedItems.each(function() {
-        const item = $(this);
-        const cid = item.find('.data-cid').val();
-        const filename = item.find('.data-filename').val();
-        const size = parseInt(item.find('.desc__size').text().match(/\d+/g)?.[0]) || 0;
-        const isProtected = item.find('.data-passphrase-protected').val() === 'true';
-        
-        if (cid && filename) {
-            files.push({
-                cid: cid,
-                filename: filename,
-                size: size,
-                protected: isProtected
-            });
-        }
-    });
-    
-    if (files.length === 0) {
-        showToast(_t('selected-files-invalid'), 'error');
-        return;
-    }
-    
-    // Create batch share
-    if (passphrase) {
-        // Encrypt the batch data with passphrase (keep existing format for encrypted)
-        const encryptedBatch = encryptData(files, passphrase);
-        if (encryptedBatch) {
-            const batchShareUrl = `${window.location.origin}${window.location.pathname.replace('index.html', '')}batch-share.html?share=${encodeURIComponent(encryptedBatch)}`;
-            copyToClipboard(batchShareUrl);
-            showToast(_t('batch-share-link-copied'), 'success');
-        } else {
-            showToast(_t('batch-encryption-failed'), 'error');
-        }
-    } else {
-        // Use compressed format for non-encrypted batch shares
-        const compressedData = base64UrlEncode(JSON.stringify(files));
-        const batchShareUrl = `${window.location.origin}${window.location.pathname.replace('index.html', '')}batch-share.html?d=${compressedData}`;
-        
-        copyToClipboard(batchShareUrl);
-        showToast(_t('batch-share-link-copied'), 'success');
-    }
-}
-
 // Function to parse URL parameters and process the batch share
 function processBatchShare() {
     const urlParams = new URLSearchParams(window.location.search);
