@@ -19,6 +19,8 @@ IPFSBED is a decentralized file hosting platform built on the InterPlanetary Fil
 - **Wide Format Support**: Images, documents, videos, archives, and many other file types
 - **Password Protection**: Optional encryption for sensitive files with password protection
 - **Batch Sharing**: Share multiple files at once with a single link
+- **Short URLs**: Generate compact, easy-to-share URLs through integrated URL shortener
+- **Folder Support**: Upload entire folders while preserving directory structure
 - **Multiple Gateways**: Choose from various IPFS gateways for optimal access speed
 - **Internationalization**: UI available in 12 languages
 - **No Registration**: Use immediately without creating an account
@@ -35,18 +37,26 @@ IPFSBED is a decentralized file hosting platform built on the InterPlanetary Fil
    - Pasting an image from clipboard (Ctrl+V)
 4. After uploading, you'll get a share link
    - With passphrase: `share.html?share=encrypted_data` (recipient needs the passphrase)
-   - Without passphrase: `share.html?cid=...&filename=...` (publicly accessible)
+   - Without passphrase: `share.html?d=compressed_data` (publicly accessible)
+   - Both formats automatically generate a short URL for easier sharing
+
+### Folder Upload
+
+1. Toggle "Folder Mode" using the switch at the top of the upload area
+2. Click the upload area and select a folder, or drag and drop a folder
+3. The entire folder structure will be preserved and uploaded to IPFS
+4. Share the generated link to allow recipients to browse and download the folder contents
 
 ### Batch Sharing
 
-1. Upload multiple files
-2. Select the files you want to share using the checkboxes
+1. Upload multiple files or folders
+2. Select the items you want to share using the checkboxes
 3. Click "Batch Share"
 4. (Optional) Set a passphrase for this batch of files
 5. Click "Confirm & Copy Link"
 6. Share the generated link with recipients
    - With passphrase: `batch-share.html?share=encrypted_data`
-   - Without passphrase: `batch-share.html?files=data`
+   - Without passphrase: `batch-share.html?d=compressed_data` or `batch-share.html?files=data` (legacy format)
 
 ### Accessing Shared Files
 
@@ -58,6 +68,15 @@ IPFSBED is a decentralized file hosting platform built on the InterPlanetary Fil
    - Copy links to individual files
 
 ## Advanced Features
+
+### Short URL Generation
+
+IPFSBED includes integration with a URL shortening service to make shared links more compact and easier to share. This feature:
+
+- Automatically generates short URLs for all shared content
+- Works for both single files/folders and batch shares
+- Can be toggled on/off with the "Short URL" option
+- Falls back to regular full-length URLs if the shortening service is unavailable
 
 ### Multiple Gateway Support
 
@@ -83,7 +102,13 @@ Change language using the globe icon in the top-right corner.
 
 ## Self-Hosting
 
-You can customize the IPFS upload endpoints by modifying the `static/file.js` file:
+### Basic Setup
+
+You can self-host IPFSBED with minimal configuration:
+
+1. Clone this repository
+2. Serve the static files using any web server (Apache, Nginx, etc.)
+3. Customize the IPFS upload endpoints by modifying the `static/file.js` file:
 
 ```javascript
 function uploadToImg2IPFS(file) {
@@ -96,14 +121,17 @@ function uploadToImg2IPFS(file) {
 }
 ```
 
+### URL Shortener Integration
+
+IPFSBED can be integrated with YOURLS (Your Own URL Shortener) for generating short links:
+
+1. Set up a [YOURLS](https://yourls.org/) instance on your server
+2. For Cloudflare Pages hosting, configure environment variables:
+   - `YOURLS_SIGNATURE`: Your YOURLS API signature token
+   - `YOURLS_API_ENDPOINT`: URL to your YOURLS API endpoint (e.g., `https://yourdomain.com/yourls-api.php`)
+3. The application will automatically use your YOURLS instance for URL shortening
+
 For setting up your own IPFS gateway, refer to this [guide](https://forum.conflux.fun/t/ipfs/14771).
-
-## Privacy & Security
-
-- Files uploaded with a passphrase are encrypted client-side before sharing
-- The encryption key (passphrase) is never sent to any server
-- Without the correct passphrase, encrypted files cannot be accessed
-- Public files (without passphrase) are accessible to anyone with the link
 
 ## Contributing
 
@@ -111,8 +139,10 @@ Contributions are welcome! Please feel free to submit a Pull Request or create a
 
 ## References
 
-- [IPFS](https://ipfsscan.io/)
+- [IPFS](https://ipfs.io/)
+- [IPFS Scanner](https://ipfsscan.io/)
 - [img2ipfs](https://github.com/jialezi/img2ipfs)
+- [YOURLS - Your Own URL Shortener](https://yourls.org/)
 
 ## License
 
