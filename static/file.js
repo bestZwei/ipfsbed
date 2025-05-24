@@ -10,6 +10,48 @@ $(document).ready(() => {
     // Initialize buttons in disabled state
     $('.copyall, #shareSelected').addClass('disabled');
 
+    // 新增：获取短链接的函数
+    async function getShortUrl(longUrl) {
+        if (!$('#enableShortUrl').prop('checked')) {
+            return longUrl; // 如果未启用短网址，则返回原始URL
+        }
+
+        try {
+            // 这里的 '/api/shorten-url' 是您Cloudflare Worker的访问路径
+            // 您可能需要根据实际部署情况调整
+            const response = await fetch('/api/shorten-url', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ longUrl: longUrl }),
+            });
+
+            if (!response.ok) {
+                const errorData = await response.json().catch(() => ({ error: 'Failed to parse error response from shortener service' }));
+                console.error('Shortener service error:', response.status, errorData.error);
+                // 您需要添加 'shorten-url-failed-fallback' 到 langs.js
+                showToast(_t('shorten-url-failed-fallback', { default: '短链接获取失败，已使用原始链接。' }), 'error');
+                return longUrl; // 失败时回退到长链接
+            }
+
+            const data = await response.json();
+            if (data.shortUrl) {
+                // 您需要添加 'shorten-url-success' 到 langs.js
+                showToast(_t('shorten-url-success', { default: '短链接已生成。' }), 'success');
+                return data.shortUrl;
+            } else {
+                console.error('Shortener service did not return shortUrl:', data.error || 'Unknown error from shortener');
+                showToast(_t('shorten-url-failed-fallback', { default: '短链接获取失败，已使用原始链接。' }), 'error');
+                return longUrl; // 失败时回退到长链接
+            }
+        } catch (error) {
+            console.error('Error calling shortener service:', error);
+            showToast(_t('shorten-url-failed-fallback', { default: '短链接获取失败，已使用原始链接。' }), 'error');
+            return longUrl; // 失败时回退到长链接
+        }
+    }
+
     function initEventListeners() {
         $(document).on('paste', handlePasteUpload);
         
@@ -401,12 +443,11 @@ $(document).ready(() => {
         $(`.${randomClass}`).find('.progress-status').text(`${percent}%`);
     }
 
-    function handleUploadSuccess(res, randomClass, file) { // Added file parameter
+    async function handleUploadSuccess(res, randomClass, file) { // Added file parameter & async
         const fileName = encodeURIComponent(file.name);
         
         const passphrase = $('#passphraseInput').val();
-        let displaySrc;
-        let shareUrl;
+        let originalShareUrl; // Renamed from displaySrc / shareUrl to avoid confusion before shortening
 
         if (passphrase) {
             // Encrypted share link (keep existing format for encrypted files)
@@ -416,8 +457,7 @@ $(document).ready(() => {
                 size: file.size
             };
             const encryptedData = encryptData(fileData, passphrase);
-            shareUrl = `${window.location.origin}${window.location.pathname.replace('index.html', '')}share.html?share=${encodeURIComponent(encryptedData)}`;
-            displaySrc = shareUrl;
+            originalShareUrl = `${window.location.origin}${window.location.pathname.replace('index.html', '')}share.html?share=${encodeURIComponent(encryptedData)}`;
         } else {
             // Use new compressed format for public files
             const fileData = {
@@ -426,9 +466,11 @@ $(document).ready(() => {
                 s: file.size        // size
             };
             const compressedData = base64UrlEncode(JSON.stringify(fileData));
-            shareUrl = `${window.location.origin}${window.location.pathname.replace('index.html', '')}share.html?d=${compressedData}`;
-            displaySrc = shareUrl;
+            originalShareUrl = `${window.location.origin}${window.location.pathname.replace('index.html', '')}share.html?d=${compressedData}`;
         }
+        
+        // Get short URL if enabled
+        const finalShareUrl = await getShortUrl(originalShareUrl);
         
         $('#file').val(null);
         $(`.${randomClass}`).find('.progress-inner').addClass('success');
@@ -436,12 +478,12 @@ $(document).ready(() => {
             $(`.${randomClass}`).removeClass('uploading');
             const urlDisplay = $(`.${randomClass}`).find('.url-display');
             const fileUrlInput = $(`.${randomClass}`).find('.file-url-input');
-            fileUrlInput.val(displaySrc);
+            fileUrlInput.val(finalShareUrl); // Use final (potentially shortened) URL
             urlDisplay.fadeIn(300);
         });
         
         // Store the URL and CID values in hidden inputs
-        $(`.${randomClass}`).find('.data-url').val(displaySrc);
+        $(`.${randomClass}`).find('.data-url').val(finalShareUrl); // Use final (potentially shortened) URL
         $(`.${randomClass}`).find('.data-cid').val(res.Hash);
         $(`.${randomClass}`).find('.data-filename').val(file.name);
         
@@ -752,9 +794,9 @@ function closeBatchSharePassphraseModal() {
 $(document).ready(() => {
     // ... existing ready listeners ...
 
-    $('#confirmBatchSharePassphrase').on('click', () => {
+    $('#confirmBatchSharePassphrase').on('click', async () => { // Make async
         const passphrase = $('#batchPassphraseInput').val();
-        shareBatchFiles(passphrase); // Pass the passphrase to the main function
+        await shareBatchFiles(passphrase); // Pass the passphrase and await
         closeBatchSharePassphraseModal();
     });
 
@@ -771,7 +813,7 @@ $(document).ready(() => {
 });
 
 // Modified function to accept passphrase as an argument
-function shareBatchFiles(passphrase) { // passphrase is now an argument
+async function shareBatchFiles(passphrase) { // passphrase is now an argument, make async
     const selectedItems = $('.file-select-checkbox:checked').closest('.item');
     
     // This check is technically redundant if promptBatchSharePassphrase already checks,
@@ -808,30 +850,36 @@ function shareBatchFiles(passphrase) { // passphrase is now an argument
     // Get the passphrase if set - Now passed as an argument
     // const passphrase = $('#passphraseInput').val(); // OLD: Read from global input
     
+    let batchShareUrlToCopy; // Variable to hold the URL before copying
+
     // Create batch share
     if (passphrase) {
         // Encrypt the batch data with passphrase
         const encryptedBatch = encryptData(files, passphrase);
         if (encryptedBatch) {
-            const batchShareUrl = `${window.location.origin}${window.location.pathname.replace('index.html', '')}batch-share.html?share=${encodeURIComponent(encryptedBatch)}`;
-            copyToClipboard(batchShareUrl);
+            const originalBatchShareUrl = `${window.location.origin}${window.location.pathname.replace('index.html', '')}batch-share.html?share=${encodeURIComponent(encryptedBatch)}`;
+            batchShareUrlToCopy = await getShortUrl(originalBatchShareUrl); // Get short URL
+            
+            copyToClipboard(batchShareUrlToCopy);
             showToast(_t('batch-share-link-copied'), 'success');
             
             // Open the batch share page in a new tab - REMOVED
-            // window.open(batchShareUrl, '_blank');
+            // window.open(batchShareUrlToCopy, '_blank');
         } else {
             showToast(_t('batch-encryption-failed'), 'error');
+            return; // Return early if encryption failed
         }
     } else {
         // Create a non-encrypted batch share URL
         const batchData = encodeURIComponent(JSON.stringify(files));
-        const batchShareUrl = `${window.location.origin}${window.location.pathname.replace('index.html', '')}batch-share.html?files=${batchData}`;
+        const originalBatchShareUrl = `${window.location.origin}${window.location.pathname.replace('index.html', '')}batch-share.html?files=${batchData}`;
+        batchShareUrlToCopy = await getShortUrl(originalBatchShareUrl); // Get short URL
         
-        copyToClipboard(batchShareUrl);
+        copyToClipboard(batchShareUrlToCopy);
         showToast(_t('batch-share-link-copied'), 'success');
         
         // Open the batch share page in a new tab - REMOVED
-        // window.open(batchShareUrl, '_blank');
+        // window.open(batchShareUrlToCopy, '_blank');
     }
 }
 
@@ -1041,28 +1089,31 @@ function createDirectoryItem(folderName, totalSize, randomClass) {
 }
 
 // 文件夹上传成功处理
-function handleDirectoryUploadSuccess(dirObj, folderName, totalSize, randomClass) {
+async function handleDirectoryUploadSuccess(dirObj, folderName, totalSize, randomClass) { // Make async
     // Use compressed format for directory shares too
     const fileData = {
         c: dirObj.Hash,
-        f: folderName + '/',
+        f: folderName + '/', // Ensure trailing slash for directories
         s: totalSize
     };
     const compressedData = base64UrlEncode(JSON.stringify(fileData));
-    const shareUrl = `${window.location.origin}${window.location.pathname.replace('index.html', '')}share.html?d=${compressedData}`;
+    const originalShareUrl = `${window.location.origin}${window.location.pathname.replace('index.html', '')}share.html?d=${compressedData}`;
     
-    $('#file').val(null);
+    const finalShareUrl = await getShortUrl(originalShareUrl); // Get short URL
+
+    $('#file').val(null); // Assuming #file is the general file input, might need #directory.val(null) too
+    $('#directory').val(null); 
     $(`.${randomClass}`).find('.progress-inner').addClass('success');
     $(`.${randomClass}`).find('.progress').fadeOut(500, function() {
         $(`.${randomClass}`).removeClass('uploading');
         const urlDisplay = $(`.${randomClass}`).find('.url-display');
         const fileUrlInput = $(`.${randomClass}`).find('.file-url-input');
-        fileUrlInput.val(shareUrl);
+        fileUrlInput.val(finalShareUrl); // Use final (potentially shortened) URL
         urlDisplay.fadeIn(300);
     });
-    $(`.${randomClass}`).find('.data-url').val(shareUrl);
+    $(`.${randomClass}`).find('.data-url').val(finalShareUrl); // Use final (potentially shortened) URL
     $(`.${randomClass}`).find('.data-cid').val(dirObj.Hash);
-    $(`.${randomClass}`).find('.data-filename').val(folderName);
+    $(`.${randomClass}`).find('.data-filename').val(folderName); // Store original folderName
     $('.copyall').removeClass('disabled');
     showToast(_t('upload-success'), 'success');
     updateShareSelectedButtonState();
