@@ -4,6 +4,22 @@ let currentCid = null;
 let currentFilename = null;
 let currentFilesize = null;
 
+// Base64URL encoding/decoding functions for URL compression
+function base64UrlEncode(str) {
+    return btoa(unescape(encodeURIComponent(str)))
+        .replace(/\+/g, '-')
+        .replace(/\//g, '_')
+        .replace(/=/g, '');
+}
+
+function base64UrlDecode(str) {
+    // Add padding
+    str += '='.repeat((4 - str.length % 4) % 4);
+    // Replace URL-safe characters
+    str = str.replace(/-/g, '+').replace(/_/g, '/');
+    return decodeURIComponent(escape(atob(str)));
+}
+
 // Update page language elements specific to share page
 function updateSharePageLanguage() {
     // Set html lang
@@ -74,8 +90,32 @@ function processShareUrl() {
         
         document.getElementById('loadingIndicator').style.display = 'none';
         
+    } else if (urlParams.has('d')) {
+        // New compressed format: ?d=base64url_encoded_data
+        try {
+            const compressedData = urlParams.get('d');
+            const decodedJson = base64UrlDecode(compressedData);
+            const data = JSON.parse(decodedJson);
+            
+            if (data.c && data.f) { // cid and filename
+                displayFileDetails(data.c, data.f, data.s || 0);
+            } else {
+                throw new Error('Invalid compressed data format');
+            }
+        } catch (e) {
+            console.error('Failed to decode compressed share link:', e);
+            // Fall back to error display
+            document.getElementById('loadingIndicator').style.display = 'none';
+            document.getElementById('passphraseForm').style.display = 'none';
+            document.getElementById('fileDetails').style.display = 'block';
+            document.getElementById('fileIcon').innerHTML = '<i class="fas fa-exclamation-circle" style="font-size: 60px; color: #f56c6c;"></i>';
+            document.getElementById('fileName').textContent = _t('decryption-failed');
+            document.getElementById('fileSize').textContent = _t('selected-files-invalid');
+            document.getElementById('downloadButton').style.display = 'none';
+        }
+        
     } else if (urlParams.has('cid') && urlParams.has('filename')) {
-        // Public file (no encryption)
+        // Legacy public file format (keep for backward compatibility)
         const cid = urlParams.get('cid');
         const filename = decodeURIComponent(urlParams.get('filename'));
         const filesize = urlParams.get('size') || 0;
@@ -211,14 +251,14 @@ document.addEventListener('DOMContentLoaded', function() {
     updateSharePageLanguage();
     processShareUrl();
 
-    // 绑定下载按钮事件，阻止默认跳转，强制下载
+    // Bind download button event
     const downloadBtn = document.getElementById('downloadButton');
-    if (downloadBtn) {
-        downloadBtn.addEventListener('click', function(e) {
-            e.preventDefault();
-            const url = downloadBtn.getAttribute('data-url');
-            if (!url) return;
-            forceDownloadFile(url, currentFilename, downloadBtn);
-        });
-    }
+    downloadBtn.addEventListener('click', function(e) {
+        e.preventDefault();
+        const url = this.getAttribute('data-url');
+        const filename = currentFilename;
+        if (url && filename) {
+            forceDownloadFile(url, filename, this);
+        }
+    });
 });

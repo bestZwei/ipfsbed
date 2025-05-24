@@ -39,6 +39,7 @@ function processBatchShare() {
     document.getElementById('loadingIndicator').style.display = 'flex';
     
     if (urlParams.has('share')) {
+        // Encrypted share (existing format)
         const encryptedPayload = urlParams.get('share');
         document.getElementById('passphraseForm').style.display = 'block';
         document.getElementById('loadingIndicator').style.display = 'none';
@@ -63,7 +64,23 @@ function processBatchShare() {
                 document.getElementById('unlockButton').click();
             }
         });
+    } else if (urlParams.has('d')) {
+        // New compressed format
+        try {
+            const compressedData = urlParams.get('d');
+            const decodedJson = base64UrlDecode(compressedData);
+            const filesData = JSON.parse(decodedJson);
+            if (Array.isArray(filesData) && filesData.length > 0) {
+                displayBatchFiles(filesData);
+            } else {
+                showError(_t('selected-files-invalid'));
+            }
+        } catch (e) {
+            showError(_t('decryption-failed'));
+            console.error(e);
+        }
     } else if (urlParams.has('files')) {
+        // Legacy format (keep for backward compatibility)
         try {
             const filesData = JSON.parse(decodeURIComponent(urlParams.get('files')));
             if (Array.isArray(filesData) && filesData.length > 0) {
@@ -78,6 +95,22 @@ function processBatchShare() {
     } else {
         showError(_t('selected-files-invalid'));
     }
+}
+
+// Add Base64URL functions
+function base64UrlEncode(str) {
+    return btoa(unescape(encodeURIComponent(str)))
+        .replace(/\+/g, '-')
+        .replace(/\//g, '_')
+        .replace(/=/g, '');
+}
+
+function base64UrlDecode(str) {
+    // Add padding
+    str += '='.repeat((4 - str.length % 4) % 4);
+    // Replace URL-safe characters
+    str = str.replace(/-/g, '+').replace(/_/g, '/');
+    return decodeURIComponent(escape(atob(str)));
 }
 
 // Display error message when batch share is invalid
