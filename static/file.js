@@ -17,25 +17,23 @@ async function getShortUrl(longUrl) {
 
         if (!response.ok) {
             const errorData = await response.json().catch(() => ({ error: 'Failed to parse error response from shortener service' }));
-            console.error('Shortener service error:', response.status, errorData.error);
-            // 您需要添加 'shorten-url-failed-fallback' 到 langs.js
-            showToast(_t('shorten-url-failed-fallback', { default: '短链接获取失败，已使用原始链接。' }), 'error');
+            console.warn('Shortener service error:', response.status, errorData.error);
+            showToast(_t('shorten-url-failed-fallback', { default: '短链接获取失败，已使用原始链接。' }), 'warning');
             return longUrl; // 失败时回退到长链接
         }
 
         const data = await response.json();
         if (data.shortUrl) {
-            // 您需要添加 'shorten-url-success' 到 langs.js
-            showToast(_t('shorten-url-success', { default: '短链接已生成。' }), 'success');
+            console.log('Short URL generated:', data.shortUrl);
             return data.shortUrl;
         } else {
-            console.error('Shortener service did not return shortUrl:', data.error || 'Unknown error from shortener');
-            showToast(_t('shorten-url-failed-fallback', { default: '短链接获取失败，已使用原始链接。' }), 'error');
+            console.warn('Shortener service did not return shortUrl:', data.error || 'Unknown error from shortener');
+            showToast(_t('shorten-url-failed-fallback', { default: '短链接获取失败，已使用原始链接。' }), 'warning');
             return longUrl; // 失败时回退到长链接
         }
     } catch (error) {
-        console.error('Error calling shortener service:', error);
-        showToast(_t('shorten-url-failed-fallback', { default: '短链接获取失败，已使用原始链接。' }), 'error');
+        console.warn('Error calling shortener service:', error);
+        showToast(_t('shorten-url-failed-fallback', { default: '短链接获取失败，已使用原始链接。' }), 'warning');
         return longUrl; // 失败时回退到长链接
     }
 }

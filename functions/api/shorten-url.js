@@ -33,14 +33,23 @@ export async function onRequestPost(context) {
       return new Response(JSON.stringify({ shortUrl: data.shorturl }), {
         headers: { 'Content-Type': 'application/json' },
       });
-    } else {
-      console.error('YOURLS API error:', data.message);
-      return new Response(JSON.stringify({ error: data.message || 'Failed to shorten URL via YOURLS.' }), {
-        // 如果YOURLS API本身返回200但操作失败，我们返回一个代表应用层错误的500或4xx状态码
-        status: response.status === 200 ? 502 : response.status, // 502 Bad Gateway if YOURLS is up but fails
-        headers: { 'Content-Type': 'application/json' },
-      });
+    } else if (data.status === 'fail' && data.message && data.message.includes('already exists in database')) {
+      // Extract the existing short URL from the error message
+      const shortUrlMatch = data.message.match(/short URL: ([^)]+)/);
+      if (shortUrlMatch && shortUrlMatch[1]) {
+        const existingShortUrl = shortUrlMatch[1].startsWith('http') ? shortUrlMatch[1] : `https://${shortUrlMatch[1]}`;
+        return new Response(JSON.stringify({ shortUrl: existingShortUrl }), {
+          headers: { 'Content-Type': 'application/json' },
+        });
+      }
     }
+
+    // Handle other error cases
+    console.error('YOURLS API error:', data.message);
+    return new Response(JSON.stringify({ error: data.message || 'Failed to shorten URL via YOURLS.' }), {
+      status: response.status === 200 ? 502 : response.status,
+      headers: { 'Content-Type': 'application/json' },
+    });
   } catch (error) {
     console.error('Error in shorten-url worker:', error.message, error.stack);
     return new Response(JSON.stringify({ error: 'Internal server error while shortening URL.' }), {
