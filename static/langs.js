@@ -199,7 +199,7 @@ const translations = {
     'batch-share-passphrase-title': 'Пароль для пакетного обмена',
     'batch-share-confirm-copy': 'Подтвердить и скопировать ссылку',
     'batch-share-cancel': 'Отмена',
-    'batch-share-link-cопирован': 'Ссылка для пакетного обмена скопирована в буфер обмена',
+    'batch-share-link-copied': 'Ссылка для пакетного обмена скопирована в буфер обмена',
     'batch-encryption-failed': 'Пакетное шифрование не удалось',
     'show-password': 'Показать пароль',
     'hide-password': 'Скрыть пароль',
