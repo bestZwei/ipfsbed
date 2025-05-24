@@ -234,7 +234,7 @@ async function forceDownloadFile(url, filename, btn) {
         }, 100);
 
     } catch (e) {
-        showToast(_t('upload-error'), 'error');
+        showToast(_t('download-error'), 'error');
     } finally {
         btn.classList.remove('disabled');
         btn.querySelector('span').textContent = _t('download-button') || 'Download';

@@ -60,6 +60,7 @@ const translations = {
     'sponsors-text': '本项目由',
     'sponsors-and': '和',
     'sponsors-suffix': '赞助',
+    'download-error': '下载失败！',
   },
   'en': {
     'meta-title': 'IPFSBED - Decentralized IPFS File Hosting Service',
@@ -118,6 +119,7 @@ const translations = {
     'sponsors-text': 'Sponsored by',
     'sponsors-and': 'and',
     'sponsors-suffix': '',
+    'download-error': 'Download failed!',
   },
   'de': {
     'meta-title': 'IPFSBED - Dezentraler IPFS-Dateihosting-Dienst',
@@ -176,6 +178,7 @@ const translations = {
     'sponsors-text': 'Gesponsert von',
     'sponsors-and': 'und',
     'sponsors-suffix': '',
+    'download-error': 'Download fehlgeschlagen!',
   },
   'ru': {
     'meta-title': 'IPFSBED - Децентрализованный сервис хостинга файлов IPFS',
@@ -196,7 +199,7 @@ const translations = {
     'batch-share-passphrase-title': 'Пароль для пакетного обмена',
     'batch-share-confirm-copy': 'Подтвердить и скопировать ссылку',
     'batch-share-cancel': 'Отмена',
-    'batch-share-link-copирован': 'Ссылка для пакетного обмена скопирована в буфер обмена',
+    'batch-share-link-cопирован': 'Ссылка для пакетного обмена скопирована в буфер обмена',
     'batch-encryption-failed': 'Пакетное шифрование не удалось',
     'show-password': 'Показать пароль',
     'hide-password': 'Скрыть пароль',
@@ -234,6 +237,7 @@ const translations = {
     'sponsors-text': 'Спонсировано',
     'sponsors-and': 'и',
     'sponsors-suffix': '',
+    'download-error': 'Ошибка загрузки!',
   },
   'fr': {
     'meta-title': 'IPFSBED - Service d\'hébergement de fichiers IPFS décentralisé',
@@ -292,6 +296,7 @@ const translations = {
     'sponsors-text': 'Sponsorisé par',
     'sponsors-and': 'et',
     'sponsors-suffix': '',
+    'download-error': 'Échec du téléchargement!',
   },
   'es': {
     'meta-title': 'IPFSBED - Servicio de alojamiento de archivos IPFS descentralizado',
@@ -350,6 +355,7 @@ const translations = {
     'sponsors-text': 'Patrocinado por',
     'sponsors-and': 'y',
     'sponsors-suffix': '',
+    'download-error': '¡Error al descargar!',
   },
   'ar': {
     'meta-title': 'IPFSBED - خدمة استضافة ملفات IPFS اللامركزية',
@@ -379,7 +385,7 @@ const translations = {
     'clipboard-empty': 'الحافظة فارغة!',
     'clipboard-no-file': 'لا توجد صورة في الحافظة!',
     'unsupported-type': 'نوع ملف غير مدعوم!',
-    'file-too-large': 'الملف كبير جدًا! الحد الأقصى {size} ميجابايت',
+    'file-too-large': 'فائل كبير جدًا! الحد الأقصى {size} ميجابايت',
     'file-size': 'حجم الملف: {size}',
     'short-url': 'رابط قصير',
     'download-started': 'بدء التنزيل',
@@ -408,6 +414,7 @@ const translations = {
     'sponsors-text': 'برعاية',
     'sponsors-and': 'و',
     'sponsors-suffix': '',
+    'download-error': 'فشل التنزيل!',
   },
   'fa': {
     'meta-title': 'IPFSBED - سرویس میزبانی فایل IPFS غیرمتمرکز',
@@ -466,6 +473,7 @@ const translations = {
     'sponsors-text': 'حمایت شده توسط',
     'sponsors-and': 'و',
     'sponsors-suffix': '',
+    'download-error': 'دانلود ناموفق بود!',
   },
   'tr': {
     'meta-title': 'IPFSBED - Merkezi Olmayan IPFS Dosya Barındırma Hizmeti',
@@ -524,6 +532,7 @@ const translations = {
     'sponsors-text': 'Sponsorlar:',
     'sponsors-and': 've',
     'sponsors-suffix': '',
+    'download-error': 'İndirme başarısız!',
   },
   'pt': {
     'meta-title': 'IPFSBED - Serviço de Hospedagem de Arquivos IPFS Descentralizado',
@@ -582,6 +591,7 @@ const translations = {
     'sponsors-text': 'Patrocinado por',
     'sponsors-and': 'e',
     'sponsors-suffix': '',
+    'download-error': 'Falha no download!',
   },
   'ko': {
     'meta-title': 'IPFSBED - 분산형 IPFS 파일 호스팅 서비스',
@@ -640,6 +650,7 @@ const translations = {
     'sponsors-text': '스폰서:',
     'sponsors-and': '및',
     'sponsors-suffix': '',
+    'download-error': '다운로드 실패!',
   },
   'ja': {
     'meta-title': 'IPFSBED - 分散型IPFSファイルホスティングサービス',
@@ -698,6 +709,7 @@ const translations = {
     'sponsors-text': 'スポンサー:',
     'sponsors-and': 'と',
     'sponsors-suffix': '',
+    'download-error': 'ダウンロードに失敗しました！',
   }
 };
 
