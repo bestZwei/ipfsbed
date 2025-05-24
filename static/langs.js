@@ -118,7 +118,7 @@ const translations = {
     'folder-mode': 'Folder Mode',
     'sponsors-text': 'Sponsored by',
     'sponsors-and': 'and',
-    'sponsors-suffix': '',
+    'sponsors-suffix': ' ',
     'download-error': 'Download failed!',
   },
   'de': {
@@ -177,7 +177,7 @@ const translations = {
     'folder-mode': 'Ordnermodus',
     'sponsors-text': 'Gesponsert von',
     'sponsors-and': 'und',
-    'sponsors-suffix': '',
+    'sponsors-suffix': ' ',
     'download-error': 'Download fehlgeschlagen!',
   },
   'ru': {
@@ -236,7 +236,7 @@ const translations = {
     'folder-mode': 'Режим папки',
     'sponsors-text': 'Спонсировано',
     'sponsors-and': 'и',
-    'sponsors-suffix': '',
+    'sponsors-suffix': ' ',
     'download-error': 'Ошибка загрузки!',
   },
   'fr': {
@@ -295,7 +295,7 @@ const translations = {
     'folder-mode': 'Mode dossier',
     'sponsors-text': 'Sponsorisé par',
     'sponsors-and': 'et',
-    'sponsors-suffix': '',
+    'sponsors-suffix': ' ',
     'download-error': 'Échec du téléchargement!',
   },
   'es': {
@@ -354,7 +354,7 @@ const translations = {
     'folder-mode': 'Modo carpeta',
     'sponsors-text': 'Patrocinado por',
     'sponsors-and': 'y',
-    'sponsors-suffix': '',
+    'sponsors-suffix': ' ',
     'download-error': '¡Error al descargar!',
   },
   'ar': {
@@ -413,7 +413,7 @@ const translations = {
     'folder-mode': 'وضع المجلد',
     'sponsors-text': 'برعاية',
     'sponsors-and': 'و',
-    'sponsors-suffix': '',
+    'sponsors-suffix': ' ',
     'download-error': 'فشل التنزيل!',
   },
   'fa': {
@@ -472,7 +472,7 @@ const translations = {
     'folder-mode': 'حالت پوشه',
     'sponsors-text': 'حمایت شده توسط',
     'sponsors-and': 'و',
-    'sponsors-suffix': '',
+    'sponsors-suffix': ' ',
     'download-error': 'دانلود ناموفق بود!',
   },
   'tr': {
@@ -531,7 +531,7 @@ const translations = {
     'folder-mode': 'Klasör Modu',
     'sponsors-text': 'Sponsorlar:',
     'sponsors-and': 've',
-    'sponsors-suffix': '',
+    'sponsors-suffix': ' ',
     'download-error': 'İndirme başarısız!',
   },
   'pt': {
@@ -590,7 +590,7 @@ const translations = {
     'folder-mode': 'Modo Pasta',
     'sponsors-text': 'Patrocinado por',
     'sponsors-and': 'e',
-    'sponsors-suffix': '',
+    'sponsors-suffix': ' ',
     'download-error': 'Falha no download!',
   },
   'ko': {
@@ -649,7 +649,7 @@ const translations = {
     'folder-mode': '폴더 모드',
     'sponsors-text': '스폰서:',
     'sponsors-and': '및',
-    'sponsors-suffix': '',
+    'sponsors-suffix': ' ',
     'download-error': '다운로드 실패!',
   },
   'ja': {
@@ -708,7 +708,7 @@ const translations = {
     'folder-mode': 'フォルダモード',
     'sponsors-text': 'スポンサー:',
     'sponsors-and': 'と',
-    'sponsors-suffix': '',
+    'sponsors-suffix': ' ',
     'download-error': 'ダウンロードに失敗しました！',
   }
 };
