@@ -19,6 +19,8 @@ IPFSBED是一个基于星际文件系统（IPFS）构建的去中心化文件托
 - **广泛的格式支持**：图片、文档、视频、压缩包等多种文件类型
 - **密码保护**：为敏感文件提供可选的加密和密码保护
 - **批量共享**：通过单个链接一次共享多个文件
+- **短链接**：通过集成的URL缩短服务生成简短易分享的链接
+- **文件夹支持**：上传整个文件夹并保留目录结构
 - **多网关支持**：从各种IPFS网关中选择，以获得最佳访问速度
 - **国际化**：用户界面支持12种语言
 - **无需注册**：无需创建账户即可立即使用
@@ -35,18 +37,26 @@ IPFSBED是一个基于星际文件系统（IPFS）构建的去中心化文件托
    - 从剪贴板粘贴图片（Ctrl+V）
 4. 上传后，您将获得一个分享链接
    - 带密码：`share.html?share=encrypted_data`（接收者需要密码）
-   - 无密码：`share.html?cid=...&filename=...`（公开访问）
+   - 无密码：`share.html?d=compressed_data`（公开访问）
+   - 两种格式都会自动生成短链接，便于共享
+
+### 文件夹上传
+
+1. 使用上传区域顶部的开关切换到"文件夹模式"
+2. 点击上传区域并选择一个文件夹，或拖放一个文件夹
+3. 整个文件夹结构将被保留并上传到IPFS
+4. 分享生成的链接，接收者可以浏览和下载文件夹内容
 
 ### 批量共享
 
-1. 上传多个文件
-2. 使用复选框选择要共享的文件
-3. 点击“批量共享”
+1. 上传多个文件或文件夹
+2. 使用复选框选择要共享的项目
+3. 点击"批量共享"
 4. （可选）为这批文件设置密码
-5. 点击“确认并复制链接”
+5. 点击"确认并复制链接"
 6. 与接收者分享生成的链接
    - 带密码：`batch-share.html?share=encrypted_data`
-   - 无密码：`batch-share.html?files=data`
+   - 无密码：`batch-share.html?d=compressed_data`或`batch-share.html?files=data`（旧格式）
 
 ### 访问共享文件
 
@@ -58,6 +68,15 @@ IPFSBED是一个基于星际文件系统（IPFS）构建的去中心化文件托
    - 复制单个文件的链接
 
 ## 高级功能
+
+### 短链接生成
+
+IPFSBED包含与URL缩短服务的集成，使共享链接更紧凑、更易于分享。此功能：
+
+- 自动为所有共享内容生成短链接
+- 适用于单个文件/文件夹和批量共享
+- 可通过"短网址"选项打开或关闭
+- 如果缩短服务不可用，会回退到常规完整链接
 
 ### 多网关支持
 
@@ -83,7 +102,13 @@ IPFSBED提供多种IPFS网关来访问您的文件。根据您的位置和网络
 
 ## 自托管
 
-您可以通过修改`static/file.js`文件来自定义IPFS上传端点：
+### 基本设置
+
+您可以通过最少的配置自托管IPFSBED：
+
+1. 克隆此仓库
+2. 使用任何Web服务器（Apache、Nginx等）提供静态文件服务
+3. 通过修改`static/file.js`文件来自定义IPFS上传端点：
 
 ```javascript
 function uploadToImg2IPFS(file) {
@@ -96,14 +121,17 @@ function uploadToImg2IPFS(file) {
 }
 ```
 
+### URL缩短器集成
+
+IPFSBED可以与YOURLS（Your Own URL Shortener，您自己的URL缩短器）集成以生成短链接：
+
+1. 在您的服务器上设置[YOURLS](https://yourls.org/)实例
+2. 对于Cloudflare Pages托管，配置环境变量：
+   - `YOURLS_SIGNATURE`：您的YOURLS API签名令牌
+   - `YOURLS_API_ENDPOINT`：您的YOURLS API端点URL（例如，`https://yourdomain.com/yourls-api.php`）
+3. 应用程序将自动使用您的YOURLS实例进行URL缩短
+
 关于设置您自己的IPFS网关，请参考此[指南](https://forum.conflux.fun/t/ipfs/14771)。
-
-## 隐私与安全
-
-- 使用密码上传的文件在共享前在客户端进行加密
-- 加密密钥（密码）永远不会发送到任何服务器
-- 没有正确的密码，加密文件无法访问
-- 公共文件（无密码）可被任何拥有链接的人访问
 
 ## 贡献
 
@@ -111,8 +139,10 @@ function uploadToImg2IPFS(file) {
 
 ## 参考
 
-- [IPFS](https://ipfsscan.io/)
+- [IPFS](https://ipfs.io/)
+- [IPFS Scanner](https://ipfsscan.io/)
 - [img2ipfs](https://github.com/jialezi/img2ipfs)
+- [YOURLS - Your Own URL Shortener](https://yourls.org/)
 
 ## 许可证
 
