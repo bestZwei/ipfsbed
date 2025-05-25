@@ -128,15 +128,24 @@
                 <div class="batch-actions">
                     <div class="short-url-wrapper">
                         <input type="checkbox" id="enableShortUrl" checked>
-                        <span class="short-url-label" data-translate="short-url">短网址</span>
+                        <span class="short-url-label">
+                            <span class="desktop-text" data-translate="short-url">短网址</span>
+                            <span class="mobile-text" data-translate="short-url-mobile">短链</span>
+                        </span>
                     </div>
                     <div class="toggle-all-wrapper">
                         <input type="checkbox" id="toggleAllFiles" disabled>
                         <span class="toggle-all-label" data-translate="select-all">全选</span>
                     </div>
-                    <button id="shareSelected" class="action-button disabled" data-translate="share-selected">批量分享</button>
+                    <button id="shareSelected" class="action-button disabled">
+                        <i class="fas fa-share-alt"></i>
+                        <span class="desktop-text" data-translate="share-selected">批量分享</span>
+                        <span class="mobile-text" data-translate="share-selected-mobile">分享</span>
+                    </button>
                     <a href="javascript:void(0);" class="copyall action-button disabled" onclick="copyAllLinks()" title="复制所有链接">
-                        <span data-translate="copy-all">复制全部</span>
+                        <i class="fas fa-copy"></i>
+                        <span class="desktop-text" data-translate="copy-all">复制全部</span>
+                        <span class="mobile-text" data-translate="copy-all-mobile">复制</span>
                     </a>
                 </div>
             </div>
