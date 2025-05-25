@@ -840,18 +840,15 @@ async function shareBatchFiles(passphrase) { // passphrase is now an argument, m
         const item = $(this);
         const cid = item.find('.data-cid').val();
         const filename = item.find('.data-filename').val();
-        const sizeText = item.find('.desc__size').text();
-        // Extract size number more carefully
-        const sizeMatch = sizeText.match(/[\d.,]+/);
-        const size = sizeMatch ? parseFloat(sizeMatch[0].replace(',', '')) : 0;
+        const size = parseInt(item.find('.desc__size').text().match(/\d+/g)[0]) || 0; // Extract size as number
         const isProtected = item.find('.data-passphrase-protected').val() === 'true';
         
         if (cid && filename) {
-            // Use compressed format for batch sharing
             files.push({
-                c: cid,        // compressed: cid
-                f: filename,   // compressed: filename  
-                s: size        // compressed: size
+                cid: cid,
+                filename: filename,
+                size: size,
+                isProtected: isProtected
             });
         }
     });
@@ -860,6 +857,9 @@ async function shareBatchFiles(passphrase) { // passphrase is now an argument, m
         showToast(_t('selected-files-invalid'), 'error');
         return;
     }
+    
+    // Get the passphrase if set - Now passed as an argument
+    // const passphrase = $('#passphraseInput').val(); // OLD: Read from global input
     
     let batchShareUrlToCopy; // Variable to hold the URL before copying
 
@@ -873,18 +873,24 @@ async function shareBatchFiles(passphrase) { // passphrase is now an argument, m
             
             copyToClipboard(batchShareUrlToCopy);
             showToast(_t('batch-share-link-copied'), 'success');
+            
+            // Open the batch share page in a new tab - REMOVED
+            // window.open(batchShareUrlToCopy, '_blank');
         } else {
             showToast(_t('batch-encryption-failed'), 'error');
             return; // Return early if encryption failed
         }
     } else {
-        // Create a non-encrypted batch share URL using compressed format
-        const compressedData = base64UrlEncode(JSON.stringify(files));
-        const originalBatchShareUrl = `${window.location.origin}${window.location.pathname.replace('index.html', '')}batch-share.html?d=${compressedData}`;
+        // Create a non-encrypted batch share URL
+        const batchData = encodeURIComponent(JSON.stringify(files));
+        const originalBatchShareUrl = `${window.location.origin}${window.location.pathname.replace('index.html', '')}batch-share.html?files=${batchData}`;
         batchShareUrlToCopy = await getShortUrl(originalBatchShareUrl); // Get short URL
         
         copyToClipboard(batchShareUrlToCopy);
         showToast(_t('batch-share-link-copied'), 'success');
+        
+        // Open the batch share page in a new tab - REMOVED
+        // window.open(batchShareUrlToCopy, '_blank');
     }
 }
 

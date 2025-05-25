@@ -129,15 +129,6 @@ function showError(message) {
     batchFilesContainer.style.display = 'block';
 }
 
-// Get file URL based on selected gateway
-function getFileUrl(file) {
-    const gateway = document.getElementById('batchGatewaySelect').value;
-    // Handle both old format (cid) and new compressed format (c)
-    const cid = file.cid || file.c;
-    const filename = file.filename || file.f;
-    return `${gateway}/ipfs/${cid}?filename=${encodeURIComponent(filename)}`;
-}
-
 // Display the batch files in the UI
 function displayBatchFiles(files) {
     batchFiles = files;
@@ -166,12 +157,10 @@ function displayBatchFiles(files) {
     filesList.innerHTML = ''; // Clear existing list
     
     files.forEach((file, index) => {
-        // Handle both old format and new compressed format
-        const filename = file.filename || file.f || 'Unknown';
-        const fileSize = file.size || file.s || 0;
-        
-        const fileIcon = getFileTypeIcon(filename);
-        const formattedSize = fileSize ? formatBytes(fileSize) : 'Unknown size';
+        const fileIcon = getFileTypeIcon(file.filename || file.f);
+        const fileSize = (file.size || file.s) ? formatBytes(file.size || file.s) : 'Unknown size';
+        const filename = file.filename || file.f;
+        const cid = file.cid || file.c;
 
         // Remove trailing slash for display if folder
         const displayName = filename.endsWith('/') ? filename.slice(0, -1) : filename;
@@ -180,17 +169,17 @@ function displayBatchFiles(files) {
         const fileItem = document.createElement('div');
         fileItem.className = 'file-item';
         fileItem.innerHTML = `
-            <input type="checkbox" class="file-checkbox" data-index="${index}" ${isFolder ? 'disabled title="' + _t('folder-no-batch-download', {default: 'Folders cannot be downloaded in batch'}) + '"' : 'checked'}>
+            <input type="checkbox" class="file-checkbox" data-index="${index}" ${isFolder ? 'disabled title="' + _t('folders-cannot-download') + '"' : 'checked'}>
             <div class="file-icon">${fileIcon}</div>
             <div class="file-details">
-                <div class="file-name">${displayName}${isFolder ? ' <i class="fas fa-folder" style="margin-left: 5px; color: #f7ba2a;"></i>' : ''}</div>
-                <div class="file-size">${formattedSize}</div>
+                <div class="file-name">${displayName}${isFolder ? ' <i class="fas fa-folder" style="margin-left: 5px; color: #f7ba2a;" title="' + _t('folder-indicator') + '"></i>' : ''}</div>
+                <div class="file-size">${fileSize}</div>
             </div>
             <div class="file-actions">
                 <button class="file-action-btn" onclick="copyFileUrl(${index})" title="${_t('copy-link')}">
                     <i class="fas fa-copy"></i>
                 </button>
-                <button class="file-action-btn" onclick="${isFolder ? 'browseSingleFolder' : 'downloadSingleFile'}(${index})" title="${isFolder ? _t('browse-folder', {default: 'Browse Folder'}) : _t('download-file', {default: 'Download File'})}">
+                <button class="file-action-btn" onclick="${isFolder ? 'browseSingleFolder' : 'downloadSingleFile'}(${index})" title="${isFolder ? _t('browse-folder') : _t('download-file')}">
                     <i class="fas fa-${isFolder ? 'folder-open' : 'download'}"></i>
                 </button>
             </div>
@@ -213,6 +202,20 @@ function displayBatchFiles(files) {
         downloadCancelled = true;
         document.getElementById('downloadStatus').textContent = 'Cancelling download...';
     });
+}
+
+// Get file URL based on selected gateway
+function getFileUrl(file) {
+    const gateway = document.getElementById('batchGatewaySelect').value;
+    const cid = file.cid || file.c;
+    const filename = file.filename || file.f;
+    
+    // For folders, don't add filename parameter as it interferes with IPFS directory browsing
+    if (filename.endsWith('/')) {
+        return `${gateway}/ipfs/${cid}`;
+    } else {
+        return `${gateway}/ipfs/${cid}?filename=${encodeURIComponent(filename)}`;
+    }
 }
 
 // Copy a single file URL
@@ -270,8 +273,9 @@ function getSelectedFiles() {
         const index = parseInt(checkbox.dataset.index);
         if (!isNaN(index) && index >= 0 && index < batchFiles.length) {
             const file = batchFiles[index];
+            const filename = file.filename || file.f;
             // Exclude folders (files ending with /) from batch downloads
-            if (!file.filename.endsWith('/')) {
+            if (!filename.endsWith('/')) {
                 selected.push(file);
             }
         }
@@ -324,7 +328,7 @@ function browseSingleFolder(index) {
     const fileUrl = getFileUrl(file);
     
     window.open(fileUrl, '_blank');
-    showToast(_t('folder-opened', {default: 'Folder opened in new tab'}), 'success');
+    showToast(_t('folder-opened'), 'success');
 }
 
 // Download all selected files as zip
@@ -366,9 +370,10 @@ async function downloadSelectedFiles() {
             }
             
             const file = selectedFiles[i];
+            const filename = file.filename || file.f;
             const fileUrl = getFileUrl(file);
             
-            statusText.textContent = `${_t('download-progress')}: ${i + 1}/${selectedFiles.length}: ${file.filename}`;
+            statusText.textContent = `${_t('download-progress')}: ${i + 1}/${selectedFiles.length}: ${filename}`;
             
             try {
                 const response = await fetch(fileUrl);
@@ -377,11 +382,11 @@ async function downloadSelectedFiles() {
                 }
                 
                 const blob = await response.blob();
-                zip.file(file.filename, blob);
+                zip.file(filename, blob);
                 updateProgress();
                 
             } catch (error) {
-                console.error(`Error downloading ${file.filename}:`, error);
+                console.error(`Error downloading ${filename}:`, error);
                 // Continue with the next file even if one fails
                 updateProgress();
             }
