@@ -160,24 +160,25 @@ function displayBatchFiles(files) {
         const fileIcon = getFileTypeIcon(file.filename);
         const fileSize = file.size ? formatBytes(file.size) : 'Unknown size';
 
-        // Remove trailing slash for display if folder
-        const displayName = file.filename.endsWith('/') ? file.filename.slice(0, -1) : file.filename;
+        // Check if this is a folder by checking if filename ends with '/'
         const isFolder = file.filename.endsWith('/');
+        // Remove trailing slash for display if folder
+        const displayName = isFolder ? file.filename.slice(0, -1) : file.filename;
 
         const fileItem = document.createElement('div');
         fileItem.className = 'file-item';
         fileItem.innerHTML = `
-            <input type="checkbox" class="file-checkbox" data-index="${index}" ${isFolder ? 'disabled title="Folders cannot be downloaded in batch"' : 'checked'}>
+            <input type="checkbox" class="file-checkbox" data-index="${index}" ${isFolder ? 'disabled title="' + (_t('folders-cannot-download') || 'Folders cannot be downloaded in batch') + '"' : 'checked'}>
             <div class="file-icon">${fileIcon}</div>
             <div class="file-details">
                 <div class="file-name">${displayName}${isFolder ? ' <i class="fas fa-folder" style="margin-left: 5px; color: #f7ba2a;"></i>' : ''}</div>
                 <div class="file-size">${fileSize}</div>
             </div>
             <div class="file-actions">
-                <button class="file-action-btn" onclick="copyFileUrl(${index})">
+                <button class="file-action-btn" onclick="copyFileUrl(${index})" title="${_t('copy-link')}">
                     <i class="fas fa-copy"></i>
                 </button>
-                <button class="file-action-btn" onclick="${isFolder ? 'browseSingleFolder' : 'downloadSingleFile'}(${index})">
+                <button class="file-action-btn" onclick="${isFolder ? 'browseSingleFolder' : 'downloadSingleFile'}(${index})" title="${isFolder ? (_t('browse-folder') || 'Browse Folder') : (_t('download-button') || 'Download')}">
                     <i class="fas fa-${isFolder ? 'folder-open' : 'download'}"></i>
                 </button>
             </div>
@@ -205,7 +206,8 @@ function displayBatchFiles(files) {
 // Get file URL based on selected gateway
 function getFileUrl(file) {
     const gateway = document.getElementById('batchGatewaySelect').value;
-    return `${gateway}/ipfs/${file.cid}?filename=${encodeURIComponent(file.filename)}`;
+    const encodedFilename = encodeURIComponent(file.filename);
+    return `${gateway}/ipfs/${file.cid}?filename=${encodedFilename}`;
 }
 
 // Copy a single file URL
@@ -277,6 +279,13 @@ async function downloadSingleFile(index) {
     if (index < 0 || index >= batchFiles.length) return;
     
     const file = batchFiles[index];
+    
+    // Check if this is a folder - if so, redirect to browse instead
+    if (file.filename.endsWith('/')) {
+        browseSingleFolder(index);
+        return;
+    }
+    
     const fileUrl = getFileUrl(file);
     
     try {
@@ -317,7 +326,7 @@ function browseSingleFolder(index) {
     const fileUrl = getFileUrl(file);
     
     window.open(fileUrl, '_blank');
-    showToast(_t('folder-opened'), 'success');
+    showToast(_t('folder-opened') || 'Folder opened in new tab', 'success');
 }
 
 // Download all selected files as zip
@@ -352,13 +361,20 @@ async function downloadSelectedFiles() {
     };
     
     try {
-        // Download each file and add to zip
+        // Download each file and add to zip - only process files, not folders
         for (let i = 0; i < selectedFiles.length; i++) {
             if (downloadCancelled) {
                 throw new Error('Download cancelled by user');
             }
             
             const file = selectedFiles[i];
+            
+            // Skip folders completely in ZIP creation
+            if (file.filename.endsWith('/')) {
+                updateProgress();
+                continue;
+            }
+            
             const fileUrl = getFileUrl(file);
             
             statusText.textContent = `${_t('download-progress')}: ${i + 1}/${selectedFiles.length}: ${file.filename}`;
