@@ -38,6 +38,13 @@ async function getShortUrl(longUrl) {
     }
 }
 
+// Move updateProgress function to global scope
+function updateProgress(e, randomClass) {
+    const percent = Math.floor((e.loaded / e.total) * 100);
+    $(`.${randomClass}`).find('.progress-inner').css('width', `${percent}%`);
+    $(`.${randomClass}`).find('.progress-status').text(`${percent}%`);
+}
+
 $(document).ready(() => {
     // Directly start initialization of event listeners
     initEventListeners();
@@ -435,12 +442,6 @@ $(document).ready(() => {
         return iconPath;
     }
 
-    function updateProgress(e, randomClass) {
-        const percent = Math.floor((e.loaded / e.total) * 100);
-        $(`.${randomClass}`).find('.progress-inner').css('width', `${percent}%`);
-        $(`.${randomClass}`).find('.progress-status').text(`${percent}%`);
-    }
-
     async function handleUploadSuccess(res, randomClass, file) { // Added file parameter & async
         const fileName = encodeURIComponent(file.name);
         
@@ -493,6 +494,80 @@ $(document).ready(() => {
         
         // Enable batch sharing functionality once files are uploaded
         updateShareSelectedButtonState();
+
+        // Add to history if historyManager is available
+        if (window.historyManager) {
+            try {
+                const historyRecord = window.historyManager.addRecord({
+                    filename: file.name,
+                    cid: res.Hash,
+                    size: file.size,
+                    shareUrl: finalShareUrl,
+                    isEncrypted: !!passphrase,
+                    gateway: 'IPFS Network',
+                    uploadDuration: Date.now() - parseInt(randomClass, 36) // Approximate upload time
+                });
+                console.log('Added to history:', historyRecord);
+            } catch (error) {
+                console.error('Failed to add to history:', error);
+            }
+        } else {
+            console.warn('History manager not available');
+        }
+    }
+
+    // 文件夹上传成功处理
+    async function handleDirectoryUploadSuccess(dirObj, folderName, totalSize, randomClass) { // Make async
+        // Ensure folderName has trailing slash for directory identification
+        const directoryName = folderName.endsWith('/') ? folderName : folderName + '/';
+        
+        // Use compressed format for directory shares too
+        const fileData = {
+            c: dirObj.Hash,
+            f: directoryName, // Use directoryName with trailing slash
+            s: totalSize
+        };
+        const compressedData = base64UrlEncode(JSON.stringify(fileData));
+        const originalShareUrl = `${window.location.origin}${window.location.pathname.replace('index.html', '')}share.html?d=${compressedData}`;
+        
+        const finalShareUrl = await getShortUrl(originalShareUrl); // Get short URL
+
+        $('#file').val(null); // Assuming #file is the general file input, might need #directory.val(null) too
+        $('#directory').val(null); 
+        $(`.${randomClass}`).find('.progress-inner').addClass('success');
+        $(`.${randomClass}`).find('.progress').fadeOut(500, function() {
+            $(`.${randomClass}`).removeClass('uploading');
+            const urlDisplay = $(`.${randomClass}`).find('.url-display');
+            const fileUrlInput = $(`.${randomClass}`).find('.file-url-input');
+            fileUrlInput.val(finalShareUrl); // Use final (potentially shortened) URL
+            urlDisplay.fadeIn(300);
+        });
+        $(`.${randomClass}`).find('.data-url').val(finalShareUrl); // Use final (potentially shortened) URL
+        $(`.${randomClass}`).find('.data-cid').val(dirObj.Hash);
+        $(`.${randomClass}`).find('.data-filename').val(directoryName); // Store directory name with trailing slash
+        $('.copyall').removeClass('disabled');
+        showToast(_t('upload-success'), 'success');
+        updateShareSelectedButtonState();
+
+        // Add to history if historyManager is available
+        if (window.historyManager) {
+            try {
+                const historyRecord = window.historyManager.addRecord({
+                    filename: directoryName, // Use directoryName with trailing slash for proper folder identification
+                    cid: dirObj.Hash,
+                    size: totalSize,
+                    shareUrl: finalShareUrl,
+                    isEncrypted: false, // Directories are currently not encrypted in this implementation
+                    gateway: 'IPFS Network',
+                    uploadDuration: Date.now() - parseInt(randomClass.replace('_dir', ''), 36) // Approximate upload time
+                });
+                console.log('Added directory to history:', historyRecord);
+            } catch (error) {
+                console.error('Failed to add directory to history:', error);
+            }
+        } else {
+            console.warn('History manager not available');
+        }
     }
 
     function handleError(randomClass, message = _t('upload-error')) {
@@ -827,7 +902,22 @@ async function shareBatchFiles(passphrase) { // passphrase is now an argument, m
         const item = $(this);
         const cid = item.find('.data-cid').val();
         const filename = item.find('.data-filename').val();
-        const size = parseInt(item.find('.desc__size').text().match(/\d+/g)[0]) || 0; // Extract size as number
+        // Fix: Get size from hidden input or parse from display text more reliably
+        const sizeText = item.find('.desc__size').text();
+        let size = 0;
+        try {
+            // Extract size from text like "文件大小: 1.2 MB" or "File size: 1.2 MB"
+            const sizeMatch = sizeText.match(/[\d.,]+\s*(B|KB|MB|GB)/i);
+            if (sizeMatch) {
+                const value = parseFloat(sizeMatch[0].replace(/[,\s]/g, ''));
+                const unit = sizeMatch[1].toUpperCase();
+                const multipliers = { 'B': 1, 'KB': 1024, 'MB': 1024*1024, 'GB': 1024*1024*1024 };
+                size = Math.round(value * (multipliers[unit] || 1));
+            }
+        } catch (e) {
+            console.warn('Failed to parse file size:', sizeText, e);
+        }
+        
         const isProtected = item.find('.data-passphrase-protected').val() === 'true';
         
         if (cid && filename) {
@@ -1088,10 +1178,13 @@ function createDirectoryItem(folderName, totalSize, randomClass) {
 
 // 文件夹上传成功处理
 async function handleDirectoryUploadSuccess(dirObj, folderName, totalSize, randomClass) { // Make async
+    // Ensure folderName has trailing slash for directory identification
+    const directoryName = folderName.endsWith('/') ? folderName : folderName + '/';
+    
     // Use compressed format for directory shares too
     const fileData = {
         c: dirObj.Hash,
-        f: folderName + '/', // Ensure trailing slash for directories
+        f: directoryName, // Use directoryName with trailing slash
         s: totalSize
     };
     const compressedData = base64UrlEncode(JSON.stringify(fileData));
@@ -1111,10 +1204,30 @@ async function handleDirectoryUploadSuccess(dirObj, folderName, totalSize, rando
     });
     $(`.${randomClass}`).find('.data-url').val(finalShareUrl); // Use final (potentially shortened) URL
     $(`.${randomClass}`).find('.data-cid').val(dirObj.Hash);
-    $(`.${randomClass}`).find('.data-filename').val(folderName); // Store original folderName
+    $(`.${randomClass}`).find('.data-filename').val(directoryName); // Store directory name with trailing slash
     $('.copyall').removeClass('disabled');
     showToast(_t('upload-success'), 'success');
     updateShareSelectedButtonState();
+
+    // Add to history if historyManager is available
+    if (window.historyManager) {
+        try {
+            const historyRecord = window.historyManager.addRecord({
+                filename: directoryName, // Use directoryName with trailing slash for proper folder identification
+                cid: dirObj.Hash,
+                size: totalSize,
+                shareUrl: finalShareUrl,
+                isEncrypted: false, // Directories are currently not encrypted in this implementation
+                gateway: 'IPFS Network',
+                uploadDuration: Date.now() - parseInt(randomClass.replace('_dir', ''), 36) // Approximate upload time
+            });
+            console.log('Added directory to history:', historyRecord);
+        } catch (error) {
+            console.error('Failed to add directory to history:', error);
+        }
+    } else {
+        console.warn('History manager not available');
+    }
 }
 
 // Add Base64URL functions at the top of the file
@@ -1131,5 +1244,67 @@ function base64UrlDecode(str) {
     // Replace URL-safe characters
     str = str.replace(/-/g, '+').replace(/_/g, '/');
     return decodeURIComponent(escape(atob(str)));
+}
+
+// --- History Management Integration ---
+function renderHistoryList(items) {
+    const container = document.getElementById('historyList');
+    container.innerHTML = '';
+
+    items.forEach(item => {
+        const itemElement = createHistoryItem(item);
+        container.appendChild(itemElement);
+    });
+}
+
+function createHistoryItem(item) {
+    const div = document.createElement('div');
+    div.className = 'history-item';
+    div.dataset.id = item.id;
+
+    const fileIcon = getFileTypeIcon(item.filename);
+    const formattedDate = new Date(item.timestamp).toLocaleString();
+    const fileSize = item.size ? formatBytes(item.size) : 'Unknown';
+
+    div.innerHTML = `
+        <div class="item-checkbox">
+            <input type="checkbox" onchange="toggleItemSelection('${item.id}')">
+        </div>
+        <div class="item-icon">${fileIcon}</div>
+        <div class="item-details">
+            <div class="item-name">${escapeHtml(item.filename)}</div>
+            <div class="item-meta">
+                <span><i class="fas fa-calendar"></i>${formattedDate}</span>
+                <span><i class="fas fa-database"></i>${fileSize}</span>
+                <span><i class="fas fa-tag"></i>${item.type}</span>
+                ${item.isEncrypted ? '<span class="encrypted-badge"><i class="fas fa-lock"></i>Encrypted</span>' : ''}
+            </div>
+        </div>
+        <div class="item-actions">
+            <button class="btn-icon" onclick="copyShareUrl('${escapeHtml(item.shareUrl)}')" title="Copy Share URL">
+                <i class="fas fa-copy"></i>
+            </button>
+            <button class="btn-icon" onclick="copyCID('${escapeHtml(item.cid)}')" title="Copy CID">
+                <i class="fas fa-fingerprint"></i>
+            </button>
+            <button class="btn-icon btn-danger" onclick="deleteItem('${item.id}')" title="Delete">
+                <i class="fas fa-trash"></i>
+            </button>
+        </div>
+    `;
+
+    return div;
+}
+
+// Add helper function to escape HTML
+function escapeHtml(text) {
+    const map = {
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#039;'
+    };
+    return text.replace(/[&<>"']/g, function(m) { return map[m]; });
 }
 

@@ -948,73 +948,165 @@ body {
     filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
 }
 
-/* 为设置口令栏添加样式，包括美观的开关和输入框。 */
-.passphrase-bar {
+/* Header navigation styles */
+.header-nav {
     display: flex;
     align-items: center;
-    gap: 10px;                  /* 原16px，缩小间距 */
-    padding: 8px 16px 4px 16px; /* 原16px 24px 8px 24px，缩小内边距 */
-    background: rgba(249,250,252,0.7);
-    border-bottom: 1px solid #f0f4f9;
+    gap: 15px;
     position: relative;
-    min-height: 36px;           /* 增加最小高度限制 */
+    z-index: 10; /* Ensure nav is above other elements */
 }
 
-.passphrase-bar label {
-    margin: 0;
-    font-size: 14px;
-    color: #444;
-    font-weight: 500;
+.nav-link {
     display: flex;
     align-items: center;
     gap: 8px;
-}
-
-/* 口令输入框样式 */
-#passphraseInput {
-    flex: 1;
-    min-width: 120px;
-    max-width: none;
-    padding: 7px 14px;
-    border-radius: 12px;
-    border: 1px solid #dcdfe6;
+    color: rgba(255, 255, 255, 0.9);
+    text-decoration: none;
+    padding: 8px 12px;
+    border-radius: 8px;
+    transition: all 0.3s ease;
     font-size: 14px;
-    color: #444;
-    background: #fff;
-    outline: none;
-    transition: border-color 0.2s, box-shadow 0.2s;
-}
-#passphraseInput:focus {
-    border-color: #409eff;
-    box-shadow: 0 0 0 2px rgba(64,158,255,0.15);
+    font-weight: 500;
+    background-color: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+    white-space: nowrap; /* Prevent text wrapping */
 }
 
-/* 新增：密码显示切换按钮样式 */
-.password-toggle {
-    margin-left: 8px;
-    background: transparent;
-    border: none;
-    color: #909399;
-    cursor: pointer;
-    padding: 5px 10px;
-    border-radius: 4px;
-    transition: all 0.3s;
+.nav-link:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+    color: white;
+    transform: translateY(-2px);
+}
+
+.lang-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: rgba(255, 255, 255, 0.1);
     display: flex;
     align-items: center;
     justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+    position: relative; /* Changed from absolute positioning */
 }
 
-.password-toggle:hover {
-    color: #409eff;
-    background-color: rgba(64, 158, 255, 0.1);
+.lang-icon:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+    transform: translateY(-2px);
 }
 
-.password-toggle:active {
-    transform: scale(0.95);
-}
-
-.password-toggle i {
+.lang-icon i {
+    color: rgba(255, 255, 255, 0.9);
     font-size: 16px;
+}
+
+.lang-dropdown {
+    position: absolute;
+    top: calc(100% + 8px); /* Position below the language icon */
+    right: 0;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+    padding: 8px 0;
+    min-width: 140px;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-10px);
+    transition: all 0.3s ease;
+    z-index: 1000;
+}
+
+.lang-dropdown.show {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.lang-dropdown a {
+    display: block;
+    padding: 10px 16px;
+    color: #333;
+    text-decoration: none;
+    font-size: 14px;
+    transition: background-color 0.2s;
+    white-space: nowrap;
+}
+
+.lang-dropdown a:hover {
+    background-color: #f5f5f5;
+}
+
+.lang-dropdown a.active {
+    background-color: #409eff;
+    color: white;
+}
+
+/* Mobile adjustments for header navigation */
+@media (max-width: 480px) {
+    .site-header {
+        padding: 0 5px;
+        gap: 8px; /* Add gap between logo and nav */
+    }
+    
+    .site-logo {
+        font-size: 18px;
+        gap: 8px;
+    }
+    
+    .site-logo img {
+        width: 28px;
+        height: 28px;
+    }
+    
+    .header-nav {
+        gap: 8px;
+    }
+    
+    .nav-link {
+        padding: 6px 8px;
+        font-size: 12px;
+        border-radius: 6px;
+    }
+    
+    .nav-link span {
+        display: none; /* Hide text on very small screens, show only icon */
+    }
+    
+    .lang-icon {
+        width: 32px;
+        height: 32px;
+    }
+    
+    .lang-dropdown {
+        right: -5px; /* Adjust positioning for small screens */
+        min-width: 120px;
+    }
+}
+
+/* Extra small screens */
+@media (max-width: 360px) {
+    .site-header {
+        padding: 0 2px;
+    }
+    
+    .header-nav {
+        gap: 4px;
+    }
+    
+    .nav-link {
+        padding: 4px 6px;
+        min-width: 32px; /* Ensure minimum touch target */
+    }
+    
+    .lang-icon {
+        width: 28px;
+        height: 28px;
+    }
 }
 
 /* 确保密码输入区域处于相对定位 */

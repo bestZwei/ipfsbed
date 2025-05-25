@@ -160,24 +160,26 @@ function displayBatchFiles(files) {
         const fileIcon = getFileTypeIcon(file.filename);
         const fileSize = file.size ? formatBytes(file.size) : 'Unknown size';
 
+        // Check if this is a folder by checking if filename ends with '/'
+        const isFolder = file.filename.endsWith('/');
         // Remove trailing slash for display if folder
-        const displayName = file.filename.endsWith('/') ? file.filename.slice(0, -1) : file.filename;
+        const displayName = isFolder ? file.filename.slice(0, -1) : file.filename;
 
         const fileItem = document.createElement('div');
         fileItem.className = 'file-item';
         fileItem.innerHTML = `
-            <input type="checkbox" class="file-checkbox" data-index="${index}" checked>
+            <input type="checkbox" class="file-checkbox" data-index="${index}" ${isFolder ? 'disabled title="' + (_t('folders-cannot-download') || 'Folders cannot be downloaded in batch') + '"' : 'checked'}>
             <div class="file-icon">${fileIcon}</div>
             <div class="file-details">
-                <div class="file-name">${displayName}</div>
+                <div class="file-name">${displayName}${isFolder ? ' <i class="fas fa-folder" style="margin-left: 5px; color: #f7ba2a;" title="' + (_t('folder-type') || 'Folder') + '"></i>' : ''}</div>
                 <div class="file-size">${fileSize}</div>
             </div>
             <div class="file-actions">
-                <button class="file-action-btn" onclick="copyFileUrl(${index})">
+                <button class="file-action-btn" onclick="copyFileUrl(${index})" title="${_t('copy-link')}">
                     <i class="fas fa-copy"></i>
                 </button>
-                <button class="file-action-btn" onclick="downloadSingleFile(${index})">
-                    <i class="fas fa-download"></i>
+                <button class="file-action-btn" onclick="${isFolder ? 'browseSingleFolder' : 'downloadSingleFile'}(${index})" title="${isFolder ? (_t('browse-folder') || 'Browse Folder') : (_t('download-button') || 'Download')}">
+                    <i class="fas fa-${isFolder ? 'folder-open' : 'download'}"></i>
                 </button>
             </div>
         `;
@@ -204,7 +206,8 @@ function displayBatchFiles(files) {
 // Get file URL based on selected gateway
 function getFileUrl(file) {
     const gateway = document.getElementById('batchGatewaySelect').value;
-    return `${gateway}/ipfs/${file.cid}?filename=${encodeURIComponent(file.filename)}`;
+    const encodedFilename = encodeURIComponent(file.filename);
+    return `${gateway}/ipfs/${file.cid}?filename=${encodedFilename}`;
 }
 
 // Copy a single file URL
@@ -255,13 +258,17 @@ function deselectAllFiles() {
     });
 }
 
-// Get all selected files
+// Get all selected files - exclude folders from batch downloads
 function getSelectedFiles() {
     const selected = [];
     document.querySelectorAll('.file-checkbox:checked').forEach(checkbox => {
         const index = parseInt(checkbox.dataset.index);
         if (!isNaN(index) && index >= 0 && index < batchFiles.length) {
-            selected.push(batchFiles[index]);
+            const file = batchFiles[index];
+            // Exclude folders (files ending with /) from batch downloads
+            if (!file.filename.endsWith('/')) {
+                selected.push(file);
+            }
         }
     });
     return selected;
@@ -272,6 +279,13 @@ async function downloadSingleFile(index) {
     if (index < 0 || index >= batchFiles.length) return;
     
     const file = batchFiles[index];
+    
+    // Check if this is a folder - if so, redirect to browse instead
+    if (file.filename.endsWith('/')) {
+        browseSingleFolder(index);
+        return;
+    }
+    
     const fileUrl = getFileUrl(file);
     
     try {
@@ -304,11 +318,22 @@ async function downloadSingleFile(index) {
     }
 }
 
+// Add function to browse single folder
+function browseSingleFolder(index) {
+    if (index < 0 || index >= batchFiles.length) return;
+    
+    const file = batchFiles[index];
+    const fileUrl = getFileUrl(file);
+    
+    window.open(fileUrl, '_blank');
+    showToast(_t('folder-opened') || 'Folder opened in new tab', 'success');
+}
+
 // Download all selected files as zip
 async function downloadSelectedFiles() {
     const selectedFiles = getSelectedFiles();
     if (selectedFiles.length === 0) {
-        showToast('No files selected!', 'error');
+        showToast(_t('no-files-selected'), 'error');
         return;
     }
     
@@ -321,7 +346,7 @@ async function downloadSelectedFiles() {
     const statusText = document.getElementById('downloadStatus');
     downloadDialog.style.display = 'flex';
     progressBar.style.width = '0%';
-    statusText.textContent = 'Preparing download...';
+    statusText.textContent = _t('preparing-download');
     
     // Create a new zip file
     const zip = new JSZip();
@@ -332,20 +357,27 @@ async function downloadSelectedFiles() {
         completedFiles++;
         const percentage = Math.round((completedFiles / selectedFiles.length) * 100);
         progressBar.style.width = `${percentage}%`;
-        statusText.textContent = `Downloaded ${completedFiles} of ${selectedFiles.length} files (${percentage}%)`;
+        statusText.textContent = `${_t('download-progress')}: ${completedFiles}/${selectedFiles.length} (${percentage}%)`;
     };
     
     try {
-        // Download each file and add to zip
+        // Download each file and add to zip - only process files, not folders
         for (let i = 0; i < selectedFiles.length; i++) {
             if (downloadCancelled) {
                 throw new Error('Download cancelled by user');
             }
             
             const file = selectedFiles[i];
+            
+            // Skip folders completely in ZIP creation
+            if (file.filename.endsWith('/')) {
+                updateProgress();
+                continue;
+            }
+            
             const fileUrl = getFileUrl(file);
             
-            statusText.textContent = `Downloading ${i + 1}/${selectedFiles.length}: ${file.filename}`;
+            statusText.textContent = `${_t('download-progress')}: ${i + 1}/${selectedFiles.length}: ${file.filename}`;
             
             try {
                 const response = await fetch(fileUrl);
@@ -369,14 +401,14 @@ async function downloadSelectedFiles() {
         }
         
         // Generate zip file
-        statusText.textContent = 'Creating zip file...';
+        statusText.textContent = _t('preparing-download') + '...';
         const zipBlob = await zip.generateAsync({
             type: 'blob',
             compression: 'DEFLATE',
             compressionOptions: { level: 6 }
         }, metadata => {
             progressBar.style.width = `${metadata.percent}%`;
-            statusText.textContent = `Creating zip file: ${Math.round(metadata.percent)}%`;
+            statusText.textContent = `${_t('preparing-download')}: ${Math.round(metadata.percent)}%`;
         });
         
         // Download the zip file
@@ -391,9 +423,9 @@ async function downloadSelectedFiles() {
         console.error('Error creating zip file:', error);
         
         if (downloadCancelled) {
-            statusText.textContent = 'Download cancelled.';
+            statusText.textContent = _t('batch-share-cancel');
         } else {
-            statusText.textContent = `Error: ${error.message || 'Failed to download files'}`;
+            statusText.textContent = `${_t('download-error')}: ${error.message || 'Failed to download files'}`;
         }
         
         // Hide dialog after a few seconds on error

@@ -235,73 +235,22 @@
 
 /* Language dropdown menu styles */
 .lang-icon {
-    position: absolute;
-    top: 50%; /* Changed from 20px */
-    right: 20px;
-    width: 36px;
-    height: 36px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background-color: rgba(255, 255, 255, 0.9);
-    border-radius: 50%;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    cursor: pointer;
-    z-index: 100;
-    transition: all 0.3s ease;
-    transform: translateY(-50%); /* Added */
-}
-
-.lang-icon:hover {
-    background-color: #f0f8ff;
-    transform: translateY(-52%); /* Changed from translateY(-2px) */
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    /* Remove absolute positioning styles since they're now in style.css */
+    /* These styles are now handled in the main style.css file */
 }
 
 .lang-dropdown {
-    position: absolute;
-    top: 60px;
-    right: 20px;
-    background-color: white;
-    border-radius: 12px;
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
-    padding: 10px 0;
-    z-index: 100;
-    display: none;
-    animation: fadeIn 0.3s ease;
-    max-height: 300px;
-    overflow-y: auto;
-}
-
-.lang-dropdown.show {
-    display: block;
-}
-
-.lang-dropdown a {
-    display: block;
-    padding: 8px 20px;
-    color: #333;
-    text-decoration: none;
-    transition: background-color 0.2s;
-}
-
-.lang-dropdown a:hover {
-    background-color: #f0f8ff;
-}
-
-.lang-dropdown a.active {
-    background-color: #e6f0ff;
-    color: #409eff;
-    font-weight: 500;
+    /* Remove conflicting styles since they're now in style.css */
+    /* These styles are now handled in the main style.css file */
 }
 
 .site-header {
     display: flex;
     align-items: center;
-    justify-content: space-between; /* Added */
-    margin-bottom: 8px; /* Changed from 20px */
+    justify-content: space-between;
+    margin-bottom: 8px;
     position: relative;
-    padding: 0 0; /* Added */
+    /* Remove conflicting padding since it's now in style.css */
 }
 
 .site-logo {
@@ -322,24 +271,12 @@
 /* Updated container spacing */
 .container {
     margin-top: 0;
-    padding-top: 15px; /* Changed from 20px */
+    padding-top: 15px;
 }
 
 /* Mobile optimizations */
 @media (max-width: 480px) {
-    .lang-icon {
-        top: 50%; /* Changed from 15px */
-        right: 15px;
-        width: 32px;
-        height: 32px;
-    }
-    
-    .lang-dropdown {
-        top: 55px;
-        right: 15px;
-        max-width: 150px;
-    }
-    
+    /* Remove conflicting mobile styles since they're now in style.css */
     .site-logo {
         font-size: 18px;
     }
