@@ -406,52 +406,77 @@ input:checked + .toggle-slider:before {
 }
 
 /* Responsive adjustments */
+@media (max-width: 768px) {
+    .batch-actions {
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: center;
+        align-items: center;
+        gap: 6px;
+        width: 100%;
+        padding: 5px 0;
+    }
+    
+    .short-url-wrapper,
+    .toggle-all-wrapper {
+        order: 1;
+        margin-right: 8px;
+    }
+    
+    #shareSelected,
+    .copyall {
+        order: 2;
+        flex: 0 0 auto;
+    }
+}
+
 @media (max-width: 480px) {
     .batch-actions {
-        gap: 5px;
+        gap: 4px;
+        padding: 3px 0;
     }
     
     .short-url-wrapper,
     .toggle-all-wrapper {
         margin-right: 4px;
+        margin-bottom: 2px;
     }
     
     .short-url-label, 
     .toggle-all-label {
-        font-size: 12px;
-        margin-left: 3px;
+        font-size: 11px;
+        margin-left: 2px;
     }
     
     #enableShortUrl, 
     #toggleAllFiles {
-        width: 14px;
-        height: 14px;
-    }
-    
-    .action-button, 
-    .copyall {
-        font-size: 12px;
-        padding: 4px 6px;
-        min-height: 28px;
+        width: 13px;
+        height: 13px;
     }
 }
 
 @media (max-width: 360px) {
     .batch-actions {
-        gap: 3px;
+        justify-content: space-around;
+        gap: 2px;
     }
     
+    .short-url-wrapper,
+    .toggle-all-wrapper {
+        margin-right: 2px;
+        margin-bottom: 0;
+    }
+    
+    /* 在超小屏幕上，将复选框组合并到一行 */
+    .batch-actions > div {
+        display: flex;
+        align-items: center;
+        flex-shrink: 0;
+    }
+    
+    /* 按钮组单独一行 */
     .action-button, 
     .copyall {
-        font-size: 11px;
-        padding: 4px 5px;
-        min-width: 48px;
-    }
-    
-    .short-url-label, 
-    .toggle-all-label {
-        max-width: 40px;
-        overflow: hidden;
-        text-overflow: ellipsis;
+        margin-top: 3px;
     }
 }
