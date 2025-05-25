@@ -169,6 +169,8 @@ class HistoryManager {
         if (filter !== 'all') {
             history = history.filter(record => {
                 switch (filter) {
+                    case 'folders':
+                        return record.type === 'folder';
                     case 'images':
                         return record.type === 'image';
                     case 'videos':
@@ -279,6 +281,11 @@ class HistoryManager {
 
     // 获取文件类型
     getFileType(filename) {
+        // Check if it's a folder first (ends with '/')
+        if (filename.endsWith('/')) {
+            return 'folder';
+        }
+        
         const extension = filename.split('.').pop().toLowerCase();
         const imageTypes = ['jpg', 'jpeg', 'png', 'gif', 'webp', 'svg', 'bmp', 'ico'];
         const videoTypes = ['mp4', 'webm', 'ogv', 'mkv', 'avi', 'mov', 'wmv', 'flv'];
@@ -297,6 +304,18 @@ class HistoryManager {
     // 生成标签
     generateTags(filename) {
         const tags = [];
+        
+        // Check if it's a folder first
+        if (filename.endsWith('/')) {
+            tags.push('folder', 'directory');
+            const folderName = filename.slice(0, -1).toLowerCase();
+            if (folderName.includes('image') || folderName.includes('photo')) tags.push('media');
+            if (folderName.includes('document') || folderName.includes('doc')) tags.push('documents');
+            if (folderName.includes('video') || folderName.includes('movie')) tags.push('video');
+            if (folderName.includes('backup')) tags.push('backup');
+            return [...new Set(tags)];
+        }
+        
         const extension = filename.split('.').pop().toLowerCase();
         const type = this.getFileType(filename);
         

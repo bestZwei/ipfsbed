@@ -91,6 +91,8 @@ const translations = {
     'shorten-url-failed-fallback': '短链接获取失败，已使用原始链接。',
     'browse-folder': '浏览文件夹',
     'folder-opened': '文件夹已在新窗口中打开',
+    'folders-cannot-download': '文件夹无法批量下载',
+    'folder-type': '文件夹',
   },
   'en': {
     'meta-title': 'IPFSBED - Decentralized IPFS File Hosting Service',
@@ -180,6 +182,8 @@ const translations = {
     'shorten-url-failed-fallback': 'Short URL failed, using original link.',
     'browse-folder': 'Browse Folder',
     'folder-opened': 'Folder opened in new window',
+    'folders-cannot-download': 'Folders cannot be downloaded in batch',
+    'folder-type': 'Folder',
   },
   'de': {
     'meta-title': 'IPFSBED - Dezentraler IPFS-Dateihosting-Dienst',
@@ -269,6 +273,8 @@ const translations = {
     'shorten-url-failed-fallback': 'Kurze URL fehlgeschlagen, verwende ursprünglichen Link.',
     'browse-folder': 'Ordner durchsuchen',
     'folder-opened': 'Ordner in neuem Fenster geöffnet',
+    'folders-cannot-download': 'Ordner können nicht in Stapeln heruntergeladen werden',
+    'folder-type': 'Ordner',
   },
   'ru': {
     'meta-title': 'IPFSBED - Децентрализованный сервис хостинга файлов IPFS',
@@ -358,6 +364,8 @@ const translations = {
     'shorten-url-failed-fallback': 'Сокращенная ссылка не удалась, используется оригинальная ссылка.',
     'browse-folder': 'Просмотр папки',
     'folder-opened': 'Папка открыта в новом окне',
+    'folders-cannot-download': 'Папки нельзя загружать пакетно',
+    'folder-type': 'Папка',
   },
   'fr': {
     'meta-title': 'IPFSBED - Service d\'hébergement de fichiers IPFS décentralisé',
@@ -447,6 +455,8 @@ const translations = {
     'shorten-url-failed-fallback': 'Échec de l\'URL courte, utilisation du lien original.',
     'browse-folder': 'Parcourir le dossier',
     'folder-opened': 'Dossier ouvert dans une nouvelle fenêtre',
+    'folders-cannot-download': 'Les dossiers ne peuvent pas être téléchargés en lot',
+    'folder-type': 'Dossier',
   },
   'es': {
     'meta-title': 'IPFSBED - Servicio de alojamiento de archivos IPFS descentralizado',
@@ -536,6 +546,8 @@ const translations = {
     'shorten-url-failed-fallback': 'La URL corta falló, usando el enlace original.',
     'browse-folder': 'Explorar carpeta',
     'folder-opened': 'Carpeta abierta en nueva ventana',
+    'folders-cannot-download': 'Las carpetas no se pueden descargar en lote',
+    'folder-type': 'Carpeta',
   },
   'ar': {
     'meta-title': 'IPFSBED - خدمة استضافة ملفات IPFS اللامركزية',
@@ -625,6 +637,8 @@ const translations = {
     'shorten-url-failed-fallback': 'فشل الحصول على رابط قصير، تم استخدام الرابط الأصلي.',
     'browse-folder': 'تصفح المجلد',
     'folder-opened': 'تم فتح المجلد في نافذة جديدة',
+    'folders-cannot-download': 'لا يمكن تنزيل المجلدات في دفعة واحدة',
+    'folder-type': 'مجلد',
   },
   'fa': {
     'meta-title': 'IPFSBED - سرویس میزبانی فایل IPFS غیرمتمرکز',
@@ -714,6 +728,8 @@ const translations = {
     'shorten-url-failed-fallback': 'کوتاه کردن لینک ناموفق بود، از لینک اصلی استفاده می‌شود.',
     'browse-folder': 'مرور پوشه',
     'folder-opened': 'پوشه در پنجره جدید باز شد',
+    'folders-cannot-download': 'پوشه‌ها نمی‌توانند به صورت دسته‌ای دانلود شوند',
+    'folder-type': 'پوشه',
   },
   'tr': {
     'meta-title': 'IPFSBED - Merkezi Olmayan IPFS Dosya Barındırma Hizmeti',

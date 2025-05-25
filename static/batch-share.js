@@ -171,7 +171,7 @@ function displayBatchFiles(files) {
             <input type="checkbox" class="file-checkbox" data-index="${index}" ${isFolder ? 'disabled title="' + (_t('folders-cannot-download') || 'Folders cannot be downloaded in batch') + '"' : 'checked'}>
             <div class="file-icon">${fileIcon}</div>
             <div class="file-details">
-                <div class="file-name">${displayName}${isFolder ? ' <i class="fas fa-folder" style="margin-left: 5px; color: #f7ba2a;"></i>' : ''}</div>
+                <div class="file-name">${displayName}${isFolder ? ' <i class="fas fa-folder" style="margin-left: 5px; color: #f7ba2a;" title="' + (_t('folder-type') || 'Folder') + '"></i>' : ''}</div>
                 <div class="file-size">${fileSize}</div>
             </div>
             <div class="file-actions">
