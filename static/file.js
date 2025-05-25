@@ -38,6 +38,13 @@ async function getShortUrl(longUrl) {
     }
 }
 
+// Move updateProgress function to global scope
+function updateProgress(e, randomClass) {
+    const percent = Math.floor((e.loaded / e.total) * 100);
+    $(`.${randomClass}`).find('.progress-inner').css('width', `${percent}%`);
+    $(`.${randomClass}`).find('.progress-status').text(`${percent}%`);
+}
+
 $(document).ready(() => {
     // Directly start initialization of event listeners
     initEventListeners();
@@ -433,12 +440,6 @@ $(document).ready(() => {
         }
         
         return iconPath;
-    }
-
-    function updateProgress(e, randomClass) {
-        const percent = Math.floor((e.loaded / e.total) * 100);
-        $(`.${randomClass}`).find('.progress-inner').css('width', `${percent}%`);
-        $(`.${randomClass}`).find('.progress-status').text(`${percent}%`);
     }
 
     async function handleUploadSuccess(res, randomClass, file) { // Added file parameter & async
