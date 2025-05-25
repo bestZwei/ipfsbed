@@ -1048,25 +1048,6 @@ body {
     border-color: #c0c4cc;
 }
 
-/* 响应式文本显示控制 */
-.mobile-text {
-    display: none;
-}
-
-.desktop-text {
-    display: inline;
-}
-
-@media (max-width: 480px) {
-    .mobile-text {
-        display: inline;
-    }
-    
-    .desktop-text {
-        display: none;
-    }
-}
-
 /* 优化 filelist title 在移动端的布局 */
 @media (max-width: 768px) {
     .filelist .title {
