@@ -1139,26 +1139,6 @@ async function handleDirectoryUploadSuccess(dirObj, folderName, totalSize, rando
     $('.copyall').removeClass('disabled');
     showToast(_t('upload-success'), 'success');
     updateShareSelectedButtonState();
-    
-    // Add to history if historyManager is available
-    if (window.historyManager) {
-        try {
-            const historyRecord = window.historyManager.addRecord({
-                filename: directoryName,
-                cid: dirObj.Hash,
-                size: totalSize,
-                shareUrl: finalShareUrl,
-                isEncrypted: false, // Directories are not encrypted in current implementation
-                gateway: 'IPFS Network',
-                uploadDuration: Date.now() - parseInt(randomClass.replace('_dir', ''), 36)
-            });
-            console.log('Added directory to history:', historyRecord);
-        } catch (error) {
-            console.error('Failed to add directory to history:', error);
-        }
-    } else {
-        console.warn('History manager not available');
-    }
 }
 
 // Add Base64URL functions at the top of the file

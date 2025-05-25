@@ -166,16 +166,7 @@
                 window.currentLang = window.initializeLanguage();
             }
             updateHistoryPageLanguage();
-            
-            // Check if historyManager is available
-            if (window.historyManager) {
-                initializeHistoryPage();
-            } else {
-                console.error('History manager not available');
-                // Show empty state or error message
-                document.getElementById('emptyState').style.display = 'block';
-                document.getElementById('historyList').style.display = 'none';
-            }
+            initializeHistoryPage();
         });
 
         function updateHistoryPageLanguage() {
@@ -212,11 +203,6 @@
         }
 
         function loadStatistics() {
-            if (!window.historyManager) {
-                console.error('History manager not available for statistics');
-                return;
-            }
-            
             const stats = window.historyManager.getStatistics();
             
             document.getElementById('totalFiles').textContent = stats.total;
@@ -226,11 +212,6 @@
         }
 
         function loadHistoryList() {
-            if (!window.historyManager) {
-                console.error('History manager not available for history list');
-                return;
-            }
-            
             const searchQuery = document.getElementById('searchInput').value;
             const typeFilter = document.getElementById('typeFilter').value;
             const timeFilter = document.getElementById('timeFilter').value;
@@ -378,7 +359,7 @@
         }
 
         function deleteSelected() {
-            if (selectedItems.size === 0 || !window.historyManager) return;
+            if (selectedItems.size === 0) return;
             
             if (confirm(`Delete ${selectedItems.size} selected items?`)) {
                 const deletedCount = window.historyManager.deleteMultipleRecords([...selectedItems]);
@@ -390,8 +371,6 @@
         }
 
         function deleteItem(id) {
-            if (!window.historyManager) return;
-            
             if (confirm('Delete this item?')) {
                 window.historyManager.deleteRecord(id);
                 selectedItems.delete(id);
@@ -402,8 +381,6 @@
         }
 
         function clearAllHistory() {
-            if (!window.historyManager) return;
-            
             if (confirm('Clear all history? This action cannot be undone.')) {
                 window.historyManager.clearHistory();
                 selectedItems.clear();
@@ -426,20 +403,11 @@
         }
 
         function exportHistory() {
-            if (!window.historyManager) {
-                showToast('History manager not available', 'error');
-                return;
-            }
             window.historyManager.exportHistory();
             showToast('History exported!', 'success');
         }
 
         function handleImport(event) {
-            if (!window.historyManager) {
-                showToast('History manager not available', 'error');
-                return;
-            }
-            
             const file = event.target.files[0];
             if (!file) return;
 
