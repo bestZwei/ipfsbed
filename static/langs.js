@@ -94,6 +94,8 @@ const translations = {
     'folder-opened': '文件夹已在新窗口中打开',
     'preparing-download': '正在准备下载...',
     'empty-folder': '文件夹为空',
+    'directory-download-failed': '文件夹下载失败',
+    'gateway-not-supported': '此网关不支持文件夹下载',
   },
   'en': {
     'meta-title': 'IPFSBED - Decentralized IPFS File Hosting Service',
@@ -186,6 +188,8 @@ const translations = {
     'folder-opened': 'Folder opened in new window',
     'preparing-download': 'Preparing download...',
     'empty-folder': 'Folder is empty',
+    'directory-download-failed': 'Directory download failed',
+    'gateway-not-supported': 'This gateway does not support directory downloads',
   },
   'de': {
     'meta-title': 'IPFSBED - Dezentraler IPFS-Dateihosting-Dienst',
@@ -278,6 +282,8 @@ const translations = {
     'folder-opened': 'Ordner in neuem Fenster geöffnet',
     'preparing-download': 'Download wird vorbereitet...',
     'empty-folder': 'Ordner ist leer',
+    'directory-download-failed': 'Verzeichnisdownload fehlgeschlagen',
+    'gateway-not-supported': 'Dieses Gateway unterstützt keine Verzeichnisdownloads',
   },
   'ru': {
     'meta-title': 'IPFSBED - Децентрализованный сервис хостинга файлов IPFS',
@@ -370,6 +376,8 @@ const translations = {
     'folder-opened': 'Папка открыта в новом окне',
     'preparing-download': 'Подготовка к загрузке...',
     'empty-folder': 'Папка пуста',
+    'directory-download-failed': 'Скачивание директории не удалось',
+    'gateway-not-supported': 'Этот шлюз не поддерживает скачивание директорий',
   },
   'fr': {
     'meta-title': 'IPFSBED - Service d\'hébergement de fichiers IPFS décentralisé',
@@ -462,6 +470,8 @@ const translations = {
     'folder-opened': 'Dossier ouvert dans une nouvelle fenêtre',
     'preparing-download': 'Préparation du téléchargement...',
     'empty-folder': 'Dossier vide',
+    'directory-download-failed': 'Échec du téléchargement du répertoire',
+    'gateway-not-supported': 'Cette passerelle ne prend pas en charge les téléchargements de répertoires',
   },
   'es': {
     'meta-title': 'IPFSBED - Servicio de alojamiento de archivos IPFS descentralizado',
@@ -554,6 +564,8 @@ const translations = {
     'folder-opened': 'Carpeta abierta en nueva ventana',
     'preparing-download': 'Preparando descarga...',
     'empty-folder': 'Carpeta vacía',
+    'directory-download-failed': 'Error en la descarga del directorio',
+    'gateway-not-supported': 'Esta puerta de enlace no soporta descargas de directorios',
   },
   'ar': {
     'meta-title': 'IPFSBED - خدمة استضافة ملفات IPFS اللامركزية',
@@ -646,6 +658,8 @@ const translations = {
     'folder-opened': 'تم فتح المجلد في نافذة جديدة',
     'preparing-download': 'جارٍ تحضير التنزيل...',
     'empty-folder': 'المجلد فارغ',
+    'directory-download-failed': 'فشل تنزيل الدليل',
+    'gateway-not-supported': 'لا يدعم هذا البوابة تنزيل الأدلة',
   },
   'fa': {
     'meta-title': 'IPFSBED - سرویس میزبانی فایل IPFS غیرمتمرکز',
@@ -738,6 +752,8 @@ const translations = {
     'folder-opened': 'پوشه در پنجره جدید باز شد',
     'preparing-download': 'در حال آماده سازی دانلود...',
     'empty-folder': 'پوشه خالی است',
+    'directory-download-failed': 'فشل دانلود الدليل',
+    'gateway-not-supported': 'لا يدعم هذا البوابة تنزيل الأدلة',
   },
   'tr': {
     'meta-title': 'IPFSBED - Merkezi Olmayan IPFS Dosya Barındırma Hizmeti',

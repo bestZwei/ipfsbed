@@ -340,19 +340,41 @@ async function downloadDirectoryAsZip(cid, dirname, gatewayUrl) {
         showToast(_t('preparing-download'), 'info');
         document.getElementById('loadingIndicator').style.display = 'flex';
         
-        // Get directory listing
+        // Get directory listing with better error handling
         const listUrl = `${gatewayUrl}/ipfs/${cid}?format=json`;
         const response = await fetch(listUrl);
         
         if (!response.ok) {
-            throw new Error('Failed to get directory listing');
+            throw new Error(`HTTP ${response.status}: ${response.statusText}`);
         }
         
-        const listing = await response.json();
+        const contentType = response.headers.get('content-type');
+        if (!contentType || !contentType.includes('application/json')) {
+            // If we get HTML instead of JSON, the gateway doesn't support directory listing
+            throw new Error('Directory listing not supported by this gateway');
+        }
         
-        if (!Array.isArray(listing.Links) || listing.Links.length === 0) {
+        let listing;
+        try {
+            listing = await response.json();
+        } catch (jsonError) {
+            // If JSON parsing fails, the response is likely an HTML error page
+            const textContent = await response.text();
+            console.error('Failed to parse JSON response:', textContent.substring(0, 200));
+            throw new Error('Invalid directory listing format received');
+        }
+        
+        if (!listing || !Array.isArray(listing.Links)) {
+            // Try alternative listing format
+            if (Array.isArray(listing)) {
+                listing = { Links: listing };
+            } else {
+                throw new Error('Invalid directory structure received');
+            }
+        }
+        
+        if (listing.Links.length === 0) {
             showToast(_t('empty-folder'), 'warning');
-            document.getElementById('loadingIndicator').style.display = 'none';
             return;
         }
         
@@ -360,28 +382,38 @@ async function downloadDirectoryAsZip(cid, dirname, gatewayUrl) {
         const zip = new JSZip();
         let downloadedFiles = 0;
         const totalFiles = listing.Links.length;
+        let successfulDownloads = 0;
+        
+        // Show progress
+        const toastId = showProgressToast(_t('download-progress'), 0, totalFiles);
         
         for (const link of listing.Links) {
             try {
-                const fileUrl = `${gatewayUrl}/ipfs/${link.Hash}`;
-                const fileResponse = await fetch(fileUrl);
-                
-                if (fileResponse.ok) {
-                    const blob = await fileResponse.blob();
-                    zip.file(link.Name, blob);
+                if (link.Type === 2) { // File type
+                    const fileUrl = `${gatewayUrl}/ipfs/${link.Hash}`;
+                    const fileResponse = await fetch(fileUrl);
+                    
+                    if (fileResponse.ok) {
+                        const blob = await fileResponse.blob();
+                        zip.file(link.Name, blob);
+                        successfulDownloads++;
+                    } else {
+                        console.warn(`Failed to download file: ${link.Name}`);
+                    }
                 }
-                
                 downloadedFiles++;
-                
-                // Update progress
-                const progressText = `${_t('download-progress')}: ${downloadedFiles}/${totalFiles}`;
-                if (document.getElementById('loadingText')) {
-                    document.getElementById('loadingText').textContent = progressText;
-                }
-                
-            } catch (error) {
-                console.error(`Failed to download ${link.Name}:`, error);
+                updateProgressToast(toastId, downloadedFiles, totalFiles);
+            } catch (fileError) {
+                console.warn(`Error downloading file ${link.Name}:`, fileError);
+                downloadedFiles++;
+                updateProgressToast(toastId, downloadedFiles, totalFiles);
             }
+        }
+        
+        hideProgressToast(toastId);
+        
+        if (successfulDownloads === 0) {
+            throw new Error('No files could be downloaded from the directory');
         }
         
         // Generate and download ZIP
@@ -394,11 +426,26 @@ async function downloadDirectoryAsZip(cid, dirname, gatewayUrl) {
         downloadLink.click();
         document.body.removeChild(downloadLink);
         
-        showToast(_t('download-started'), 'success');
+        if (successfulDownloads < totalFiles) {
+            showToast(`Downloaded ${successfulDownloads}/${totalFiles} files successfully`, 'warning');
+        } else {
+            showToast(_t('download-started'), 'success');
+        }
         
     } catch (error) {
         console.error('Error downloading directory:', error);
-        showToast(_t('download-error'), 'error');
+        
+        // Provide specific error messages based on the error type
+        let errorMessage = _t('download-error');
+        if (error.message.includes('Directory listing not supported')) {
+            errorMessage = 'This gateway does not support directory downloads. Please try a different gateway.';
+        } else if (error.message.includes('Invalid directory')) {
+            errorMessage = 'Unable to read directory structure. The folder may be corrupted or inaccessible.';
+        } else if (error.message.includes('No files could be downloaded')) {
+            errorMessage = 'All files in the directory failed to download. Please check your internet connection.';
+        }
+        
+        showToast(errorMessage, 'error');
     } finally {
         document.getElementById('loadingIndicator').style.display = 'none';
     }
