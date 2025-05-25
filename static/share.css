@@ -374,6 +374,31 @@
     text-decoration: underline;
 }
 
+/* Progress bar styles */
+.progress-toast {
+    min-width: 300px !important;
+}
+
+.progress-bar {
+    width: 100%;
+    height: 6px;
+    background-color: #f0f0f0;
+    border-radius: 3px;
+    margin-top: 8px;
+    overflow: hidden;
+}
+
+.progress-fill {
+    height: 100%;
+    background-color: #409eff;
+    border-radius: 3px;
+    transition: width 0.3s ease;
+}
+
+.download-button + .download-button {
+    margin-top: 10px;
+}
+
 /* Responsive adjustments */
 @media (max-width: 767px) {
     .share-container {
