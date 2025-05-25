@@ -24,6 +24,7 @@ IPFSBED is a decentralized file hosting platform built on the InterPlanetary Fil
 - **Multiple Gateways**: Choose from various IPFS gateways for optimal access speed
 - **Internationalization**: UI available in 12 languages
 - **No Registration**: Use immediately without creating an account
+- **Upload History**: View, search, filter, export, and import your upload history
 
 ## How to Use
 
@@ -66,6 +67,18 @@ IPFSBED is a decentralized file hosting platform built on the InterPlanetary Fil
    - You can select which files to download
    - Download individual files or all files as a ZIP archive
    - Copy links to individual files
+
+### Upload History Page
+
+You can view your upload history by clicking the "上传历史" (Upload History) link in the top-right corner. The history page allows you to:
+
+- View all files and folders you have uploaded (stored in your browser)
+- Search, filter by type/time/encryption, and sort your uploads
+- Export your upload history as a JSON file, or import history from another browser
+- Delete individual records, batch delete, or clear all history
+- Copy share links or CIDs directly from the history page
+
+> **Note:** Upload history is stored locally in your browser and is not synced between devices.
 
 ## Advanced Features
 
