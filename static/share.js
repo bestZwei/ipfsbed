@@ -207,13 +207,13 @@ function updateFileAccessLinks() {
     const fileUrl = `${selectedGatewayBase}/ipfs/${currentCid}?filename=${encodedFilename}`;
     
     document.getElementById('fileUrlDisplay').value = fileUrl;
-    document.getElementById('downloadButton').setAttribute('data-url', fileUrl); // 不再直接设置 href
     
     // Check if this is a folder (filename ends with /)
     const isFolder = currentFilename && currentFilename.endsWith('/');
+    const downloadButton = document.getElementById('downloadButton');
     
     if (isFolder) {
-        // For folders, change the download button text and behavior
+        // For folders, change the download button to browse folder
         downloadButton.innerHTML = `<i class="fas fa-folder-open" style="margin-right: 8px;"></i><span>${_t('browse-folder') || '浏览文件夹'}</span>`;
         downloadButton.onclick = function(e) {
             e.preventDefault();
@@ -221,6 +221,29 @@ function updateFileAccessLinks() {
             window.open(fileUrl, '_blank');
         };
         downloadButton.removeAttribute('download');
+        
+        // Add ZIP download button for folders
+        const fileDetails = document.getElementById('fileDetails');
+        let zipButton = document.getElementById('zipDownloadButton');
+        
+        if (!zipButton) {
+            zipButton = document.createElement('button');
+            zipButton.id = 'zipDownloadButton';
+            zipButton.className = 'download-button';
+            zipButton.style.marginTop = '10px';
+            zipButton.style.backgroundColor = '#67c23a';
+            zipButton.innerHTML = `<i class="fas fa-download" style="margin-right: 8px;"></i><span>${_t('download-as-zip')}</span>`;
+            zipButton.onclick = function(e) {
+                e.preventDefault();
+                downloadDirectoryAsZip(currentCid, currentFilename, selectedGatewayBase);
+            };
+            
+            // Insert after the main download button
+            downloadButton.parentNode.insertBefore(zipButton, downloadButton.nextSibling);
+        } else {
+            // Update existing button text
+            zipButton.querySelector('span').textContent = _t('download-as-zip');
+        }
     } else {
         // For files, keep original download behavior
         downloadButton.innerHTML = `<i class="fas fa-download" style="margin-right: 8px;"></i><span>${_t('download-button')}</span>`;
@@ -228,6 +251,12 @@ function updateFileAccessLinks() {
             e.preventDefault();
             forceDownloadFile(fileUrl, currentFilename, this);
         };
+        
+        // Remove ZIP button if it exists
+        const zipButton = document.getElementById('zipDownloadButton');
+        if (zipButton) {
+            zipButton.remove();
+        }
     }
 }
 
@@ -309,6 +338,7 @@ function handleDirectoryBrowsing(cid, dirname, gatewayUrl) {
 async function downloadDirectoryAsZip(cid, dirname, gatewayUrl) {
     try {
         showToast(_t('preparing-download'), 'info');
+        document.getElementById('loadingIndicator').style.display = 'flex';
         
         // Get directory listing
         const listUrl = `${gatewayUrl}/ipfs/${cid}?format=json`;
@@ -322,6 +352,7 @@ async function downloadDirectoryAsZip(cid, dirname, gatewayUrl) {
         
         if (!Array.isArray(listing.Links) || listing.Links.length === 0) {
             showToast(_t('empty-folder'), 'warning');
+            document.getElementById('loadingIndicator').style.display = 'none';
             return;
         }
         
@@ -329,9 +360,6 @@ async function downloadDirectoryAsZip(cid, dirname, gatewayUrl) {
         const zip = new JSZip();
         let downloadedFiles = 0;
         const totalFiles = listing.Links.length;
-        
-        // Show progress
-        const progressToast = showProgressToast(_t('download-progress'), 0, totalFiles);
         
         for (const link of listing.Links) {
             try {
@@ -344,7 +372,12 @@ async function downloadDirectoryAsZip(cid, dirname, gatewayUrl) {
                 }
                 
                 downloadedFiles++;
-                updateProgressToast(progressToast, downloadedFiles, totalFiles);
+                
+                // Update progress
+                const progressText = `${_t('download-progress')}: ${downloadedFiles}/${totalFiles}`;
+                if (document.getElementById('loadingText')) {
+                    document.getElementById('loadingText').textContent = progressText;
+                }
                 
             } catch (error) {
                 console.error(`Failed to download ${link.Name}:`, error);
@@ -352,20 +385,22 @@ async function downloadDirectoryAsZip(cid, dirname, gatewayUrl) {
         }
         
         // Generate and download ZIP
+        const cleanDirname = dirname.replace('/', '') || 'ipfs_folder';
         const zipBlob = await zip.generateAsync({type: 'blob'});
         const downloadLink = document.createElement('a');
         downloadLink.href = URL.createObjectURL(zipBlob);
-        downloadLink.download = dirname.replace('/', '') + '.zip';
+        downloadLink.download = cleanDirname + '.zip';
         document.body.appendChild(downloadLink);
         downloadLink.click();
         document.body.removeChild(downloadLink);
         
-        hideProgressToast(progressToast);
         showToast(_t('download-started'), 'success');
         
     } catch (error) {
         console.error('Error downloading directory:', error);
         showToast(_t('download-error'), 'error');
+    } finally {
+        document.getElementById('loadingIndicator').style.display = 'none';
     }
 }
 

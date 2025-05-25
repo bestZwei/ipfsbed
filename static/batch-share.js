@@ -308,7 +308,7 @@ async function downloadSingleFile(index) {
 async function downloadSelectedFiles() {
     const selectedFiles = getSelectedFiles();
     if (selectedFiles.length === 0) {
-        showToast('No files selected!', 'error');
+        showToast(_t('no-files-selected'), 'error');
         return;
     }
     
@@ -321,7 +321,7 @@ async function downloadSelectedFiles() {
     const statusText = document.getElementById('downloadStatus');
     downloadDialog.style.display = 'flex';
     progressBar.style.width = '0%';
-    statusText.textContent = 'Preparing download...';
+    statusText.textContent = _t('preparing-download');
     
     // Create a new zip file
     const zip = new JSZip();
@@ -332,7 +332,7 @@ async function downloadSelectedFiles() {
         completedFiles++;
         const percentage = Math.round((completedFiles / selectedFiles.length) * 100);
         progressBar.style.width = `${percentage}%`;
-        statusText.textContent = `Downloaded ${completedFiles} of ${selectedFiles.length} files (${percentage}%)`;
+        statusText.textContent = `${_t('download-progress')}: ${completedFiles}/${selectedFiles.length} (${percentage}%)`;
     };
     
     try {
@@ -345,7 +345,7 @@ async function downloadSelectedFiles() {
             const file = selectedFiles[i];
             const fileUrl = getFileUrl(file);
             
-            statusText.textContent = `Downloading ${i + 1}/${selectedFiles.length}: ${file.filename}`;
+            statusText.textContent = `${_t('download-progress')}: ${i + 1}/${selectedFiles.length}: ${file.filename}`;
             
             try {
                 const response = await fetch(fileUrl);
@@ -369,14 +369,14 @@ async function downloadSelectedFiles() {
         }
         
         // Generate zip file
-        statusText.textContent = 'Creating zip file...';
+        statusText.textContent = _t('preparing-download') + '...';
         const zipBlob = await zip.generateAsync({
             type: 'blob',
             compression: 'DEFLATE',
             compressionOptions: { level: 6 }
         }, metadata => {
             progressBar.style.width = `${metadata.percent}%`;
-            statusText.textContent = `Creating zip file: ${Math.round(metadata.percent)}%`;
+            statusText.textContent = `${_t('preparing-download')}: ${Math.round(metadata.percent)}%`;
         });
         
         // Download the zip file
@@ -391,9 +391,9 @@ async function downloadSelectedFiles() {
         console.error('Error creating zip file:', error);
         
         if (downloadCancelled) {
-            statusText.textContent = 'Download cancelled.';
+            statusText.textContent = _t('batch-share-cancel');
         } else {
-            statusText.textContent = `Error: ${error.message || 'Failed to download files'}`;
+            statusText.textContent = `${_t('download-error')}: ${error.message || 'Failed to download files'}`;
         }
         
         // Hide dialog after a few seconds on error
