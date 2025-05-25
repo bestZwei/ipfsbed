@@ -157,29 +157,27 @@ function displayBatchFiles(files) {
     filesList.innerHTML = ''; // Clear existing list
     
     files.forEach((file, index) => {
-        const fileIcon = getFileTypeIcon(file.filename || file.f);
-        const fileSize = (file.size || file.s) ? formatBytes(file.size || file.s) : 'Unknown size';
-        const filename = file.filename || file.f;
-        const cid = file.cid || file.c;
+        const fileIcon = getFileTypeIcon(file.filename);
+        const fileSize = file.size ? formatBytes(file.size) : 'Unknown size';
 
         // Remove trailing slash for display if folder
-        const displayName = filename.endsWith('/') ? filename.slice(0, -1) : filename;
-        const isFolder = filename.endsWith('/');
+        const displayName = file.filename.endsWith('/') ? file.filename.slice(0, -1) : file.filename;
+        const isFolder = file.filename.endsWith('/');
 
         const fileItem = document.createElement('div');
         fileItem.className = 'file-item';
         fileItem.innerHTML = `
-            <input type="checkbox" class="file-checkbox" data-index="${index}" ${isFolder ? 'disabled title="' + _t('folders-cannot-download') + '"' : 'checked'}>
+            <input type="checkbox" class="file-checkbox" data-index="${index}" ${isFolder ? 'disabled title="Folders cannot be downloaded in batch"' : 'checked'}>
             <div class="file-icon">${fileIcon}</div>
             <div class="file-details">
-                <div class="file-name">${displayName}${isFolder ? ' <i class="fas fa-folder" style="margin-left: 5px; color: #f7ba2a;" title="' + _t('folder-indicator') + '"></i>' : ''}</div>
+                <div class="file-name">${displayName}${isFolder ? ' <i class="fas fa-folder" style="margin-left: 5px; color: #f7ba2a;"></i>' : ''}</div>
                 <div class="file-size">${fileSize}</div>
             </div>
             <div class="file-actions">
-                <button class="file-action-btn" onclick="copyFileUrl(${index})" title="${_t('copy-link')}">
+                <button class="file-action-btn" onclick="copyFileUrl(${index})">
                     <i class="fas fa-copy"></i>
                 </button>
-                <button class="file-action-btn" onclick="${isFolder ? 'browseSingleFolder' : 'downloadSingleFile'}(${index})" title="${isFolder ? _t('browse-folder') : _t('download-file')}">
+                <button class="file-action-btn" onclick="${isFolder ? 'browseSingleFolder' : 'downloadSingleFile'}(${index})">
                     <i class="fas fa-${isFolder ? 'folder-open' : 'download'}"></i>
                 </button>
             </div>
@@ -207,15 +205,7 @@ function displayBatchFiles(files) {
 // Get file URL based on selected gateway
 function getFileUrl(file) {
     const gateway = document.getElementById('batchGatewaySelect').value;
-    const cid = file.cid || file.c;
-    const filename = file.filename || file.f;
-    
-    // For folders, don't add filename parameter as it interferes with IPFS directory browsing
-    if (filename.endsWith('/')) {
-        return `${gateway}/ipfs/${cid}`;
-    } else {
-        return `${gateway}/ipfs/${cid}?filename=${encodeURIComponent(filename)}`;
-    }
+    return `${gateway}/ipfs/${file.cid}?filename=${encodeURIComponent(file.filename)}`;
 }
 
 // Copy a single file URL
@@ -273,9 +263,8 @@ function getSelectedFiles() {
         const index = parseInt(checkbox.dataset.index);
         if (!isNaN(index) && index >= 0 && index < batchFiles.length) {
             const file = batchFiles[index];
-            const filename = file.filename || file.f;
             // Exclude folders (files ending with /) from batch downloads
-            if (!filename.endsWith('/')) {
+            if (!file.filename.endsWith('/')) {
                 selected.push(file);
             }
         }
@@ -370,10 +359,9 @@ async function downloadSelectedFiles() {
             }
             
             const file = selectedFiles[i];
-            const filename = file.filename || file.f;
             const fileUrl = getFileUrl(file);
             
-            statusText.textContent = `${_t('download-progress')}: ${i + 1}/${selectedFiles.length}: ${filename}`;
+            statusText.textContent = `${_t('download-progress')}: ${i + 1}/${selectedFiles.length}: ${file.filename}`;
             
             try {
                 const response = await fetch(fileUrl);
@@ -382,11 +370,11 @@ async function downloadSelectedFiles() {
                 }
                 
                 const blob = await response.blob();
-                zip.file(filename, blob);
+                zip.file(file.filename, blob);
                 updateProgress();
                 
             } catch (error) {
-                console.error(`Error downloading ${filename}:`, error);
+                console.error(`Error downloading ${file.filename}:`, error);
                 // Continue with the next file even if one fails
                 updateProgress();
             }

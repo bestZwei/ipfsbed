@@ -257,7 +257,6 @@ body {
     margin-bottom: 6px;
     border-bottom: 1px solid #ebeef5;
     transition: all 0.2s ease;
-    position: relative;
 }
 
 .file-item:last-child {
@@ -268,38 +267,6 @@ body {
     background-color: #f5f7fa;
     transform: translateY(-1px);
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
-}
-
-/* Special styling for folders */
-.file-item:has(.file-checkbox:disabled) {
-    background-color: #fafbfc;
-    border-left: 3px solid #f7ba2a;
-}
-
-.file-item:has(.file-checkbox:disabled):hover {
-    background-color: #f8f9fa;
-}
-
-.file-checkbox:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
-}
-
-.file-checkbox:disabled + .file-icon + .file-details .file-name {
-    color: #909399;
-    font-style: italic;
-}
-
-/* Add a small folder indicator for disabled checkboxes */
-.file-item:has(.file-checkbox:disabled)::before {
-    content: '';
-    position: absolute;
-    left: 0;
-    top: 0;
-    bottom: 0;
-    width: 3px;
-    background-color: #f7ba2a;
-    border-radius: 0 2px 2px 0;
 }
 
 .file-checkbox {
