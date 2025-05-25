@@ -269,6 +269,15 @@ body {
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
 }
 
+/* Style for disabled folder items */
+.file-item:has(.file-checkbox:disabled) {
+    opacity: 0.7;
+}
+
+.file-item:has(.file-checkbox:disabled) .file-name {
+    color: #909399;
+}
+
 .file-checkbox {
     margin-right: 12px;
     width: 18px;

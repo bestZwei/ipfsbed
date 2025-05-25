@@ -129,6 +129,15 @@ function showError(message) {
     batchFilesContainer.style.display = 'block';
 }
 
+// Get file URL based on selected gateway
+function getFileUrl(file) {
+    const gateway = document.getElementById('batchGatewaySelect').value;
+    // Handle both old format (cid) and new compressed format (c)
+    const cid = file.cid || file.c;
+    const filename = file.filename || file.f;
+    return `${gateway}/ipfs/${cid}?filename=${encodeURIComponent(filename)}`;
+}
+
 // Display the batch files in the UI
 function displayBatchFiles(files) {
     batchFiles = files;
@@ -157,27 +166,31 @@ function displayBatchFiles(files) {
     filesList.innerHTML = ''; // Clear existing list
     
     files.forEach((file, index) => {
-        const fileIcon = getFileTypeIcon(file.filename);
-        const fileSize = file.size ? formatBytes(file.size) : 'Unknown size';
+        // Handle both old format and new compressed format
+        const filename = file.filename || file.f || 'Unknown';
+        const fileSize = file.size || file.s || 0;
+        
+        const fileIcon = getFileTypeIcon(filename);
+        const formattedSize = fileSize ? formatBytes(fileSize) : 'Unknown size';
 
         // Remove trailing slash for display if folder
-        const displayName = file.filename.endsWith('/') ? file.filename.slice(0, -1) : file.filename;
-        const isFolder = file.filename.endsWith('/');
+        const displayName = filename.endsWith('/') ? filename.slice(0, -1) : filename;
+        const isFolder = filename.endsWith('/');
 
         const fileItem = document.createElement('div');
         fileItem.className = 'file-item';
         fileItem.innerHTML = `
-            <input type="checkbox" class="file-checkbox" data-index="${index}" ${isFolder ? 'disabled title="Folders cannot be downloaded in batch"' : 'checked'}>
+            <input type="checkbox" class="file-checkbox" data-index="${index}" ${isFolder ? 'disabled title="' + _t('folder-no-batch-download', {default: 'Folders cannot be downloaded in batch'}) + '"' : 'checked'}>
             <div class="file-icon">${fileIcon}</div>
             <div class="file-details">
                 <div class="file-name">${displayName}${isFolder ? ' <i class="fas fa-folder" style="margin-left: 5px; color: #f7ba2a;"></i>' : ''}</div>
-                <div class="file-size">${fileSize}</div>
+                <div class="file-size">${formattedSize}</div>
             </div>
             <div class="file-actions">
-                <button class="file-action-btn" onclick="copyFileUrl(${index})">
+                <button class="file-action-btn" onclick="copyFileUrl(${index})" title="${_t('copy-link')}">
                     <i class="fas fa-copy"></i>
                 </button>
-                <button class="file-action-btn" onclick="${isFolder ? 'browseSingleFolder' : 'downloadSingleFile'}(${index})">
+                <button class="file-action-btn" onclick="${isFolder ? 'browseSingleFolder' : 'downloadSingleFile'}(${index})" title="${isFolder ? _t('browse-folder', {default: 'Browse Folder'}) : _t('download-file', {default: 'Download File'})}">
                     <i class="fas fa-${isFolder ? 'folder-open' : 'download'}"></i>
                 </button>
             </div>
@@ -200,12 +213,6 @@ function displayBatchFiles(files) {
         downloadCancelled = true;
         document.getElementById('downloadStatus').textContent = 'Cancelling download...';
     });
-}
-
-// Get file URL based on selected gateway
-function getFileUrl(file) {
-    const gateway = document.getElementById('batchGatewaySelect').value;
-    return `${gateway}/ipfs/${file.cid}?filename=${encodeURIComponent(file.filename)}`;
 }
 
 // Copy a single file URL
@@ -317,7 +324,7 @@ function browseSingleFolder(index) {
     const fileUrl = getFileUrl(file);
     
     window.open(fileUrl, '_blank');
-    showToast(_t('folder-opened'), 'success');
+    showToast(_t('folder-opened', {default: 'Folder opened in new tab'}), 'success');
 }
 
 // Download all selected files as zip
