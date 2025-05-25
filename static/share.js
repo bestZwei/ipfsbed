@@ -213,36 +213,19 @@ function updateFileAccessLinks() {
     const downloadButton = document.getElementById('downloadButton');
     
     if (isFolder) {
-        // For folders, change the download button to browse folder
+        // For folders, change the download button to browse folder only
         downloadButton.innerHTML = `<i class="fas fa-folder-open" style="margin-right: 8px;"></i><span>${_t('browse-folder') || '浏览文件夹'}</span>`;
         downloadButton.onclick = function(e) {
             e.preventDefault();
-            // Open folder in new tab for browsing
             window.open(fileUrl, '_blank');
+            showToast(_t('folder-opened'), 'success');
         };
         downloadButton.removeAttribute('download');
         
-        // Add ZIP download button for folders
-        const fileDetails = document.getElementById('fileDetails');
-        let zipButton = document.getElementById('zipDownloadButton');
-        
-        if (!zipButton) {
-            zipButton = document.createElement('button');
-            zipButton.id = 'zipDownloadButton';
-            zipButton.className = 'download-button';
-            zipButton.style.marginTop = '10px';
-            zipButton.style.backgroundColor = '#67c23a';
-            zipButton.innerHTML = `<i class="fas fa-download" style="margin-right: 8px;"></i><span>${_t('download-as-zip')}</span>`;
-            zipButton.onclick = function(e) {
-                e.preventDefault();
-                downloadDirectoryAsZip(currentCid, currentFilename, selectedGatewayBase);
-            };
-            
-            // Insert after the main download button
-            downloadButton.parentNode.insertBefore(zipButton, downloadButton.nextSibling);
-        } else {
-            // Update existing button text
-            zipButton.querySelector('span').textContent = _t('download-as-zip');
+        // Remove any existing ZIP download button
+        const zipButton = document.getElementById('zipDownloadButton');
+        if (zipButton) {
+            zipButton.remove();
         }
     } else {
         // For files, keep original download behavior
@@ -251,12 +234,6 @@ function updateFileAccessLinks() {
             e.preventDefault();
             forceDownloadFile(fileUrl, currentFilename, this);
         };
-        
-        // Remove ZIP button if it exists
-        const zipButton = document.getElementById('zipDownloadButton');
-        if (zipButton) {
-            zipButton.remove();
-        }
     }
 }
 
@@ -304,9 +281,9 @@ function isDirectory(filename) {
     return filename.endsWith('/');
 }
 
-// Handle directory browsing
+// Handle directory browsing - simplified to browse only
 function handleDirectoryBrowsing(cid, dirname, gatewayUrl) {
-    // Create browse button instead of download for directories
+    // Create browse button for directories
     const browseUrl = `${gatewayUrl}/ipfs/${cid}`;
     
     // Update download button for directory browsing
@@ -319,189 +296,6 @@ function handleDirectoryBrowsing(cid, dirname, gatewayUrl) {
         window.open(browseUrl, '_blank');
         showToast(_t('folder-opened'), 'success');
     };
-    
-    // Add download as ZIP option
-    const fileDetails = document.getElementById('fileDetails');
-    const zipDownloadButton = document.createElement('a');
-    zipDownloadButton.className = 'download-button';
-    zipDownloadButton.style.marginTop = '10px';
-    zipDownloadButton.innerHTML = '<i class="fas fa-download" style="margin-right: 8px;"></i><span>' + _t('download-as-zip') + '</span>';
-    zipDownloadButton.onclick = function(e) {
-        e.preventDefault();
-        downloadDirectoryAsZip(cid, dirname, gatewayUrl);
-    };
-    
-    fileDetails.appendChild(zipDownloadButton);
-}
-
-// Download directory as ZIP
-async function downloadDirectoryAsZip(cid, dirname, gatewayUrl) {
-    try {
-        showToast(_t('preparing-download'), 'info');
-        document.getElementById('loadingIndicator').style.display = 'flex';
-        
-        // Get directory listing with better error handling
-        const listUrl = `${gatewayUrl}/ipfs/${cid}?format=json`;
-        const response = await fetch(listUrl);
-        
-        if (!response.ok) {
-            throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-        }
-        
-        const contentType = response.headers.get('content-type');
-        if (!contentType || !contentType.includes('application/json')) {
-            // If we get HTML instead of JSON, the gateway doesn't support directory listing
-            throw new Error('Directory listing not supported by this gateway');
-        }
-        
-        let listing;
-        try {
-            listing = await response.json();
-        } catch (jsonError) {
-            // If JSON parsing fails, the response is likely an HTML error page
-            const textContent = await response.text();
-            console.error('Failed to parse JSON response:', textContent.substring(0, 200));
-            throw new Error('Invalid directory listing format received');
-        }
-        
-        if (!listing || !Array.isArray(listing.Links)) {
-            // Try alternative listing format
-            if (Array.isArray(listing)) {
-                listing = { Links: listing };
-            } else {
-                throw new Error('Invalid directory structure received');
-            }
-        }
-        
-        if (listing.Links.length === 0) {
-            showToast(_t('empty-folder'), 'warning');
-            return;
-        }
-        
-        // Create ZIP file
-        const zip = new JSZip();
-        let downloadedFiles = 0;
-        const totalFiles = listing.Links.length;
-        let successfulDownloads = 0;
-        
-        // Show progress
-        const toastId = showProgressToast(_t('download-progress'), 0, totalFiles);
-        
-        for (const link of listing.Links) {
-            try {
-                if (link.Type === 2) { // File type
-                    const fileUrl = `${gatewayUrl}/ipfs/${link.Hash}`;
-                    const fileResponse = await fetch(fileUrl);
-                    
-                    if (fileResponse.ok) {
-                        const blob = await fileResponse.blob();
-                        zip.file(link.Name, blob);
-                        successfulDownloads++;
-                    } else {
-                        console.warn(`Failed to download file: ${link.Name}`);
-                    }
-                }
-                downloadedFiles++;
-                updateProgressToast(toastId, downloadedFiles, totalFiles);
-            } catch (fileError) {
-                console.warn(`Error downloading file ${link.Name}:`, fileError);
-                downloadedFiles++;
-                updateProgressToast(toastId, downloadedFiles, totalFiles);
-            }
-        }
-        
-        hideProgressToast(toastId);
-        
-        if (successfulDownloads === 0) {
-            throw new Error('No files could be downloaded from the directory');
-        }
-        
-        // Generate and download ZIP
-        const cleanDirname = dirname.replace('/', '') || 'ipfs_folder';
-        const zipBlob = await zip.generateAsync({type: 'blob'});
-        const downloadLink = document.createElement('a');
-        downloadLink.href = URL.createObjectURL(zipBlob);
-        downloadLink.download = cleanDirname + '.zip';
-        document.body.appendChild(downloadLink);
-        downloadLink.click();
-        document.body.removeChild(downloadLink);
-        
-        if (successfulDownloads < totalFiles) {
-            showToast(`Downloaded ${successfulDownloads}/${totalFiles} files successfully`, 'warning');
-        } else {
-            showToast(_t('download-started'), 'success');
-        }
-        
-    } catch (error) {
-        console.error('Error downloading directory:', error);
-        
-        // Provide specific error messages based on the error type
-        let errorMessage = _t('download-error');
-        if (error.message.includes('Directory listing not supported')) {
-            errorMessage = 'This gateway does not support directory downloads. Please try a different gateway.';
-        } else if (error.message.includes('Invalid directory')) {
-            errorMessage = 'Unable to read directory structure. The folder may be corrupted or inaccessible.';
-        } else if (error.message.includes('No files could be downloaded')) {
-            errorMessage = 'All files in the directory failed to download. Please check your internet connection.';
-        }
-        
-        showToast(errorMessage, 'error');
-    } finally {
-        document.getElementById('loadingIndicator').style.display = 'none';
-    }
-}
-
-// Show progress toast
-function showProgressToast(message, current, total) {
-    const toastId = 'progress-toast-' + Date.now();
-    const toast = `
-        <div id="${toastId}" class="toast info progress-toast">
-            <span class="toast-message">${message}: ${current}/${total}</span>
-            <div class="progress-bar">
-                <div class="progress-fill" style="width: ${(current/total)*100}%"></div>
-            </div>
-        </div>
-    `;
-    
-    $('.toast-container').append(toast);
-    return toastId;
-}
-
-// Update progress toast
-function updateProgressToast(toastId, current, total) {
-    const toast = $(`#${toastId}`);
-    if (toast.length) {
-        toast.find('.toast-message').text(_t('download-progress') + `: ${current}/${total}`);
-        toast.find('.progress-fill').css('width', `${(current/total)*100}%`);
-    }
-}
-
-// Hide progress toast
-function hideProgressToast(toastId) {
-    $(`#${toastId}`).fadeOut(500, function() {
-        $(this).remove();
-    });
-}
-
-// Modified processFileAccess function
-function processFileAccess() {
-    // ...existing code...
-    
-    // After successful file access, check if it's a directory
-    if (isDirectory(fileName)) {
-        // Handle directory
-        handleDirectoryBrowsing(fileCid, fileName, gatewayUrl);
-        
-        // Update file icon for directory
-        document.getElementById('fileIcon').innerHTML = `
-            <svg viewBox="0 0 24 24" width="64" height="64">
-                <path d="M10 4H2v16h20V6H12l-2-2z" fill="#f7ba2a"/>
-            </svg>
-        `;
-    } else {
-        // Handle regular file
-        // ...existing download button setup...
-    }
 }
 
 // Initialize when DOM is ready

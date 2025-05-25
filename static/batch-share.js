@@ -162,22 +162,23 @@ function displayBatchFiles(files) {
 
         // Remove trailing slash for display if folder
         const displayName = file.filename.endsWith('/') ? file.filename.slice(0, -1) : file.filename;
+        const isFolder = file.filename.endsWith('/');
 
         const fileItem = document.createElement('div');
         fileItem.className = 'file-item';
         fileItem.innerHTML = `
-            <input type="checkbox" class="file-checkbox" data-index="${index}" checked>
+            <input type="checkbox" class="file-checkbox" data-index="${index}" ${isFolder ? 'disabled title="Folders cannot be downloaded in batch"' : 'checked'}>
             <div class="file-icon">${fileIcon}</div>
             <div class="file-details">
-                <div class="file-name">${displayName}</div>
+                <div class="file-name">${displayName}${isFolder ? ' <i class="fas fa-folder" style="margin-left: 5px; color: #f7ba2a;"></i>' : ''}</div>
                 <div class="file-size">${fileSize}</div>
             </div>
             <div class="file-actions">
                 <button class="file-action-btn" onclick="copyFileUrl(${index})">
                     <i class="fas fa-copy"></i>
                 </button>
-                <button class="file-action-btn" onclick="downloadSingleFile(${index})">
-                    <i class="fas fa-download"></i>
+                <button class="file-action-btn" onclick="${isFolder ? 'browseSingleFolder' : 'downloadSingleFile'}(${index})">
+                    <i class="fas fa-${isFolder ? 'folder-open' : 'download'}"></i>
                 </button>
             </div>
         `;
@@ -255,13 +256,17 @@ function deselectAllFiles() {
     });
 }
 
-// Get all selected files
+// Get all selected files - exclude folders from batch downloads
 function getSelectedFiles() {
     const selected = [];
     document.querySelectorAll('.file-checkbox:checked').forEach(checkbox => {
         const index = parseInt(checkbox.dataset.index);
         if (!isNaN(index) && index >= 0 && index < batchFiles.length) {
-            selected.push(batchFiles[index]);
+            const file = batchFiles[index];
+            // Exclude folders (files ending with /) from batch downloads
+            if (!file.filename.endsWith('/')) {
+                selected.push(file);
+            }
         }
     });
     return selected;
@@ -302,6 +307,17 @@ async function downloadSingleFile(index) {
         // Hide loading indicator
         document.getElementById('loadingIndicator').style.display = 'none';
     }
+}
+
+// Add function to browse single folder
+function browseSingleFolder(index) {
+    if (index < 0 || index >= batchFiles.length) return;
+    
+    const file = batchFiles[index];
+    const fileUrl = getFileUrl(file);
+    
+    window.open(fileUrl, '_blank');
+    showToast(_t('folder-opened'), 'success');
 }
 
 // Download all selected files as zip
