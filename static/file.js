@@ -109,20 +109,8 @@ $(document).ready(() => {
         $('#dragbox').on('dragover', e => e.preventDefault())
                      .on('dragenter', handleDragEnter)
                      .on('dragleave', handleDragLeave)
-                     .on('drop', function(e) {
-            e.preventDefault();
-            $('.upload').removeClass('dragenter');
-            $('.upload .content .icon').css('transform', '');
-            $('.upload .content .desc').css('transform', '');
-            const items = e.originalEvent.dataTransfer.items;
-            if (items && items.length && hasDirectory(items)) {
-                getFilesFromDataTransferItems(items).then(files => {
-                    uploadDirectory(files);
-                });
-            } else {
-                upload(e.originalEvent.dataTransfer.files);
-            }
-        });
+                     .on('drop', handleDropUpload); // Use the correct function name
+
         // For shared link access
         $('#submitAccessPassphrase').on('click', () => {
             const encryptedPayload = $('#shareAccessPrompt').data('payload');
@@ -195,9 +183,9 @@ $(document).ready(() => {
 
     function handlePasteUpload(event) {
         const clipboardData = event.clipboardData || window.clipboardData || event.originalEvent.clipboardData;
-        if (!clipboardData || !clipboardData.items) return showToast(_t('clipboard-empty'), 'error');
+        if (!clipboardData || !clipboardData.items) return;
         const file = Array.from(clipboardData.items).find(item => item.type.indexOf('image') !== -1)?.getAsFile();
-        if (!file) return showToast(_t('clipboard-no-file'), 'error');
+        if (!file) return;
         upload([file]);
     }
 
@@ -206,11 +194,22 @@ $(document).ready(() => {
         $('.upload').removeClass('dragenter');
         $('.upload .content .icon').css('transform', '');
         $('.upload .content .desc').css('transform', '');
-        upload(e.originalEvent.dataTransfer.files);
+        
+        const items = e.originalEvent.dataTransfer.items;
+        if (hasDirectory(items)) {
+            // Handle directory drop
+            getFilesFromDataTransferItems(items).then(files => {
+                if (files.length > 0) {
+                    uploadDirectory(files);
+                }
+            });
+        } else {
+            upload(e.originalEvent.dataTransfer.files);
+        }
     }
-
+    
     function upload(files) {
-        const maxSize = 5242880 * 20; // 100MB
+        const maxSize = 5242880 * 20;
         const allowedExtensions = [
             // 图片格式
             '.JPG', '.JPEG', '.PNG', '.GIF', '.BMP', '.WEBP', '.ICO', '.SVG', '.TIFF', '.TIF', '.HEIC', '.AVIF',
@@ -276,20 +275,30 @@ $(document).ready(() => {
         ];
 
         Array.from(files).forEach(file => {
-            const fileExtension = file.name.substring(file.name.lastIndexOf('.')).toUpperCase();
+            // Check file size
+            if (file.size > maxSize) {
+                showToast(_t('file-size-exceeded', { 
+                    filename: file.name, 
+                    maxSize: formatBytes(maxSize) 
+                }), 'error');
+                return;
+            }
 
+            // Check file extension
+            const fileExtension = '.' + file.name.split('.').pop().toUpperCase();
             if (!allowedExtensions.includes(fileExtension)) {
-                showToast(_t('unsupported-type'), 'error');
-                $('#file').val(null);
+                showToast(_t('file-type-not-supported', { 
+                    filename: file.name 
+                }), 'error');
                 return;
             }
 
-            if (file.size >= maxSize) {
-                showToast(_t('file-too-large', {size: maxSize / 1024 / 1024}), 'error');
-                return;
+            // Check for directory upload mode
+            if (isDirectoryUpload([file])) {
+                uploadDirectory([file]);
+            } else {
+                uploadToImg2IPFS(file);
             }
-
-            uploadToImg2IPFS(file);
         });
     }
 
@@ -299,9 +308,6 @@ $(document).ready(() => {
             'https://gw.ipfsbed.is-an.org/api/v0/add?pin=false',
             'https://2ipfs.zone.id/api/v0/add?pin=false',
             'https://api.img2ipfs.org/api/v0/add?pin=true'
-            // 'https://ipfs.io/api/v0/add?pin=false',
-            // 'https://ipfs.crossbell.io/api/v0/add?pin=false',
-            // 'https://ipfs.4everland.xyz/api/v0/add?pin=false'
         ];
         const formData = new FormData();
         formData.append('file', file);
@@ -312,50 +318,48 @@ $(document).ready(() => {
         // Add uploading class for animation
         $(`.${randomClass}`).addClass('uploading');
         
-        // 添加重试机制
         const tryUpload = (apiIndex = 0, retryCount = 0) => {
             if (apiIndex >= apis.length) {
-                handleError(randomClass, _t('all-apis-failed'));
+                handleError(randomClass, _t('upload-failed-all-apis'));
                 return;
             }
+
+            const xhr = new XMLHttpRequest();
+            xhr.upload.addEventListener('progress', (e) => updateProgress(e, randomClass));
             
-            $.ajax({
-                url: apis[apiIndex],
-                type: 'post',
-                dataType: 'json',
-                processData: false,
-                contentType: false,
-                data: formData,
-                timeout: 120000, // 2分钟超时
-                xhr: () => {
-                    const xhr = $.ajaxSettings.xhr();
-                    if (xhr.upload) {
-                        xhr.upload.addEventListener('progress', e => updateProgress(e, randomClass), false);
-                    }
-                    return xhr;
-                },
-                success: res => {
-                    if (res.Hash) {
-                        handleUploadSuccess(res, randomClass, file); // Pass the file object
-                        setTimeout(() => seeding(res), 1000);
-                    } else {
+            xhr.addEventListener('load', async () => {
+                if (xhr.status === 200) {
+                    try {
+                        const res = JSON.parse(xhr.responseText);
+                        await handleUploadSuccess(res, randomClass, file);
+                        seeding(res);
+                    } catch (error) {
+                        console.error('Error parsing response:', error);
                         if (retryCount < 2) {
                             setTimeout(() => tryUpload(apiIndex, retryCount + 1), 1000);
                         } else {
                             tryUpload(apiIndex + 1, 0);
                         }
                     }
-                },
-                error: (xhr, status) => {
-                    if (status === 'timeout') {
-                        tryUpload(apiIndex + 1, 0);
-                    } else if (retryCount < 2) {
+                } else {
+                    if (retryCount < 2) {
                         setTimeout(() => tryUpload(apiIndex, retryCount + 1), 1000);
                     } else {
                         tryUpload(apiIndex + 1, 0);
                     }
                 }
             });
+
+            xhr.addEventListener('error', () => {
+                if (retryCount < 2) {
+                    setTimeout(() => tryUpload(apiIndex, retryCount + 1), 1000);
+                } else {
+                    tryUpload(apiIndex + 1, 0);
+                }
+            });
+
+            xhr.open('POST', apis[apiIndex]);
+            xhr.send(formData);
         };
 
         tryUpload();
@@ -368,8 +372,8 @@ $(document).ready(() => {
         
         // Determine which copy icon/text to show initially based on passphrase
         let copyButtonTitle = passphrase ? _t('copy-share-link') : _t('copy-link');
-        let copyFunction = passphrase ? `copyShareLink(this)` : `copyLinkUrl(this)`;
-
+        let copyFunction = passphrase ? `copyShareLink(this)` : `copyLinkUrl(this)`;;
+        
         return `
             <div class="item ${randomClass}">
                 <div class="file">
@@ -401,11 +405,9 @@ $(document).ready(() => {
                     </div>
                     <div class="progress-status">0%</div>
                 </div>
-                <!-- URL display text input -->
                 <div class="url-display" style="display: none; margin-top: 8px;">
                     <input type="text" class="file-url-input" style="width: 100%; padding: 6px; border: 1px solid #dcdfe6; border-radius: 4px; box-sizing: border-box;" readonly>
                 </div>
-                <!-- Hidden inputs to store the data -->
                 <input type="hidden" class="data-url" value="">
                 <input type="hidden" class="data-cid" value="">
                 <input type="hidden" class="data-filename" value="${file.name}">
@@ -442,77 +444,60 @@ $(document).ready(() => {
         return iconPath;
     }
 
-    async function handleUploadSuccess(res, randomClass, file) { // Added file parameter & async
-        const fileName = encodeURIComponent(file.name);
-        
+    async function handleUploadSuccess(res, randomClass, file) {
         const passphrase = $('#passphraseInput').val();
-        let originalShareUrl; // Renamed from displaySrc / shareUrl to avoid confusion before shortening
-
+        
+        // Use compressed format for all shares
+        const fileData = {
+            c: res.Hash,
+            f: file.name,
+            s: file.size
+        };
+        const compressedData = base64UrlEncode(JSON.stringify(fileData));
+        let shareUrl;
+        
         if (passphrase) {
-            // Encrypted share link (keep existing format for encrypted files)
-            const fileData = {
-                cid: res.Hash,
-                filename: file.name,
-                size: file.size
-            };
-            const encryptedData = encryptData(fileData, passphrase);
-            originalShareUrl = `${window.location.origin}${window.location.pathname.replace('index.html', '')}share.html?share=${encodeURIComponent(encryptedData)}`;
+            // Encrypt the file data for passphrase-protected files
+            const encrypted = encryptData(fileData, passphrase);
+            if (encrypted) {
+                shareUrl = `${window.location.origin}${window.location.pathname.replace('index.html', '')}share.html?share=${encrypted}`;
+            } else {
+                // Fallback to unprotected if encryption fails
+                shareUrl = `${window.location.origin}${window.location.pathname.replace('index.html', '')}share.html?d=${compressedData}`;
+            }
         } else {
-            // Use new compressed format for public files
-            const fileData = {
-                c: res.Hash,        // cid
-                f: file.name,       // filename  
-                s: file.size        // size
-            };
-            const compressedData = base64UrlEncode(JSON.stringify(fileData));
-            originalShareUrl = `${window.location.origin}${window.location.pathname.replace('index.html', '')}share.html?d=${compressedData}`;
+            shareUrl = `${window.location.origin}${window.location.pathname.replace('index.html', '')}share.html?d=${compressedData}`;
         }
         
-        // Get short URL if enabled
-        const finalShareUrl = await getShortUrl(originalShareUrl);
+        const finalShareUrl = await getShortUrl(shareUrl);
         
         $('#file').val(null);
+        $('#directory').val(null);
+        $(`.${randomClass}`).removeClass('uploading');
         $(`.${randomClass}`).find('.progress-inner').addClass('success');
         $(`.${randomClass}`).find('.progress').fadeOut(500, function() {
-            $(`.${randomClass}`).removeClass('uploading');
-            const urlDisplay = $(`.${randomClass}`).find('.url-display');
-            const fileUrlInput = $(`.${randomClass}`).find('.file-url-input');
-            fileUrlInput.val(finalShareUrl); // Use final (potentially shortened) URL
-            urlDisplay.fadeIn(300);
+            $(this).remove();
         });
-        
-        // Store the URL and CID values in hidden inputs
-        $(`.${randomClass}`).find('.data-url').val(finalShareUrl); // Use final (potentially shortened) URL
+        $(`.${randomClass}`).find('.data-url').val(finalShareUrl);
         $(`.${randomClass}`).find('.data-cid').val(res.Hash);
         $(`.${randomClass}`).find('.data-filename').val(file.name);
-        
-        // Enable buttons since we have uploaded files
+        $(`.${randomClass}`).find('.data-passphrase-protected').val(passphrase ? 'true' : 'false');
         $('.copyall').removeClass('disabled');
-        
-        // Success notification
         showToast(_t('upload-success'), 'success');
-        
-        // Enable batch sharing functionality once files are uploaded
         updateShareSelectedButtonState();
 
         // Add to history if historyManager is available
         if (window.historyManager) {
-            try {
-                const historyRecord = window.historyManager.addRecord({
-                    filename: file.name,
-                    cid: res.Hash,
-                    size: file.size,
-                    shareUrl: finalShareUrl,
-                    isEncrypted: !!passphrase,
-                    gateway: 'IPFS Network',
-                    uploadDuration: Date.now() - parseInt(randomClass, 36) // Approximate upload time
-                });
-                console.log('Added to history:', historyRecord);
-            } catch (error) {
-                console.error('Failed to add to history:', error);
-            }
+            window.historyManager.addRecord({
+                filename: file.name,
+                cid: res.Hash,
+                shareUrl: finalShareUrl,
+                size: file.size,
+                type: file.type || 'unknown',
+                isEncrypted: !!passphrase
+            });
         } else {
-            console.warn('History manager not available');
+            console.warn('historyManager not available, skipping history record');
         }
     }
 
@@ -999,119 +984,122 @@ function hasDirectory(items) {
 // 递归获取拖拽文件夹下所有文件
 function getFilesFromDataTransferItems(items) {
     return new Promise(resolve => {
-        let files = [];
+        const files = [];
         let pending = 0;
-        function traverse(entry, path = '') {
-            if (entry.isFile) {
-                pending++;
-                entry.file(file => {
-                    file.webkitRelativePath = path + file.name;
-                    files.push(file);
-                    pending--;
-                    if (pending === 0) resolve(files);
-                });
-            } else if (entry.isDirectory) {
-                const reader = entry.createReader();
-                pending++;
-                reader.readEntries(entries => {
-                    entries.forEach(e => traverse(e, path + entry.name + '/'));
-                    pending--;
-                    if (pending === 0) resolve(files);
-                });
+        
+        function traverseFileTree(item, path = '') {
+            return new Promise((resolve) => {
+                if (item.isFile) {
+                    item.file(file => {
+                        file.webkitRelativePath = path + file.name;
+                        files.push(file);
+                        resolve();
+                    });
+                } else if (item.isDirectory) {
+                    const dirReader = item.createReader();
+                    dirReader.readEntries(entries => {
+                        if (entries.length === 0) {
+                            resolve();
+                            return;
+                        }
+                        
+                        const promises = entries.map(entry => 
+                            traverseFileTree(entry, path + item.name + '/')
+                        );
+                        Promise.all(promises).then(resolve);
+                    });
+                } else {
+                    resolve();
+                }
+            });
+        }
+        
+        const promises = [];
+        for (let i = 0; i < items.length; i++) {
+            const item = items[i].webkitGetAsEntry();
+            if (item) {
+                promises.push(traverseFileTree(item));
             }
         }
-        for (let i = 0; i < items.length; i++) {
-            const entry = items[i].webkitGetAsEntry && items[i].webkitGetAsEntry();
-            if (entry) traverse(entry, '');
-        }
+        
+        Promise.all(promises).then(() => resolve(files));
     });
 }
 
 // 文件夹上传
 function uploadDirectory(fileList) {
     if (!fileList || !fileList.length) return;
-    // 文件夹名取第一个文件的 webkitRelativePath 的首目录
+    
     const firstPath = fileList[0].webkitRelativePath || fileList[0].name;
     const folderName = firstPath.split('/')[0];
-    // 计算总大小
     let totalSize = 0;
     Array.from(fileList).forEach(f => totalSize += f.size);
 
-    // 构建 FormData
     const formData = new FormData();
     Array.from(fileList).forEach(f => {
-        // 保持相对路径
         formData.append('file', f, f.webkitRelativePath || f.name);
     });
 
-    // 显示上传条目
     const randomClass = Date.now().toString(36) + '_dir';
     $('.filelist .list').append(createDirectoryItem(folderName, totalSize, randomClass));
     $(`.${randomClass}`).addClass('uploading');
 
-    // 上传到 IPFS
     const apis = [
         'https://gw.ipfsbed.is-an.org/api/v0/add?pin=false&recursive=true&wrap-with-directory=true',
         'https://2ipfs.zone.id/api/v0/add?pin=false&recursive=true&wrap-with-directory=true',
         'https://api.img2ipfs.org/api/v0/add?pin=true&recursive=true&wrap-with-directory=true'
     ];
+    
     const tryUpload = (apiIndex = 0, retryCount = 0) => {
         if (apiIndex >= apis.length) {
-            handleError(randomClass, _t('all-apis-failed'));
+            handleError(randomClass, _t('upload-failed-all-apis'));
             return;
         }
-        $.ajax({
-            url: apis[apiIndex],
-            type: 'post',
-            dataType: 'text' // IPFS 返回多行 JSON
-            ,
-            processData: false,
-            contentType: false,
-            data: formData,
-            timeout: 300000, // 5分钟
-            xhr: () => {
-                const xhr = $.ajaxSettings.xhr();
-                if (xhr.upload) {
-                    xhr.upload.addEventListener('progress', e => updateProgress(e, randomClass), false);
-                }
-                return xhr;
-            },
-            success: res => {
-                // 解析最后一行为文件夹
-                const lines = res.trim().split('\n');
-                let dirObj = null;
-                for (let i = lines.length - 1; i >= 0; i--) {
-                    try {
-                        const obj = JSON.parse(lines[i]);
-                        // 目录对象的 Name 等于文件夹名
-                        if (obj.Name === folderName) {
-                            dirObj = obj;
-                            break;
-                        }
-                    } catch {}
-                }
-                if (dirObj && dirObj.Hash) {
-                    handleDirectoryUploadSuccess(dirObj, folderName, totalSize, randomClass);
-                    setTimeout(() => seeding(dirObj), 1000);
-                } else {
+
+        const xhr = new XMLHttpRequest();
+        xhr.upload.addEventListener('progress', (e) => updateProgress(e, randomClass));
+        
+        xhr.addEventListener('load', async () => {
+            if (xhr.status === 200) {
+                try {
+                    const lines = xhr.responseText.trim().split('\n');
+                    const responses = lines.map(line => JSON.parse(line));
+                    const dirObj = responses.find(r => r.Name === '' || r.Name === folderName);
+                    
+                    if (dirObj) {
+                        await handleDirectoryUploadSuccess(dirObj, folderName, totalSize, randomClass);
+                    } else {
+                        throw new Error('Directory object not found in response');
+                    }
+                } catch (error) {
+                    console.error('Error parsing directory response:', error);
                     if (retryCount < 2) {
                         setTimeout(() => tryUpload(apiIndex, retryCount + 1), 1000);
                     } else {
                         tryUpload(apiIndex + 1, 0);
                     }
                 }
-            },
-            error: (xhr, status) => {
-                if (status === 'timeout') {
-                    tryUpload(apiIndex + 1, 0);
-                } else if (retryCount < 2) {
+            } else {
+                if (retryCount < 2) {
                     setTimeout(() => tryUpload(apiIndex, retryCount + 1), 1000);
                 } else {
                     tryUpload(apiIndex + 1, 0);
                 }
             }
         });
+
+        xhr.addEventListener('error', () => {
+            if (retryCount < 2) {
+                setTimeout(() => tryUpload(apiIndex, retryCount + 1), 1000);
+            } else {
+                tryUpload(apiIndex + 1, 0);
+            }
+        });
+
+        xhr.open('POST', apis[apiIndex]);
+        xhr.send(formData);
     };
+    
     tryUpload();
 }
 
