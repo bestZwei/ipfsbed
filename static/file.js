@@ -841,13 +841,13 @@ async function shareBatchFiles(passphrase) { // passphrase is now an argument, m
         const item = $(this);
         const cid = item.find('.data-cid').val();
         const filename = item.find('.data-filename').val();
-        const size = parseInt(item.find('.desc__size').text().match(/\d+/g)[0]) || 0; // Extract size as number
+        const size = parseInt(item.find('.desc__size').text().match(/\d+/g)?.[0]) || 0; // Extract size as number with optional chaining
         const isProtected = item.find('.data-passphrase-protected').val() === 'true';
         
         if (cid && filename) {
             files.push({
                 cid: cid,
-                filename: filename,
+                filename: filename, // This should already have '/' for directories
                 size: size,
                 isProtected: isProtected
             });
@@ -1102,10 +1102,13 @@ function createDirectoryItem(folderName, totalSize, randomClass) {
 
 // 文件夹上传成功处理
 async function handleDirectoryUploadSuccess(dirObj, folderName, totalSize, randomClass) { // Make async
+    // Ensure folderName has trailing slash for directory identification
+    const directoryName = folderName.endsWith('/') ? folderName : folderName + '/';
+    
     // Use compressed format for directory shares too
     const fileData = {
         c: dirObj.Hash,
-        f: folderName + '/', // Ensure trailing slash for directories
+        f: directoryName, // Use directoryName with trailing slash
         s: totalSize
     };
     const compressedData = base64UrlEncode(JSON.stringify(fileData));
@@ -1125,7 +1128,7 @@ async function handleDirectoryUploadSuccess(dirObj, folderName, totalSize, rando
     });
     $(`.${randomClass}`).find('.data-url').val(finalShareUrl); // Use final (potentially shortened) URL
     $(`.${randomClass}`).find('.data-cid').val(dirObj.Hash);
-    $(`.${randomClass}`).find('.data-filename').val(folderName); // Store original folderName
+    $(`.${randomClass}`).find('.data-filename').val(directoryName); // Store directory name with trailing slash
     $('.copyall').removeClass('disabled');
     showToast(_t('upload-success'), 'success');
     updateShareSelectedButtonState();
