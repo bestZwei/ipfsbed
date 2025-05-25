@@ -516,6 +516,60 @@ $(document).ready(() => {
         }
     }
 
+    // 文件夹上传成功处理
+    async function handleDirectoryUploadSuccess(dirObj, folderName, totalSize, randomClass) { // Make async
+        // Ensure folderName has trailing slash for directory identification
+        const directoryName = folderName.endsWith('/') ? folderName : folderName + '/';
+        
+        // Use compressed format for directory shares too
+        const fileData = {
+            c: dirObj.Hash,
+            f: directoryName, // Use directoryName with trailing slash
+            s: totalSize
+        };
+        const compressedData = base64UrlEncode(JSON.stringify(fileData));
+        const originalShareUrl = `${window.location.origin}${window.location.pathname.replace('index.html', '')}share.html?d=${compressedData}`;
+        
+        const finalShareUrl = await getShortUrl(originalShareUrl); // Get short URL
+
+        $('#file').val(null); // Assuming #file is the general file input, might need #directory.val(null) too
+        $('#directory').val(null); 
+        $(`.${randomClass}`).find('.progress-inner').addClass('success');
+        $(`.${randomClass}`).find('.progress').fadeOut(500, function() {
+            $(`.${randomClass}`).removeClass('uploading');
+            const urlDisplay = $(`.${randomClass}`).find('.url-display');
+            const fileUrlInput = $(`.${randomClass}`).find('.file-url-input');
+            fileUrlInput.val(finalShareUrl); // Use final (potentially shortened) URL
+            urlDisplay.fadeIn(300);
+        });
+        $(`.${randomClass}`).find('.data-url').val(finalShareUrl); // Use final (potentially shortened) URL
+        $(`.${randomClass}`).find('.data-cid').val(dirObj.Hash);
+        $(`.${randomClass}`).find('.data-filename').val(directoryName); // Store directory name with trailing slash
+        $('.copyall').removeClass('disabled');
+        showToast(_t('upload-success'), 'success');
+        updateShareSelectedButtonState();
+
+        // Add to history if historyManager is available
+        if (window.historyManager) {
+            try {
+                const historyRecord = window.historyManager.addRecord({
+                    filename: directoryName, // Use directoryName with trailing slash for proper folder identification
+                    cid: dirObj.Hash,
+                    size: totalSize,
+                    shareUrl: finalShareUrl,
+                    isEncrypted: false, // Directories are currently not encrypted in this implementation
+                    gateway: 'IPFS Network',
+                    uploadDuration: Date.now() - parseInt(randomClass.replace('_dir', ''), 36) // Approximate upload time
+                });
+                console.log('Added directory to history:', historyRecord);
+            } catch (error) {
+                console.error('Failed to add directory to history:', error);
+            }
+        } else {
+            console.warn('History manager not available');
+        }
+    }
+
     function handleError(randomClass, message = _t('upload-error')) {
         $(`.${randomClass}`).find('.progress-inner').addClass('error');
         $(`.${randomClass}`).find('.progress-status').text('Failed');
@@ -1139,6 +1193,26 @@ async function handleDirectoryUploadSuccess(dirObj, folderName, totalSize, rando
     $('.copyall').removeClass('disabled');
     showToast(_t('upload-success'), 'success');
     updateShareSelectedButtonState();
+
+    // Add to history if historyManager is available
+    if (window.historyManager) {
+        try {
+            const historyRecord = window.historyManager.addRecord({
+                filename: directoryName, // Use directoryName with trailing slash for proper folder identification
+                cid: dirObj.Hash,
+                size: totalSize,
+                shareUrl: finalShareUrl,
+                isEncrypted: false, // Directories are currently not encrypted in this implementation
+                gateway: 'IPFS Network',
+                uploadDuration: Date.now() - parseInt(randomClass.replace('_dir', ''), 36) // Approximate upload time
+            });
+            console.log('Added directory to history:', historyRecord);
+        } catch (error) {
+            console.error('Failed to add directory to history:', error);
+        }
+    } else {
+        console.warn('History manager not available');
+    }
 }
 
 // Add Base64URL functions at the top of the file
