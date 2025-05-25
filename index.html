@@ -222,14 +222,32 @@
         const fileInput = document.getElementById('file');
         const directoryInput = document.getElementById('directory');
 
+        // Initialize toggle state from localStorage
+        document.addEventListener('DOMContentLoaded', function() {
+            const savedDirectoryMode = localStorage.getItem('ipfsbed_directory_mode');
+            if (savedDirectoryMode === 'true') {
+                uploadModeToggle.checked = true;
+                // Trigger change event to ensure proper configuration
+                uploadModeToggle.dispatchEvent(new Event('change'));
+            }
+        });
+
         uploadModeToggle.addEventListener('change', function() {
-            // The actual toggling of webkitdirectory attribute is now handled in file.js
-            // This is just for any immediate UI updates needed
-            if (this.checked) {
-                // Directory mode selected
+            const isDirectoryMode = this.checked;
+            localStorage.setItem('ipfsbed_directory_mode', isDirectoryMode ? 'true' : 'false');
+            
+            // Configure file inputs based on mode
+            if (isDirectoryMode) {
+                directoryInput.setAttribute('webkitdirectory', '');
+                directoryInput.setAttribute('directory', '');
+                fileInput.removeAttribute('webkitdirectory');
+                fileInput.removeAttribute('directory');
                 console.log("Switched to directory mode");
             } else {
-                // File mode selected
+                directoryInput.removeAttribute('webkitdirectory');
+                directoryInput.removeAttribute('directory');
+                fileInput.removeAttribute('webkitdirectory');
+                fileInput.removeAttribute('directory');
                 console.log("Switched to file mode");
             }
         });

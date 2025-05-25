@@ -13,15 +13,20 @@ class HistoryManager {
 
     // 添加上传记录
     addRecord(fileData) {
+        if (!fileData || !fileData.filename || !fileData.cid) {
+            console.error('Invalid file data provided to addRecord:', fileData);
+            return null;
+        }
+
         const history = this.getHistory();
         const record = {
             id: Date.now() + Math.random().toString(36).substr(2, 9),
             timestamp: Date.now(),
             filename: fileData.filename,
             cid: fileData.cid,
-            size: fileData.size,
+            size: fileData.size || 0,
             type: this.getFileType(fileData.filename),
-            shareUrl: fileData.shareUrl,
+            shareUrl: fileData.shareUrl || '',
             isEncrypted: fileData.isEncrypted || false,
             gateway: fileData.gateway || 'Unknown',
             uploadDuration: fileData.uploadDuration || 0,
@@ -321,8 +326,8 @@ class HistoryManager {
         
         tags.push(extension, type);
         
-        // 根据文件名生成额外标签
-        const name = filename.toLowerCase();
+        // 根据文件名生成额外标签 - Fix: sanitize filename input
+        const name = filename.toLowerCase().replace(/[<>"/\\|?*]/g, ''); // Remove potentially dangerous characters
         if (name.includes('screenshot') || name.includes('screen')) tags.push('screenshot');
         if (name.includes('photo') || name.includes('img')) tags.push('photo');
         if (name.includes('backup')) tags.push('backup');

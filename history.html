@@ -203,13 +203,36 @@
             document.getElementById('importFile').addEventListener('change', handleImport);
         }
 
+        // Add helper function to escape HTML
+        function escapeHtml(text) {
+            if (typeof text !== 'string') return '';
+            const map = {
+                '&': '&amp;',
+                '<': '&lt;',
+                '>': '&gt;',
+                '"': '&quot;',
+                "'": '&#039;'
+            };
+            return text.replace(/[&<>"']/g, function(m) { return map[m]; });
+        }
+
+        // Enhanced error handling for statistics
         function loadStatistics() {
-            const stats = window.historyManager.getStatistics();
-            
-            document.getElementById('totalFiles').textContent = stats.total;
-            document.getElementById('totalSize').textContent = formatBytes(stats.totalSize);
-            document.getElementById('todayFiles').textContent = stats.today;
-            document.getElementById('encryptedFiles').textContent = stats.encryptedCount;
+            try {
+                const stats = window.historyManager.getStatistics();
+                
+                document.getElementById('totalFiles').textContent = stats.total || 0;
+                document.getElementById('totalSize').textContent = formatBytes(stats.totalSize || 0);
+                document.getElementById('todayFiles').textContent = stats.today || 0;
+                document.getElementById('encryptedFiles').textContent = stats.encryptedCount || 0;
+            } catch (error) {
+                console.error('Failed to load statistics:', error);
+                // Set default values on error
+                document.getElementById('totalFiles').textContent = '0';
+                document.getElementById('totalSize').textContent = '0 KB';
+                document.getElementById('todayFiles').textContent = '0';
+                document.getElementById('encryptedFiles').textContent = '0';
+            }
         }
 
         function loadHistoryList() {
@@ -262,19 +285,19 @@
                 </div>
                 <div class="item-icon">${fileIcon}</div>
                 <div class="item-details">
-                    <div class="item-name">${item.filename}</div>
+                    <div class="item-name">${escapeHtml(item.filename)}</div>
                     <div class="item-meta">
                         <span><i class="fas fa-calendar"></i>${formattedDate}</span>
                         <span><i class="fas fa-database"></i>${fileSize}</span>
-                        <span><i class="fas fa-tag"></i>${item.type}</span>
+                        <span><i class="fas fa-tag"></i>${escapeHtml(item.type)}</span>
                         ${item.isEncrypted ? '<span class="encrypted-badge"><i class="fas fa-lock"></i>Encrypted</span>' : ''}
                     </div>
                 </div>
                 <div class="item-actions">
-                    <button class="btn-icon" onclick="copyShareUrl('${item.shareUrl}')" title="Copy Share URL">
+                    <button class="btn-icon" onclick="copyShareUrl('${escapeHtml(item.shareUrl)}')" title="Copy Share URL">
                         <i class="fas fa-copy"></i>
                     </button>
-                    <button class="btn-icon" onclick="copyCID('${item.cid}')" title="Copy CID">
+                    <button class="btn-icon" onclick="copyCID('${escapeHtml(item.cid)}')" title="Copy CID">
                         <i class="fas fa-fingerprint"></i>
                     </button>
                     <button class="btn-icon btn-danger" onclick="deleteItem('${item.id}')" title="Delete">
@@ -436,6 +459,32 @@
                 clearTimeout(timeout);
                 timeout = setTimeout(later, wait);
             };
+        }
+
+        function copyToClipboard(text) {
+            if (navigator.clipboard && window.isSecureContext) {
+                return navigator.clipboard.writeText(text);
+            } else {
+                // Fallback for older browsers or non-HTTPS
+                return new Promise((resolve, reject) => {
+                    const textarea = document.createElement('textarea');
+                    textarea.value = text;
+                    textarea.style.position = 'fixed';
+                    textarea.style.left = '-999999px';
+                    textarea.style.top = '-999999px';
+                    document.body.appendChild(textarea);
+                    textarea.focus();
+                    textarea.select();
+                    try {
+                        document.execCommand('copy');
+                        textarea.remove();
+                        resolve();
+                    } catch (error) {
+                        textarea.remove();
+                        reject(error);
+                    }
+                });
+            }
         }
     </script>
 </body>

@@ -902,13 +902,28 @@ async function shareBatchFiles(passphrase) { // passphrase is now an argument, m
         const item = $(this);
         const cid = item.find('.data-cid').val();
         const filename = item.find('.data-filename').val();
-        const size = parseInt(item.find('.desc__size').text().match(/\d+/g)?.[0]) || 0; // Extract size as number with optional chaining
+        // Fix: Get size from hidden input or parse from display text more reliably
+        const sizeText = item.find('.desc__size').text();
+        let size = 0;
+        try {
+            // Extract size from text like "文件大小: 1.2 MB" or "File size: 1.2 MB"
+            const sizeMatch = sizeText.match(/[\d.,]+\s*(B|KB|MB|GB)/i);
+            if (sizeMatch) {
+                const value = parseFloat(sizeMatch[0].replace(/[,\s]/g, ''));
+                const unit = sizeMatch[1].toUpperCase();
+                const multipliers = { 'B': 1, 'KB': 1024, 'MB': 1024*1024, 'GB': 1024*1024*1024 };
+                size = Math.round(value * (multipliers[unit] || 1));
+            }
+        } catch (e) {
+            console.warn('Failed to parse file size:', sizeText, e);
+        }
+        
         const isProtected = item.find('.data-passphrase-protected').val() === 'true';
         
         if (cid && filename) {
             files.push({
                 cid: cid,
-                filename: filename, // This should already have '/' for directories
+                filename: filename,
                 size: size,
                 isProtected: isProtected
             });
@@ -1229,5 +1244,67 @@ function base64UrlDecode(str) {
     // Replace URL-safe characters
     str = str.replace(/-/g, '+').replace(/_/g, '/');
     return decodeURIComponent(escape(atob(str)));
+}
+
+// --- History Management Integration ---
+function renderHistoryList(items) {
+    const container = document.getElementById('historyList');
+    container.innerHTML = '';
+
+    items.forEach(item => {
+        const itemElement = createHistoryItem(item);
+        container.appendChild(itemElement);
+    });
+}
+
+function createHistoryItem(item) {
+    const div = document.createElement('div');
+    div.className = 'history-item';
+    div.dataset.id = item.id;
+
+    const fileIcon = getFileTypeIcon(item.filename);
+    const formattedDate = new Date(item.timestamp).toLocaleString();
+    const fileSize = item.size ? formatBytes(item.size) : 'Unknown';
+
+    div.innerHTML = `
+        <div class="item-checkbox">
+            <input type="checkbox" onchange="toggleItemSelection('${item.id}')">
+        </div>
+        <div class="item-icon">${fileIcon}</div>
+        <div class="item-details">
+            <div class="item-name">${escapeHtml(item.filename)}</div>
+            <div class="item-meta">
+                <span><i class="fas fa-calendar"></i>${formattedDate}</span>
+                <span><i class="fas fa-database"></i>${fileSize}</span>
+                <span><i class="fas fa-tag"></i>${item.type}</span>
+                ${item.isEncrypted ? '<span class="encrypted-badge"><i class="fas fa-lock"></i>Encrypted</span>' : ''}
+            </div>
+        </div>
+        <div class="item-actions">
+            <button class="btn-icon" onclick="copyShareUrl('${escapeHtml(item.shareUrl)}')" title="Copy Share URL">
+                <i class="fas fa-copy"></i>
+            </button>
+            <button class="btn-icon" onclick="copyCID('${escapeHtml(item.cid)}')" title="Copy CID">
+                <i class="fas fa-fingerprint"></i>
+            </button>
+            <button class="btn-icon btn-danger" onclick="deleteItem('${item.id}')" title="Delete">
+                <i class="fas fa-trash"></i>
+            </button>
+        </div>
+    `;
+
+    return div;
+}
+
+// Add helper function to escape HTML
+function escapeHtml(text) {
+    const map = {
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#039;'
+    };
+    return text.replace(/[&<>"']/g, function(m) { return map[m]; });
 }
 
