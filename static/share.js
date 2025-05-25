@@ -246,14 +246,13 @@ async function forceDownloadFile(url, filename, btn) {
 document.addEventListener('DOMContentLoaded', function() {
     // Initialize language first to ensure _t is ready
     if (window.initializeLanguage) {
-        window.currentLang = window.initializeLanguage(); // Ensure currentLang is set
+        window.currentLang = window.initializeLanguage();
     }
     updateSharePageLanguage();
     processShareUrl();
 
-    // Bind download button event
-    const downloadBtn = document.getElementById('downloadButton');
-    downloadBtn.addEventListener('click', function(e) {
+    // Add download button event listener
+    document.getElementById('downloadButton').addEventListener('click', function(e) {
         e.preventDefault();
         const url = this.getAttribute('data-url');
         const filename = currentFilename;

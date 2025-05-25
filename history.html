@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="" id="htmlLang">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload History - IPFSBED</title>
+    <meta name="description" content="View your upload history on IPFSBED">
+    <link rel="shortcut icon" href="/img/ipfsbed.png">
+    <link rel="stylesheet" href="./static/style.css">
+    <link rel="stylesheet" href="./static/history.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js"></script>
+    <script src="./static/langs.js"></script>
+    <script src="./static/common.js"></script>
+    <script src="./static/history.js"></script>
+</head>
+<body>
+    <div class="site-header">
+        <div class="site-logo">
+            <img src="/img/ipfsbed.png" alt="IPFSBED Logo" width="32" height="32">
+            IPFSBED
+        </div>
+        <div class="lang-icon" id="langToggle">
+            <i class="fas fa-globe"></i>
+        </div>
+        <div class="lang-dropdown" id="langDropdown">
+            <a href="#" data-lang="zh-CN" class="active">中文</a>
+            <a href="#" data-lang="en">English</a>
+            <a href="#" data-lang="de">Deutsch</a>
+            <a href="#" data-lang="ru">Русский</a>
+            <a href="#" data-lang="fr">Français</a>
+            <a href="#" data-lang="es">Español</a>
+            <a href="#" data-lang="ar">العربية</a>
+            <a href="#" data-lang="fa">فارسی</a>
+            <a href="#" data-lang="tr">Türkçe</a>
+            <a href="#" data-lang="pt">Português</a>
+            <a href="#" data-lang="ko">조선어</a>
+            <a href="#" data-lang="ja">日本語</a>
+        </div>
+    </div>
+
+    <div class="history-container">
+        <div class="history-header">
+            <h1><i class="fas fa-history"></i><span data-translate="upload-history">Upload History</span></h1>
+            <div class="header-actions">
+                <button class="btn btn-secondary" onclick="exportHistory()">
+                    <i class="fas fa-download"></i><span data-translate="export-history">Export</span>
+                </button>
+                <label class="btn btn-secondary" for="importFile">
+                    <i class="fas fa-upload"></i><span data-translate="import-history">Import</span>
+                </label>
+                <input type="file" id="importFile" accept=".json" style="display: none;">
+                <a href="./index.html" class="btn btn-primary">
+                    <i class="fas fa-home"></i><span data-translate="return-home">Return Home</span>
+                </a>
+            </div>
+        </div>
+
+        <!-- Statistics Dashboard -->
+        <div class="stats-dashboard">
+            <div class="stat-card">
+                <div class="stat-icon"><i class="fas fa-file"></i></div>
+                <div class="stat-content">
+                    <div class="stat-number" id="totalFiles">0</div>
+                    <div class="stat-label" data-translate="total-files">Total Files</div>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon"><i class="fas fa-database"></i></div>
+                <div class="stat-content">
+                    <div class="stat-number" id="totalSize">0 KB</div>
+                    <div class="stat-label" data-translate="total-size">Total Size</div>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon"><i class="fas fa-calendar-day"></i></div>
+                <div class="stat-content">
+                    <div class="stat-number" id="todayFiles">0</div>
+                    <div class="stat-label" data-translate="today-uploads">Today</div>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon"><i class="fas fa-lock"></i></div>
+                <div class="stat-content">
+                    <div class="stat-number" id="encryptedFiles">0</div>
+                    <div class="stat-label" data-translate="encrypted-files">Encrypted</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Search and Filter Controls -->
+        <div class="controls-section">
+            <div class="search-box">
+                <i class="fas fa-search"></i>
+                <input type="text" id="searchInput" data-translate-placeholder="search-placeholder" placeholder="Search files...">
+            </div>
+            
+            <div class="filter-controls">
+                <select id="typeFilter">
+                    <option value="all" data-translate="filter-all">All Types</option>
+                    <option value="images" data-translate="filter-images">Images</option>
+                    <option value="videos" data-translate="filter-videos">Videos</option>
+                    <option value="documents" data-translate="filter-documents">Documents</option>
+                    <option value="archives" data-translate="filter-archives">Archives</option>
+                    <option value="encrypted" data-translate="filter-encrypted">Encrypted</option>
+                </select>
+
+                <select id="timeFilter">
+                    <option value="all" data-translate="filter-all-time">All Time</option>
+                    <option value="today" data-translate="filter-today">Today</option>
+                    <option value="week" data-translate="filter-week">This Week</option>
+                    <option value="month" data-translate="filter-month">This Month</option>
+                </select>
+
+                <select id="sortOrder">
+                    <option value="newest" data-translate="sort-newest">Newest First</option>
+                    <option value="oldest" data-translate="sort-oldest">Oldest First</option>
+                    <option value="name" data-translate="sort-name">Name A-Z</option>
+                    <option value="size" data-translate="sort-size">Size (Large to Small)</option>
+                </select>
+            </div>
+
+            <div class="batch-actions">
+                <button class="btn btn-sm" id="selectAllBtn" onclick="selectAllItems()">
+                    <i class="fas fa-check-square"></i><span data-translate="select-all">Select All</span>
+                </button>
+                <button class="btn btn-sm btn-danger" id="deleteSelectedBtn" onclick="deleteSelected()" disabled>
+                    <i class="fas fa-trash"></i><span data-translate="delete-selected">Delete Selected</span>
+                </button>
+                <button class="btn btn-sm btn-danger" onclick="clearAllHistory()">
+                    <i class="fas fa-trash-alt"></i><span data-translate="clear-all">Clear All</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- History List -->
+        <div class="history-list" id="historyList">
+            <!-- Items will be populated by JavaScript -->
+        </div>
+
+        <!-- Pagination -->
+        <div class="pagination" id="pagination">
+            <!-- Pagination will be populated by JavaScript -->
+        </div>
+
+        <!-- Empty State -->
+        <div class="empty-state" id="emptyState" style="display: none;">
+            <i class="fas fa-inbox"></i>
+            <h3 data-translate="no-history">No Upload History</h3>
+            <p data-translate="no-history-desc">Your uploaded files will appear here</p>
+            <a href="./index.html" class="btn btn-primary">
+                <i class="fas fa-upload"></i><span data-translate="start-uploading">Start Uploading</span>
+            </a>
+        </div>
+    </div>
+
+    <script>
+        let currentPage = 1;
+        let selectedItems = new Set();
+
+        document.addEventListener('DOMContentLoaded', function() {
+            if (window.initializeLanguage) {
+                window.currentLang = window.initializeLanguage();
+            }
+            updateHistoryPageLanguage();
+            initializeHistoryPage();
+        });
+
+        function updateHistoryPageLanguage() {
+            document.getElementById('htmlLang').setAttribute('lang', window.currentLang || 'en');
+            // Update all elements with data-translate attributes
+            document.querySelectorAll('[data-translate]').forEach(element => {
+                const key = element.getAttribute('data-translate');
+                element.textContent = _t(key);
+            });
+            // Update placeholders
+            document.querySelectorAll('[data-translate-placeholder]').forEach(element => {
+                const key = element.getAttribute('data-translate-placeholder');
+                element.placeholder = _t(key);
+            });
+        }
+
+        function initializeHistoryPage() {
+            loadStatistics();
+            loadHistoryList();
+            setupEventListeners();
+        }
+
+        function setupEventListeners() {
+            // Search input
+            document.getElementById('searchInput').addEventListener('input', debounce(loadHistoryList, 300));
+            
+            // Filter controls
+            document.getElementById('typeFilter').addEventListener('change', loadHistoryList);
+            document.getElementById('timeFilter').addEventListener('change', loadHistoryList);
+            document.getElementById('sortOrder').addEventListener('change', loadHistoryList);
+
+            // Import file
+            document.getElementById('importFile').addEventListener('change', handleImport);
+        }
+
+        function loadStatistics() {
+            const stats = window.historyManager.getStatistics();
+            
+            document.getElementById('totalFiles').textContent = stats.total;
+            document.getElementById('totalSize').textContent = formatBytes(stats.totalSize);
+            document.getElementById('todayFiles').textContent = stats.today;
+            document.getElementById('encryptedFiles').textContent = stats.encryptedCount;
+        }
+
+        function loadHistoryList() {
+            const searchQuery = document.getElementById('searchInput').value;
+            const typeFilter = document.getElementById('typeFilter').value;
+            const timeFilter = document.getElementById('timeFilter').value;
+            const sortOrder = document.getElementById('sortOrder').value;
+
+            const filteredHistory = window.historyManager.searchAndFilter(searchQuery, typeFilter, sortOrder);
+            const paginatedData = window.historyManager.paginate(filteredHistory, currentPage, 20);
+
+            renderHistoryList(paginatedData.items);
+            renderPagination(paginatedData);
+
+            // Show empty state if no items
+            const emptyState = document.getElementById('emptyState');
+            const historyList = document.getElementById('historyList');
+            
+            if (paginatedData.totalItems === 0) {
+                emptyState.style.display = 'block';
+                historyList.style.display = 'none';
+            } else {
+                emptyState.style.display = 'none';
+                historyList.style.display = 'block';
+            }
+        }
+
+        function renderHistoryList(items) {
+            const container = document.getElementById('historyList');
+            container.innerHTML = '';
+
+            items.forEach(item => {
+                const itemElement = createHistoryItem(item);
+                container.appendChild(itemElement);
+            });
+        }
+
+        function createHistoryItem(item) {
+            const div = document.createElement('div');
+            div.className = 'history-item';
+            div.dataset.id = item.id;
+
+            const fileIcon = getFileTypeIcon(item.filename);
+            const formattedDate = new Date(item.timestamp).toLocaleString();
+            const fileSize = item.size ? formatBytes(item.size) : 'Unknown';
+
+            div.innerHTML = `
+                <div class="item-checkbox">
+                    <input type="checkbox" onchange="toggleItemSelection('${item.id}')">
+                </div>
+                <div class="item-icon">${fileIcon}</div>
+                <div class="item-details">
+                    <div class="item-name">${item.filename}</div>
+                    <div class="item-meta">
+                        <span><i class="fas fa-calendar"></i>${formattedDate}</span>
+                        <span><i class="fas fa-database"></i>${fileSize}</span>
+                        <span><i class="fas fa-tag"></i>${item.type}</span>
+                        ${item.isEncrypted ? '<span class="encrypted-badge"><i class="fas fa-lock"></i>Encrypted</span>' : ''}
+                    </div>
+                </div>
+                <div class="item-actions">
+                    <button class="btn-icon" onclick="copyShareUrl('${item.shareUrl}')" title="Copy Share URL">
+                        <i class="fas fa-copy"></i>
+                    </button>
+                    <button class="btn-icon" onclick="copyCID('${item.cid}')" title="Copy CID">
+                        <i class="fas fa-fingerprint"></i>
+                    </button>
+                    <button class="btn-icon btn-danger" onclick="deleteItem('${item.id}')" title="Delete">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </div>
+            `;
+
+            return div;
+        }
+
+        function renderPagination(paginatedData) {
+            const container = document.getElementById('pagination');
+            container.innerHTML = '';
+
+            if (paginatedData.totalPages <= 1) return;
+
+            // Previous button
+            if (paginatedData.hasPrevPage) {
+                const prevBtn = document.createElement('button');
+                prevBtn.className = 'pagination-btn';
+                prevBtn.innerHTML = '<i class="fas fa-chevron-left"></i>';
+                prevBtn.onclick = () => changePage(currentPage - 1);
+                container.appendChild(prevBtn);
+            }
+
+            // Page numbers
+            const startPage = Math.max(1, currentPage - 2);
+            const endPage = Math.min(paginatedData.totalPages, currentPage + 2);
+
+            for (let i = startPage; i <= endPage; i++) {
+                const pageBtn = document.createElement('button');
+                pageBtn.className = `pagination-btn ${i === currentPage ? 'active' : ''}`;
+                pageBtn.textContent = i;
+                pageBtn.onclick = () => changePage(i);
+                container.appendChild(pageBtn);
+            }
+
+            // Next button
+            if (paginatedData.hasNextPage) {
+                const nextBtn = document.createElement('button');
+                nextBtn.className = 'pagination-btn';
+                nextBtn.innerHTML = '<i class="fas fa-chevron-right"></i>';
+                nextBtn.onclick = () => changePage(currentPage + 1);
+                container.appendChild(nextBtn);
+            }
+        }
+
+        function changePage(page) {
+            currentPage = page;
+            loadHistoryList();
+        }
+
+        function toggleItemSelection(id) {
+            if (selectedItems.has(id)) {
+                selectedItems.delete(id);
+            } else {
+                selectedItems.add(id);
+            }
+            updateBatchActions();
+        }
+
+        function selectAllItems() {
+            const checkboxes = document.querySelectorAll('.history-item input[type="checkbox"]');
+            const allSelected = Array.from(checkboxes).every(cb => cb.checked);
+            
+            checkboxes.forEach(cb => {
+                cb.checked = !allSelected;
+                const id = cb.closest('.history-item').dataset.id;
+                if (!allSelected) {
+                    selectedItems.add(id);
+                } else {
+                    selectedItems.delete(id);
+                }
+            });
+            
+            updateBatchActions();
+        }
+
+        function updateBatchActions() {
+            const deleteBtn = document.getElementById('deleteSelectedBtn');
+            deleteBtn.disabled = selectedItems.size === 0;
+        }
+
+        function deleteSelected() {
+            if (selectedItems.size === 0) return;
+            
+            if (confirm(`Delete ${selectedItems.size} selected items?`)) {
+                const deletedCount = window.historyManager.deleteMultipleRecords([...selectedItems]);
+                selectedItems.clear();
+                loadStatistics();
+                loadHistoryList();
+                showToast(`${deletedCount} items deleted`, 'success');
+            }
+        }
+
+        function deleteItem(id) {
+            if (confirm('Delete this item?')) {
+                window.historyManager.deleteRecord(id);
+                selectedItems.delete(id);
+                loadStatistics();
+                loadHistoryList();
+                showToast('Item deleted', 'success');
+            }
+        }
+
+        function clearAllHistory() {
+            if (confirm('Clear all history? This action cannot be undone.')) {
+                window.historyManager.clearHistory();
+                selectedItems.clear();
+                loadStatistics();
+                loadHistoryList();
+                showToast('History cleared', 'success');
+            }
+        }
+
+        function copyShareUrl(url) {
+            copyToClipboard(url)
+                .then(() => showToast('Share URL copied!', 'success'))
+                .catch(() => showToast('Failed to copy URL', 'error'));
+        }
+
+        function copyCID(cid) {
+            copyToClipboard(cid)
+                .then(() => showToast('CID copied!', 'success'))
+                .catch(() => showToast('Failed to copy CID', 'error'));
+        }
+
+        function exportHistory() {
+            window.historyManager.exportHistory();
+            showToast('History exported!', 'success');
+        }
+
+        function handleImport(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            window.historyManager.importHistory(file)
+                .then(count => {
+                    loadStatistics();
+                    loadHistoryList();
+                    showToast(`${count} records imported!`, 'success');
+                })
+                .catch(error => {
+                    showToast(`Import failed: ${error.message}`, 'error');
+                });
+            
+            // Reset file input
+            event.target.value = '';
+        }
+
+        function debounce(func, wait) {
+            let timeout;
+            return function executedFunction(...args) {
+                const later = () => {
+                    clearTimeout(timeout);
+                    func(...args);
+                };
+                clearTimeout(timeout);
+                timeout = setTimeout(later, wait);
+            };
+        }
+    </script>
+</body>
+</html>

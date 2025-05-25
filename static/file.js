@@ -493,6 +493,19 @@ $(document).ready(() => {
         
         // Enable batch sharing functionality once files are uploaded
         updateShareSelectedButtonState();
+
+        // Add to history if historyManager is available
+        if (window.historyManager) {
+            window.historyManager.addRecord({
+                filename: file.name,
+                cid: res.Hash,
+                size: file.size,
+                shareUrl: finalShareUrl,
+                isEncrypted: !!passphrase,
+                gateway: 'IPFS Network',
+                uploadDuration: Date.now() - parseInt(randomClass, 36) // Approximate upload time
+            });
+        }
     }
 
     function handleError(randomClass, message = _t('upload-error')) {
