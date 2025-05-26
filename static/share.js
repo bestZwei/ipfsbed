@@ -3,6 +3,7 @@
 let currentCid = null;
 let currentFilename = null;
 let currentFilesize = null;
+let downloadAbortController = null; // Add abort controller for downloads
 
 // Base64URL encoding/decoding functions for URL compression
 function base64UrlEncode(str) {
@@ -249,10 +250,18 @@ async function forceDownloadFile(url, filename, btn) {
     try {
         btn.classList.add('disabled');
         btn.querySelector('span').textContent = _t('download-progress') || 'Downloading...';
-        // 显示loading
+        
+        // Create new abort controller for this download
+        downloadAbortController = new AbortController();
+        
+        // 显示loading with cancel button
         document.getElementById('loadingIndicator').style.display = 'flex';
+        document.getElementById('cancelDownload').style.display = 'block';
 
-        const response = await fetch(url);
+        const response = await fetch(url, {
+            signal: downloadAbortController.signal
+        });
+        
         if (!response.ok) throw new Error('Network error');
         const blob = await response.blob();
 
@@ -268,11 +277,25 @@ async function forceDownloadFile(url, filename, btn) {
         }, 100);
 
     } catch (e) {
-        showToast(_t('download-error'), 'error');
+        if (e.name === 'AbortError') {
+            showToast(_t('download-cancelled') || 'Download cancelled', 'info');
+        } else {
+            showToast(_t('download-error'), 'error');
+        }
     } finally {
         btn.classList.remove('disabled');
         btn.querySelector('span').textContent = _t('download-button') || 'Download';
         document.getElementById('loadingIndicator').style.display = 'none';
+        document.getElementById('cancelDownload').style.display = 'none';
+        downloadAbortController = null;
+    }
+}
+
+// Add function to cancel download
+function cancelDownload() {
+    if (downloadAbortController) {
+        downloadAbortController.abort();
+        downloadAbortController = null;
     }
 }
 
@@ -344,4 +367,7 @@ document.addEventListener('DOMContentLoaded', function() {
             forceDownloadFile(url, filename, this);
         }
     });
+    
+    // Add cancel download button event listener
+    document.getElementById('cancelDownload').addEventListener('click', cancelDownload);
 });

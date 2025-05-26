@@ -93,6 +93,8 @@ const translations = {
     'folder-opened': '文件夹已在新窗口中打开',
     'folders-cannot-download': '文件夹无法批量下载',
     'folder-type': '文件夹',
+    'download-cancelled': '下载已取消',
+    'cancel-download': '取消下载',
   },
   'en': {
     'meta-title': 'IPFSBED - Decentralized IPFS File Hosting Service',
@@ -184,6 +186,8 @@ const translations = {
     'folder-opened': 'Folder opened in new window',
     'folders-cannot-download': 'Folders cannot be downloaded in batch',
     'folder-type': 'Folder',
+    'download-cancelled': 'Download cancelled',
+    'cancel-download': 'Cancel Download',
   },
   'de': {
     'meta-title': 'IPFSBED - Dezentraler IPFS-Dateihosting-Dienst',
@@ -275,6 +279,8 @@ const translations = {
     'folder-opened': 'Ordner in neuem Fenster geöffnet',
     'folders-cannot-download': 'Ordner können nicht in Stapeln heruntergeladen werden',
     'folder-type': 'Ordner',
+    'download-cancelled': 'Download abgebrochen',
+    'cancel-download': 'Download abbrechen',
   },
   'ru': {
     'meta-title': 'IPFSBED - Децентрализованный сервис хостинга файлов IPFS',
@@ -366,6 +372,8 @@ const translations = {
     'folder-opened': 'Папка открыта в новом окне',
     'folders-cannot-download': 'Папки нельзя загружать пакетно',
     'folder-type': 'Папка',
+    'download-cancelled': 'Загрузка отменена',
+    'cancel-download': 'Отменить загрузку',
   },
   'fr': {
     'meta-title': 'IPFSBED - Service d\'hébergement de fichiers IPFS décentralisé',
@@ -457,6 +465,8 @@ const translations = {
     'folder-opened': 'Dossier ouvert dans une nouvelle fenêtre',
     'folders-cannot-download': 'Les dossiers ne peuvent pas être téléchargés en lot',
     'folder-type': 'Dossier',
+    'download-cancelled': 'Téléchargement annulé',
+    'cancel-download': 'Annuler le téléchargement',
   },
   'es': {
     'meta-title': 'IPFSBED - Servicio de alojamiento de archivos IPFS descentralizado',
@@ -548,6 +558,8 @@ const translations = {
     'folder-opened': 'Carpeta abierta en nueva ventana',
     'folders-cannot-download': 'Las carpetas no se pueden descargar en lote',
     'folder-type': 'Carpeta',
+    'download-cancelled': 'Descarga cancelada',
+    'cancel-download': 'Cancelar descarga',
   },
   'ar': {
     'meta-title': 'IPFSBED - خدمة استضافة ملفات IPFS اللامركزية',
@@ -639,6 +651,8 @@ const translations = {
     'folder-opened': 'تم فتح المجلد في نافذة جديدة',
     'folders-cannot-download': 'لا يمكن تنزيل المجلدات في دفعة واحدة',
     'folder-type': 'مجلد',
+    'download-cancelled': 'تم إلغاء التنزيل',
+    'cancel-download': 'إلغاء التنزيل',
   },
   'fa': {
     'meta-title': 'IPFSBED - سرویس میزبانی فایل IPFS غیرمتمرکز',
@@ -730,6 +744,8 @@ const translations = {
     'folder-opened': 'پوشه در پنجره جدید باز شد',
     'folders-cannot-download': 'پوشه‌ها نمی‌توانند به صورت دسته‌ای دانلود شوند',
     'folder-type': 'پوشه',
+    'download-cancelled': 'دانلود لغو شد',
+    'cancel-download': 'لغو دانلود',
   },
   'tr': {
     'meta-title': 'IPFSBED - Merkezi Olmayan IPFS Dosya Barındırma Hizmeti',
@@ -821,6 +837,8 @@ const translations = {
     'folder-opened': 'Klasör yeni pencerede açıldı',
     'folders-cannot-download': 'Klasörler toplu olarak indirilemez',
     'folder-type': 'Klasör',
+    'download-cancelled': 'İndirme iptal edildi',
+    'cancel-download': 'İndirmeyi İptal Et',
   },
   'pt': {
     'meta-title': 'IPFSBED - Serviço de Hospedagem de Arquivos IPFS Descentralizado',
@@ -912,6 +930,8 @@ const translations = {
     'folder-opened': 'Pasta aberta em nova janela',
     'folders-cannot-download': 'Pastas não podem ser baixadas em lote',
     'folder-type': 'Pasta',
+    'download-cancelled': 'Download cancelado',
+    'cancel-download': 'Cancelar Download',
   },
   'ko': {
     'meta-title': 'IPFSBED - 분산형 IPFS 파일 호스팅 서비스',
@@ -1003,6 +1023,8 @@ const translations = {
     'folder-opened': '새 창에서 폴더 열림',
     'folders-cannot-download': '폴더는 일괄 다운로드할 수 없습니다',
     'folder-type': '폴더',
+    'download-cancelled': '다운로드 취소됨',
+    'cancel-download': '다운로드 취소',
   },
   'ja': {
     'meta-title': 'IPFSBED - 分散型IPFSファイルホスティングサービス',
@@ -1094,6 +1116,8 @@ const translations = {
     'folder-opened': 'フォルダが新しいウィンドウで開かれました',
     'folders-cannot-download': 'フォルダは一括ダウンロードできません',
     'folder-type': 'フォルダ',
+    'download-cancelled': 'ダウンロードがキャンセルされました',
+    'cancel-download': 'ダウンロードをキャンセル',
   }
 };
 

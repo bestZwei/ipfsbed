@@ -2,6 +2,7 @@
 
 let batchFiles = [];
 let downloadCancelled = false;
+let downloadAbortController = null; // Add abort controller for single file downloads
 
 // Update page language elements specific to batch share page
 function updateBatchSharePageLanguage() {
@@ -289,11 +290,18 @@ async function downloadSingleFile(index) {
     const fileUrl = getFileUrl(file);
     
     try {
-        // Show loading indicator
+        // Create new abort controller for this download
+        downloadAbortController = new AbortController();
+        
+        // Show loading indicator with cancel button
         document.getElementById('loadingIndicator').style.display = 'flex';
+        document.getElementById('cancelSingleDownload').style.display = 'block';
         
         // Fetch the file
-        const response = await fetch(fileUrl);
+        const response = await fetch(fileUrl, {
+            signal: downloadAbortController.signal
+        });
+        
         if (!response.ok) throw new Error('Network error');
         const blob = await response.blob();
 
@@ -310,11 +318,25 @@ async function downloadSingleFile(index) {
         
         showToast(_t('download-started') || 'Download started', 'success');
     } catch (e) {
-        console.error('Download error:', e);
-        showToast(_t('upload-error') || 'Download failed', 'error');
+        if (e.name === 'AbortError') {
+            showToast(_t('download-cancelled') || 'Download cancelled', 'info');
+        } else {
+            console.error('Download error:', e);
+            showToast(_t('upload-error') || 'Download failed', 'error');
+        }
     } finally {
         // Hide loading indicator
         document.getElementById('loadingIndicator').style.display = 'none';
+        document.getElementById('cancelSingleDownload').style.display = 'none';
+        downloadAbortController = null;
+    }
+}
+
+// Add function to cancel single file download
+function cancelSingleDownload() {
+    if (downloadAbortController) {
+        downloadAbortController.abort();
+        downloadAbortController = null;
     }
 }
 
@@ -443,4 +465,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     updateBatchSharePageLanguage();
     processBatchShare();
+    
+    // Add cancel single download button event listener
+    document.getElementById('cancelSingleDownload').addEventListener('click', cancelSingleDownload);
 });
