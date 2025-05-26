@@ -94,6 +94,7 @@ const translations = {
     'folder-opened': '文件夹已在新窗口中打开',
     'folders-cannot-download': '文件夹无法批量下载',
     'folder-type': '文件夹',
+    'ipfs-propagation-notice': '如果文件刚上传，请稍等片刻再下载，IPFS网络需要时间传播',
   },
   'en': {
     'meta-title': 'IPFSBED - Decentralized IPFS File Hosting Service',
@@ -186,6 +187,7 @@ const translations = {
     'folder-opened': 'Folder opened in new window',
     'folders-cannot-download': 'Folders cannot be downloaded in batch',
     'folder-type': 'Folder',
+    'ipfs-propagation-notice': 'If files were just uploaded, please wait a moment before downloading as IPFS network needs time to propagate',
   },
   'de': {
     'meta-title': 'IPFSBED - Dezentraler IPFS-Dateihosting-Dienst',
@@ -278,6 +280,7 @@ const translations = {
     'folder-opened': 'Ordner in neuem Fenster geöffnet',
     'folders-cannot-download': 'Ordner können nicht in Stapeln heruntergeladen werden',
     'folder-type': 'Ordner',
+    'ipfs-propagation-notice': 'Falls Dateien gerade hochgeladen wurden, warten Sie bitte einen Moment, da das IPFS-Netzwerk Zeit zur Verbreitung benötigt',
   },
   'ru': {
     'meta-title': 'IPFSBED - Децентрализованный сервис хостинга файлов IPFS',
@@ -370,6 +373,7 @@ const translations = {
     'folder-opened': 'Папка открыта в новом окне',
     'folders-cannot-download': 'Папки нельзя загружать пакетно',
     'folder-type': 'Папка',
+    'ipfs-propagation-notice': 'Если файлы только что загружены, подождите немного, так как сети IPFS нужно время для распространения',
   },
   'fr': {
     'meta-title': 'IPFSBED - Service d\'hébergement de fichiers IPFS décentralisé',
@@ -462,6 +466,7 @@ const translations = {
     'folder-opened': 'Dossier ouvert dans une nouvelle fenêtre',
     'folders-cannot-download': 'Les dossiers ne peuvent pas être téléchargés en lot',
     'folder-type': 'Dossier',
+    'ipfs-propagation-notice': 'Si les fichiers viennent d\'être téléchargés, veuillez attendre un moment car le réseau IPFS a besoin de temps pour se propager',
   },
   'es': {
     'meta-title': 'IPFSBED - Servicio de alojamiento de archivos IPFS descentralizado',
@@ -554,6 +559,7 @@ const translations = {
     'folder-opened': 'Carpeta abierta en nueva ventana',
     'folders-cannot-download': 'Las carpetas no se pueden descargar en lote',
     'folder-type': 'Carpeta',
+    'ipfs-propagation-notice': 'Si los archivos se acaban de subir, espere un momento ya que la red IPFS necesita tiempo para propagarse',
   },
   'ar': {
     'meta-title': 'IPFSBED - خدمة استضافة ملفات IPFS اللامركزية',
@@ -646,6 +652,7 @@ const translations = {
     'folder-opened': 'تم فتح المجلد في نافذة جديدة',
     'folders-cannot-download': 'لا يمكن تنزيل المجلدات في دفعة واحدة',
     'folder-type': 'مجلد',
+    'ipfs-propagation-notice': 'إذا تم رفع الملفات للتو، يرجى الانتظار قليلاً حيث تحتاج شبكة IPFS وقتاً للانتشار',
   },
   'fa': {
     'meta-title': 'IPFSBED - سرویس میزبانی فایل IPFS غیرمتمرکز',
@@ -738,6 +745,7 @@ const translations = {
     'folder-opened': 'پوشه در پنجره جدید باز شد',
     'folders-cannot-download': 'پوشه‌ها نمی‌توانند به صورت دسته‌ای دانلود شوند',
     'folder-type': 'پوشه',
+    'ipfs-propagation-notice': 'اگر فایل‌ها تازه آپلود شده‌اند، لطفاً کمی صبر کنید زیرا شبکه IPFS برای انتشار زمان نیاز دارد',
   },
   'tr': {
     'meta-title': 'IPFSBED - Merkezi Olmayan IPFS Dosya Barındırma Hizmeti',
@@ -830,6 +838,7 @@ const translations = {
     'folder-opened': 'Klasör yeni pencerede açıldı',
     'folders-cannot-download': 'Klasörler toplu olarak indirilemez',
     'folder-type': 'Klasör',
+    'ipfs-propagation-notice': 'Dosyalar yeni yüklendiyse, IPFS ağının yayılması için zaman gerektiğinden lütfen bir süre bekleyin',
   },
   'pt': {
     'meta-title': 'IPFSBED - Serviço de Hospedagem de Arquivos IPFS Descentralizado',
@@ -922,6 +931,7 @@ const translations = {
     'folder-opened': 'Pasta aberta em nova janela',
     'folders-cannot-download': 'Pastas não podem ser baixadas em lote',
     'folder-type': 'Pasta',
+    'ipfs-propagation-notice': 'Se os arquivos foram recém-carregados, aguarde um momento pois a rede IPFS precisa de tempo para se propagar',
   },
   'ko': {
     'meta-title': 'IPFSBED - 분산형 IPFS 파일 호스팅 서비스',
@@ -1014,6 +1024,7 @@ const translations = {
     'folder-opened': '새 창에서 폴더 열림',
     'folders-cannot-download': '폴더는 일괄 다운로드할 수 없습니다',
     'folder-type': '폴더',
+    'ipfs-propagation-notice': '파일이 방금 업로드된 경우, IPFS 네트워크가 전파되는 데 시간이 필요하므로 잠시 기다려 주세요',
   },
   'ja': {
     'meta-title': 'IPFSBED - 分散型IPFSファイルホスティングサービス',
@@ -1106,6 +1117,7 @@ const translations = {
     'folder-opened': 'フォルダが新しいウィンドウで開かれました',
     'folders-cannot-download': 'フォルダは一括ダウンロードできません',
     'folder-type': 'フォルダ',
+    'ipfs-propagation-notice': 'ファイルが今アップロードされた場合、IPFSネットワークが伝播するのに時間が必要なので、少々お待ちください',
   }
 };
 

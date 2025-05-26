@@ -16,10 +16,18 @@ body {
     text-align: center;
     margin-bottom: 20px;
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
     padding-bottom: 15px;
     border-bottom: 1px solid #ebeef5;
+}
+
+.batch-share-header-top {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 10px;
 }
 
 .batch-share-header img {
@@ -31,9 +39,50 @@ body {
 
 .batch-share-header h1 {
     font-size: 1.5rem;
-    margin: 8px 0;
+    margin: 0;
     font-weight: 600;
     color: #303133;
+}
+
+.ipfs-notice {
+    font-size: 0.8rem;
+    color: #000000;
+    margin: 0;
+    padding: 8px 16px;
+    background: linear-gradient(135deg, #88d4e98b 0%, #689af177 100%);
+    border-radius: 16px;
+    max-width: 90%;
+    text-align: center;
+    line-height: 1.5;
+    box-shadow: 0 2px 12px rgba(103, 194, 58, 0.15);
+    position: relative;
+    overflow: hidden;
+    font-weight: 500;
+    letter-spacing: 0.3px;
+    transition: all 0.3s ease;
+}
+
+.ipfs-notice::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+    animation: shimmer 3s ease-in-out infinite;
+}
+
+.ipfs-notice:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 20px rgba(103, 194, 58, 0.25);
+    border-color: #5daf34;
+}
+
+@keyframes shimmer {
+    0% { left: -100%; }
+    50% { left: 100%; }
+    100% { left: 100%; }
 }
 
 .batch-share-header:hover img {
