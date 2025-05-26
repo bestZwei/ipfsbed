@@ -318,6 +318,31 @@
     text-align: center;
 }
 
+.loading-cancel {
+    margin-top: 15px;
+    padding: 8px 16px;
+    background-color: #f56c6c;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.85rem;
+    transition: all 0.3s;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.loading-cancel:hover {
+    background-color: #f78989;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(245, 108, 108, 0.2);
+}
+
+.loading-cancel:active {
+    transform: translateY(0);
+}
+
 .return-home {
     text-align: center;
     margin-top: 15px;

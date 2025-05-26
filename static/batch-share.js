@@ -2,7 +2,6 @@
 
 let batchFiles = [];
 let downloadCancelled = false;
-let downloadAbortController = null; // Add abort controller for single file downloads
 
 // Update page language elements specific to batch share page
 function updateBatchSharePageLanguage() {
@@ -20,6 +19,7 @@ function updateBatchSharePageLanguage() {
     document.getElementById('batchReturnHomeText').textContent = _t('return-home');
     document.getElementById('downloadDialogTitle').textContent = _t('download-progress') || 'Downloading Files';
     document.getElementById('downloadCancel').textContent = _t('batch-share-cancel');
+    document.getElementById('loadingCancelBtn').textContent = _t('loading-cancel');
     
     // Update sponsor text elements
     document.querySelectorAll('.sponsors-section [data-translate]').forEach(element => {
@@ -290,18 +290,11 @@ async function downloadSingleFile(index) {
     const fileUrl = getFileUrl(file);
     
     try {
-        // Create new abort controller for this download
-        downloadAbortController = new AbortController();
-        
-        // Show loading indicator with cancel button
+        // Show loading indicator
         document.getElementById('loadingIndicator').style.display = 'flex';
-        document.getElementById('cancelSingleDownload').style.display = 'block';
         
         // Fetch the file
-        const response = await fetch(fileUrl, {
-            signal: downloadAbortController.signal
-        });
-        
+        const response = await fetch(fileUrl);
         if (!response.ok) throw new Error('Network error');
         const blob = await response.blob();
 
@@ -318,25 +311,11 @@ async function downloadSingleFile(index) {
         
         showToast(_t('download-started') || 'Download started', 'success');
     } catch (e) {
-        if (e.name === 'AbortError') {
-            showToast(_t('download-cancelled') || 'Download cancelled', 'info');
-        } else {
-            console.error('Download error:', e);
-            showToast(_t('upload-error') || 'Download failed', 'error');
-        }
+        console.error('Download error:', e);
+        showToast(_t('upload-error') || 'Download failed', 'error');
     } finally {
         // Hide loading indicator
         document.getElementById('loadingIndicator').style.display = 'none';
-        document.getElementById('cancelSingleDownload').style.display = 'none';
-        downloadAbortController = null;
-    }
-}
-
-// Add function to cancel single file download
-function cancelSingleDownload() {
-    if (downloadAbortController) {
-        downloadAbortController.abort();
-        downloadAbortController = null;
     }
 }
 
@@ -457,6 +436,12 @@ async function downloadSelectedFiles() {
     }
 }
 
+// Add cancel loading functionality  
+function cancelBatchLoading() {
+    document.getElementById('loadingIndicator').style.display = 'none';
+    showError(_t('loading-cancel'));
+}
+
 // Initialize when DOM is ready
 document.addEventListener('DOMContentLoaded', function() {
     // Initialize language
@@ -465,7 +450,4 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     updateBatchSharePageLanguage();
     processBatchShare();
-    
-    // Add cancel single download button event listener
-    document.getElementById('cancelSingleDownload').addEventListener('click', cancelSingleDownload);
 });

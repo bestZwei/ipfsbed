@@ -3,7 +3,6 @@
 let currentCid = null;
 let currentFilename = null;
 let currentFilesize = null;
-let downloadAbortController = null; // Add abort controller for downloads
 
 // Base64URL encoding/decoding functions for URL compression
 function base64UrlEncode(str) {
@@ -135,6 +134,16 @@ function processShareUrl() {
     }
 }
 
+// Add cancel loading functionality
+function cancelLoading() {
+    document.getElementById('loadingIndicator').style.display = 'none';
+    document.getElementById('fileDetails').style.display = 'block';
+    document.getElementById('fileIcon').innerHTML = '<i class="fas fa-times-circle" style="font-size: 60px; color: #f56c6c;"></i>';
+    document.getElementById('fileName').textContent = _t('loading-cancel');
+    document.getElementById('fileSize').textContent = _t('selected-files-invalid');
+    document.getElementById('downloadButton').style.display = 'none';
+}
+
 // Display file details and setup download button
 function displayFileDetails(cid, filename, filesize) {
     currentCid = cid;
@@ -250,18 +259,10 @@ async function forceDownloadFile(url, filename, btn) {
     try {
         btn.classList.add('disabled');
         btn.querySelector('span').textContent = _t('download-progress') || 'Downloading...';
-        
-        // Create new abort controller for this download
-        downloadAbortController = new AbortController();
-        
-        // 显示loading with cancel button
+        // 显示loading
         document.getElementById('loadingIndicator').style.display = 'flex';
-        document.getElementById('cancelDownload').style.display = 'block';
 
-        const response = await fetch(url, {
-            signal: downloadAbortController.signal
-        });
-        
+        const response = await fetch(url);
         if (!response.ok) throw new Error('Network error');
         const blob = await response.blob();
 
@@ -277,25 +278,11 @@ async function forceDownloadFile(url, filename, btn) {
         }, 100);
 
     } catch (e) {
-        if (e.name === 'AbortError') {
-            showToast(_t('download-cancelled') || 'Download cancelled', 'info');
-        } else {
-            showToast(_t('download-error'), 'error');
-        }
+        showToast(_t('download-error'), 'error');
     } finally {
         btn.classList.remove('disabled');
         btn.querySelector('span').textContent = _t('download-button') || 'Download';
         document.getElementById('loadingIndicator').style.display = 'none';
-        document.getElementById('cancelDownload').style.display = 'none';
-        downloadAbortController = null;
-    }
-}
-
-// Add function to cancel download
-function cancelDownload() {
-    if (downloadAbortController) {
-        downloadAbortController.abort();
-        downloadAbortController = null;
     }
 }
 
@@ -367,7 +354,4 @@ document.addEventListener('DOMContentLoaded', function() {
             forceDownloadFile(url, filename, this);
         }
     });
-    
-    // Add cancel download button event listener
-    document.getElementById('cancelDownload').addEventListener('click', cancelDownload);
 });
