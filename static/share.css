@@ -13,32 +13,78 @@
     text-align: center;
     margin-bottom: 20px;
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #ebeef5;
+}
+
+.share-header-top {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 10px;
 }
 
 .share-header img {
-    width: 24px;
-    height: 24px;
-    vertical-align: middle;
-    margin-right: 10px;
+    width: 28px;
+    height: 28px;
+    margin-right: 15px;
     transition: transform 0.3s ease;
-}
-
-.share-header:hover img {
-    transform: scale(1.1);
 }
 
 .share-header h1 {
     font-size: 1.5rem;
+    margin: 0;
     font-weight: 600;
     color: #303133;
-    margin: 8px 0;
+}
+
+.ipfs-notice {
+    font-size: 0.8rem;
+    color: #000000;
+    margin: 0;
+    padding: 8px 16px;
+    background: linear-gradient(135deg, #88d4e98b 0%, #689af177 100%);
+    border-radius: 16px;
+    max-width: 90%;
+    text-align: center;
+    line-height: 1.5;
+    box-shadow: 0 2px 12px rgba(103, 194, 58, 0.15);
+    position: relative;
+    overflow: hidden;
+    font-weight: 500;
+    letter-spacing: 0.3px;
+    transition: all 0.3s ease;
+}
+
+.ipfs-notice::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+    animation: shimmer 3s ease-in-out infinite;
+}
+
+.ipfs-notice:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 20px rgba(103, 194, 58, 0.25);
+    border-color: #5daf34;
+}
+
+@keyframes shimmer {
+    0% { left: -100%; }
+    50% { left: 100%; }
+    100% { left: 100%; }
 }
 
 .share-content {
-    padding: 25px;
-    margin-bottom: 20px;
+    padding: 10px;
+    margin-bottom: 10px;
     border-radius: 8px;
     background-color: #f8f9fa;
     box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.05);
@@ -47,7 +93,7 @@
 .passphrase-form {
     text-align: center;
     position: relative;
-    padding: 20px;
+    padding: 10px;
     margin-bottom: 15px;
 }
 
@@ -103,9 +149,9 @@
 
 .file-details {
     display: none;
-    margin-top: 25px;
+    margin-top: 8px;
     text-align: center;
-    padding: 20px;
+    padding: 10px;
     animation: fadeIn 0.5s ease;
 }
 
@@ -316,6 +362,31 @@
     font-weight: 500;
     margin: 10px 0;
     text-align: center;
+}
+
+.loading-cancel {
+    margin-top: 15px;
+    padding: 8px 16px;
+    background-color: #f56c6c;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.85rem;
+    transition: all 0.3s;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.loading-cancel:hover {
+    background-color: #f78989;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(245, 108, 108, 0.2);
+}
+
+.loading-cancel:active {
+    transform: translateY(0);
 }
 
 .return-home {

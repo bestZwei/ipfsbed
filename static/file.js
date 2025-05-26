@@ -194,11 +194,27 @@ $(document).ready(() => {
     }
 
     function handlePasteUpload(event) {
-        const clipboardData = event.clipboardData || window.clipboardData || event.originalEvent.clipboardData;
-        if (!clipboardData || !clipboardData.items) return showToast(_t('clipboard-empty'), 'error');
-        const file = Array.from(clipboardData.items).find(item => item.type.indexOf('image') !== -1)?.getAsFile();
-        if (!file) return showToast(_t('clipboard-no-file'), 'error');
-        upload([file]);
+        const items = (event.clipboardData || event.originalEvent.clipboardData).items;
+        const files = [];
+        
+        for (let i = 0; i < items.length; i++) {
+            const item = items[i];
+            
+            // 支持所有文件类型，不仅仅是图片
+            if (item.kind === 'file') {
+                const file = item.getAsFile();
+                if (file) {
+                    files.push(file);
+                }
+            }
+        }
+        
+        if (files.length > 0) {
+            upload(files);
+            return;
+        }
+        
+        showToast(_t('clipboard-empty'), 'error');
     }
 
     function handleDropUpload(e) {

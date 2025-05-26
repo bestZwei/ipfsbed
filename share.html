@@ -21,8 +21,11 @@
 <body>
     <div class="share-container">
         <div class="share-header">
-            <img src="/img/ipfsbed.png" alt="IPFSBED Logo" width="28" height="28">
-            <h1 id="shareHeaderTitle">IPFSBED</h1>
+            <div class="share-header-top">
+                <img src="/img/ipfsbed.png" alt="IPFSBED Logo" width="28" height="28">
+                <h1 id="shareHeaderTitle">IPFSBED</h1>
+            </div>
+            <p class="ipfs-notice" data-translate="ipfs-propagation-notice">如果文件刚上传，请稍等片刻再下载，IPFS网络需要时间传播</p>
         </div>
         
         <div class="share-content">
@@ -30,6 +33,10 @@
             <div class="loading" id="loadingIndicator">
                 <div class="spinner"></div>
                 <p id="loadingText"></p>
+                <button class="loading-cancel" id="loadingCancelBtn" onclick="cancelLoading()">
+                    <i class="fas fa-times"></i>
+                    <span data-translate="loading-cancel">取消</span>
+                </button>
             </div>
             
             <!-- Passphrase form (shown for encrypted files) -->

@@ -2,6 +2,7 @@
 
 let batchFiles = [];
 let downloadCancelled = false;
+let singleDownloadCancelled = false;
 
 // Update page language elements specific to batch share page
 function updateBatchSharePageLanguage() {
@@ -19,6 +20,7 @@ function updateBatchSharePageLanguage() {
     document.getElementById('batchReturnHomeText').textContent = _t('return-home');
     document.getElementById('downloadDialogTitle').textContent = _t('download-progress') || 'Downloading Files';
     document.getElementById('downloadCancel').textContent = _t('batch-share-cancel');
+    document.getElementById('loadingCancelBtn').textContent = _t('loading-cancel');
     
     // Update sponsor text elements
     document.querySelectorAll('.sponsors-section [data-translate]').forEach(element => {
@@ -289,13 +291,32 @@ async function downloadSingleFile(index) {
     const fileUrl = getFileUrl(file);
     
     try {
+        // Reset single download cancellation flag
+        singleDownloadCancelled = false;
+        
         // Show loading indicator
         document.getElementById('loadingIndicator').style.display = 'flex';
+        
+        // Check for cancellation before fetch
+        if (singleDownloadCancelled) {
+            throw new Error('Download cancelled by user');
+        }
         
         // Fetch the file
         const response = await fetch(fileUrl);
         if (!response.ok) throw new Error('Network error');
+        
+        // Check for cancellation before blob conversion
+        if (singleDownloadCancelled) {
+            throw new Error('Download cancelled by user');
+        }
+        
         const blob = await response.blob();
+
+        // Check for cancellation before download
+        if (singleDownloadCancelled) {
+            throw new Error('Download cancelled by user');
+        }
 
         // Create a temporary link and click it to start download
         const a = document.createElement('a');
@@ -311,10 +332,16 @@ async function downloadSingleFile(index) {
         showToast(_t('download-started') || 'Download started', 'success');
     } catch (e) {
         console.error('Download error:', e);
-        showToast(_t('upload-error') || 'Download failed', 'error');
+        if (singleDownloadCancelled) {
+            showToast(_t('loading-cancel') || 'Download cancelled', 'info');
+        } else {
+            showToast(_t('upload-error') || 'Download failed', 'error');
+        }
     } finally {
         // Hide loading indicator
         document.getElementById('loadingIndicator').style.display = 'none';
+        // Reset cancellation flag
+        singleDownloadCancelled = false;
     }
 }
 
@@ -433,6 +460,18 @@ async function downloadSelectedFiles() {
             downloadDialog.style.display = 'none';
         }, 3000);
     }
+}
+
+// Add cancel loading functionality  
+function cancelBatchLoading() {
+    // Set cancellation flag for single downloads
+    singleDownloadCancelled = true;
+    
+    // Hide loading indicator
+    document.getElementById('loadingIndicator').style.display = 'none';
+    
+    // Show cancellation message instead of error
+    showToast(_t('loading-cancel') || 'Loading cancelled', 'info');
 }
 
 // Initialize when DOM is ready

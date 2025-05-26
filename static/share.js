@@ -134,6 +134,16 @@ function processShareUrl() {
     }
 }
 
+// Add cancel loading functionality
+function cancelLoading() {
+    document.getElementById('loadingIndicator').style.display = 'none';
+    document.getElementById('fileDetails').style.display = 'block';
+    document.getElementById('fileIcon').innerHTML = '<i class="fas fa-times-circle" style="font-size: 60px; color: #f56c6c;"></i>';
+    document.getElementById('fileName').textContent = _t('loading-cancel');
+    document.getElementById('fileSize').textContent = _t('selected-files-invalid');
+    document.getElementById('downloadButton').style.display = 'none';
+}
+
 // Display file details and setup download button
 function displayFileDetails(cid, filename, filesize) {
     currentCid = cid;
