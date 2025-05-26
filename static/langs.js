@@ -29,7 +29,7 @@ const translations = {
     'upload-success': '上传成功！',
     'upload-error': '上传失败！',
     'clipboard-empty': '剪贴板为空！',
-    'clipboard-no-file': '剪贴板中没有图片！',
+    'clipboard-no-file': '剪贴板中没有文件！', // 修改：从"图片"改为"文件"
     'unsupported-type': '不支持的文件类型！',
     'file-too-large': '文件太大！最大 {size}MB',
     'file-size': '文件大小：{size}',
@@ -120,7 +120,7 @@ const translations = {
     'upload-success': 'Upload successful!',
     'upload-error': 'Upload failed!',
     'clipboard-empty': 'Clipboard is empty!',
-    'clipboard-no-file': 'No image in clipboard!',
+    'clipboard-no-file': 'No file in clipboard!', // 修改：从"image"改为"file"
     'unsupported-type': 'Unsupported file type!',
     'file-too-large': 'File too large! Max {size}MB',
     'file-size': 'File size: {size}',
@@ -211,7 +211,7 @@ const translations = {
     'upload-success': 'Hochladen erfolgreich!',
     'upload-error': 'Hochladen fehlgeschlagen!',
     'clipboard-empty': 'Zwischenablage ist leer!',
-    'clipboard-no-file': 'Kein Bild in der Zwischenablage!',
+    'clipboard-no-file': 'Keine Datei in der Zwischenablage!', // 修改
     'unsupported-type': 'Nicht unterstützter Dateityp!',
     'file-too-large': 'Datei zu groß! Maximal {size}MB',
     'file-size': 'Dateigröße: {size}',
@@ -302,7 +302,7 @@ const translations = {
     'upload-success': 'Загрузка успешна!',
     'upload-error': 'Ошибка загрузки!',
     'clipboard-empty': 'Буфер обмена пуст!',
-    'clipboard-no-file': 'В буфере обмена нет изображения!',
+    'clipboard-no-file': 'В буфере обмена нет файла!', // 修改
     'unsupported-type': 'Неподдерживаемый тип файла!',
     'file-too-large': 'Файл слишком большой! Максимум {size}МБ',
     'file-size': 'Размер файла: {size}',
@@ -393,7 +393,7 @@ const translations = {
     'upload-success': 'Téléchargement réussi!',
     'upload-error': 'Échec du téléchargement!',
     'clipboard-empty': 'Le presse-papiers est vide!',
-    'clipboard-no-file': 'Pas d\'image dans le presse-papiers!',
+    'clipboard-no-file': 'Pas de fichier dans le presse-papiers!', // 修改
     'unsupported-type': 'Type de fichier non pris en charge!',
     'file-too-large': 'Fichier trop volumineux! Maximum {size}MB',
     'file-size': 'Taille du fichier: {size}',
@@ -484,7 +484,7 @@ const translations = {
     'upload-success': '¡Subida exitosa!',
     'upload-error': '¡Error al subir!',
     'clipboard-empty': '¡El portapapeles está vacío!',
-    'clipboard-no-file': '¡No hay imagen en el portapapeles!',
+    'clipboard-no-file': '¡No hay archivo en el portapapeles!', // 修改
     'unsupported-type': '¡Tipo de archivo no compatible!',
     'file-too-large': '¡Archivo demasiado grande! Máximo {size}MB',
     'file-size': 'Tamaño del archivo: {size}',
@@ -575,7 +575,7 @@ const translations = {
     'upload-success': 'تم الرفع بنجاح!',
     'upload-error': 'فشل الرفع!',
     'clipboard-empty': 'الحافظة فارغة!',
-    'clipboard-no-file': 'لا توجد صورة في الحافظة!',
+    'clipboard-no-file': 'لا يوجد ملف في الحافظة!', // 修改
     'unsupported-type': 'نوع ملف غير مدعوم!',
     'file-too-large': 'فائل كبير جدًا! الحد الأقصى {size} ميجابايت',
     'file-size': 'حجم الملف: {size}',
@@ -666,7 +666,7 @@ const translations = {
     'upload-success': 'آپلود با موفقیت انجام شد!',
     'upload-error': 'آپلود ناموفق بود!',
     'clipboard-empty': 'کلیپ‌بورد خالی است!',
-    'clipboard-no-file': 'تصویری در کلیپ‌بورد نیست!',
+    'clipboard-no-file': 'فایلی در کلیپ‌بورد نیست!', // 修改
     'unsupported-type': 'نوع فایل پشتیبانی نمی‌شود!',
     'file-too-large': 'فایل خیلی بزرگ است! حداکثر {size} مگابایت',
     'file-size': 'اندازه فایل: {size}',
@@ -757,7 +757,7 @@ const translations = {
     'upload-success': 'Yükleme başarılı!',
     'upload-error': 'Yükleme başarısız!',
     'clipboard-empty': 'Pano boş!',
-    'clipboard-no-file': 'Panoda resim yok!',
+    'clipboard-no-file': 'Panoda dosya yok!', // 修改
     'unsupported-type': 'Desteklenmeyen dosya türü!',
     'file-too-large': 'Dosya çok büyük! Maksimum {size}MB',
     'file-size': 'Dosya boyutu: {size}',
@@ -848,7 +848,7 @@ const translations = {
     'upload-success': 'Carregamento bem-sucedido!',
     'upload-error': 'Falha no carregamento!',
     'clipboard-empty': 'Área de transferência vazia!',
-    'clipboard-no-file': 'Sem imagem na área de transferência!',
+    'clipboard-no-file': 'Sem arquivo na área de transferência!', // 修改
     'unsupported-type': 'Tipo de arquivo não suportado!',
     'file-too-large': 'Arquivo muito grande! Máximo {size}MB',
     'file-size': 'Tamanho do arquivo: {size}',
@@ -939,7 +939,7 @@ const translations = {
     'upload-success': '업로드 성공!',
     'upload-error': '업로드 실패!',
     'clipboard-empty': '클립보드가 비어 있습니다!',
-    'clipboard-no-file': '클립보드에 이미지가 없습니다!',
+    'clipboard-no-file': '클립보드에 파일이 없습니다!', // 修改
     'unsupported-type': '지원되지 않는 파일 유형!',
     'file-too-large': '파일이 너무 큽니다! 최대 {size}MB',
     'file-size': '파일 크기: {size}',
@@ -1030,7 +1030,7 @@ const translations = {
     'upload-success': 'アップロード成功！',
     'upload-error': 'アップロード失敗！',
     'clipboard-empty': 'クリップボードが空です！',
-    'clipboard-no-file': 'クリップボードに画像がありません！',
+    'clipboard-no-file': 'クリップボードにファイルがありません!', // 修改
     'unsupported-type': '対応していないファイル形式です！',
     'file-too-large': 'ファイルが大きすぎます！最大{size}MB',
     'file-size': 'ファイルサイズ：{size}',

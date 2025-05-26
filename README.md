@@ -15,7 +15,7 @@ IPFSBED is a decentralized file hosting platform built on the InterPlanetary Fil
 ## Key Features
 
 - **Decentralized Storage**: Files are stored on the IPFS network rather than centralized servers
-- **Multiple Upload Methods**: Drag & drop, clipboard paste, or traditional file selection
+- **Multiple Upload Methods**: Drag & drop, clipboard paste (all file types), or traditional file selection
 - **Wide Format Support**: Images, documents, videos, archives, and many other file types
 - **Password Protection**: Optional encryption for sensitive files with password protection
 - **Batch Sharing**: Share multiple files at once with a single link
