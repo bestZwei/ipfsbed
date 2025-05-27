@@ -26,16 +26,56 @@ export async function onRequestPost(context) {
 
     const apiUrl = `${YOURLS_API_ENDPOINT}?signature=${YOURLS_SIGNATURE}&action=shorturl&format=json&url=${encodeURIComponent(longUrl)}`;
 
-    const response = await fetch(apiUrl);
-    const data = await response.json();
+    let fetchResponse;
+    let responseData;
+    const maxRetries = 2; // Total 3 attempts (initial + 2 retries)
+    const initialRetryDelay = 500; // Milliseconds
 
-    if (data.status === 'success' && data.shorturl) {
-      return new Response(JSON.stringify({ shortUrl: data.shorturl }), {
+    for (let attempt = 0; attempt <= maxRetries; attempt++) {
+      try {
+        fetchResponse = await fetch(apiUrl);
+        responseData = await fetchResponse.json(); // YOURLS usually returns JSON, even for errors
+
+        // Check for successful response from YOURLS
+        if (fetchResponse.ok && responseData && responseData.status === 'success' && responseData.shorturl) {
+          break; // Success, exit loop
+        }
+
+        // Check for "already exists" case, treat as success for retry logic
+        if (responseData && responseData.status === 'fail' && responseData.message && responseData.message.includes('already exists in database')) {
+          break; // Already exists, exit loop
+        }
+        
+        // If not a clear success or "already exists"
+        if (attempt < maxRetries) {
+          console.warn(`YOURLS API attempt ${attempt + 1} failed or did not return expected success. Status: ${fetchResponse.status}. Retrying...`);
+          // Exponential backoff or fixed delay
+          await new Promise(resolve => setTimeout(resolve, initialRetryDelay * Math.pow(2, attempt)));
+        } else {
+          console.error(`YOURLS API final attempt ${attempt + 1} failed. Status: ${fetchResponse.status}, Data:`, responseData);
+        }
+      } catch (e) {
+        console.error(`YOURLS API fetch/parse attempt ${attempt + 1} threw an error:`, e.message);
+        if (attempt < maxRetries) {
+          await new Promise(resolve => setTimeout(resolve, initialRetryDelay * Math.pow(2, attempt)));
+        } else {
+          // Last attempt failed with an exception (e.g., network error, invalid JSON from YOURLS)
+          return new Response(JSON.stringify({ error: `Failed to communicate with YOURLS API after ${maxRetries + 1} attempts. Last error: ${e.message}` }), {
+            status: 503, // Service Unavailable
+            headers: { 'Content-Type': 'application/json' },
+          });
+        }
+      }
+    }
+
+    // Process responseData after the loop
+    if (responseData && responseData.status === 'success' && responseData.shorturl) {
+      return new Response(JSON.stringify({ shortUrl: responseData.shorturl }), {
         headers: { 'Content-Type': 'application/json' },
       });
-    } else if (data.status === 'fail' && data.message && data.message.includes('already exists in database')) {
+    } else if (responseData && responseData.status === 'fail' && responseData.message && responseData.message.includes('already exists in database')) {
       // Extract the existing short URL from the error message
-      const shortUrlMatch = data.message.match(/short URL: ([^)]+)/);
+      const shortUrlMatch = responseData.message.match(/short URL: ([^)]+)/);
       if (shortUrlMatch && shortUrlMatch[1]) {
         const existingShortUrl = shortUrlMatch[1].startsWith('http') ? shortUrlMatch[1] : `https://${shortUrlMatch[1]}`;
         return new Response(JSON.stringify({ shortUrl: existingShortUrl }), {
@@ -44,10 +84,11 @@ export async function onRequestPost(context) {
       }
     }
 
-    // Handle other error cases
-    console.error('YOURLS API error:', data.message);
-    return new Response(JSON.stringify({ error: data.message || 'Failed to shorten URL via YOURLS.' }), {
-      status: response.status === 200 ? 502 : response.status,
+    // Handle other error cases or if responseData is not as expected after retries
+    const errorMessage = responseData ? (responseData.message || 'Failed to shorten URL via YOURLS after retries.') : 'No valid response from YOURLS API after retries.';
+    console.error('YOURLS API error after all retries:', errorMessage, 'Full data:', responseData);
+    return new Response(JSON.stringify({ error: errorMessage }), {
+      status: fetchResponse ? (fetchResponse.status === 200 ? 502 : fetchResponse.status) : 502, // If YOURLS returned 200 but bad data, use 502. Else its status or 502.
       headers: { 'Content-Type': 'application/json' },
     });
   } catch (error) {
