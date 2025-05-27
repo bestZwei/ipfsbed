@@ -1,40 +1,96 @@
+// 添加并发控制队列
+let shortUrlQueue = [];
+let activeShortUrlRequests = 0;
+const MAX_CONCURRENT_SHORT_URL_REQUESTS = 3; // 限制并发数
+
 // Move getShortUrl function to global scope (before $(document).ready)
 async function getShortUrl(longUrl) {
     if (!$('#enableShortUrl').prop('checked')) {
         return longUrl; // 如果未启用短网址，则返回原始URL
     }
 
+    // 添加到队列并等待处理
+    return new Promise((resolve) => {
+        shortUrlQueue.push({ longUrl, resolve });
+        processShortUrlQueue();
+    });
+}
+
+// 处理短链接队列
+async function processShortUrlQueue() {
+    if (activeShortUrlRequests >= MAX_CONCURRENT_SHORT_URL_REQUESTS || shortUrlQueue.length === 0) {
+        return;
+    }
+
+    const { longUrl, resolve } = shortUrlQueue.shift();
+    activeShortUrlRequests++;
+
     try {
-        // 这里的 '/api/shorten-url' 是您Cloudflare Worker的访问路径
-        // 您可能需要根据实际部署情况调整
-        const response = await fetch('/api/shorten-url', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ longUrl: longUrl }),
-        });
-
-        if (!response.ok) {
-            const errorData = await response.json().catch(() => ({ error: 'Failed to parse error response from shortener service' }));
-            console.warn('Shortener service error:', response.status, errorData.error);
-            showToast(_t('shorten-url-failed-fallback', { default: '短链接获取失败，已使用原始链接。' }), 'warning');
-            return longUrl; // 失败时回退到长链接
-        }
-
-        const data = await response.json();
-        if (data.shortUrl) {
-            console.log('Short URL generated:', data.shortUrl);
-            return data.shortUrl;
-        } else {
-            console.warn('Shortener service did not return shortUrl:', data.error || 'Unknown error from shortener');
-            showToast(_t('shorten-url-failed-fallback', { default: '短链接获取失败，已使用原始链接。' }), 'warning');
-            return longUrl; // 失败时回退到长链接
-        }
+        const shortUrl = await requestShortUrlWithRetry(longUrl);
+        resolve(shortUrl);
     } catch (error) {
-        console.warn('Error calling shortener service:', error);
-        showToast(_t('shorten-url-failed-fallback', { default: '短链接获取失败，已使用原始链接。' }), 'warning');
-        return longUrl; // 失败时回退到长链接
+        console.warn('Short URL request failed after retries:', error);
+        resolve(longUrl); // 失败时返回原始URL
+    } finally {
+        activeShortUrlRequests--;
+        // 继续处理队列中的下一个请求
+        setTimeout(processShortUrlQueue, 100); // 添加小延迟避免过于频繁
+    }
+}
+
+// 带重试机制的短链接请求
+async function requestShortUrlWithRetry(longUrl, maxRetries = 3) {
+    for (let attempt = 1; attempt <= maxRetries; attempt++) {
+        try {
+            const response = await fetch('/api/shorten-url', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ longUrl: longUrl }),
+            });
+
+            if (!response.ok) {
+                if (response.status >= 500 && attempt < maxRetries) {
+                    // 服务器错误，等待后重试
+                    await new Promise(resolve => setTimeout(resolve, 1000 * attempt));
+                    continue;
+                }
+                
+                const errorData = await response.json().catch(() => ({ error: 'Failed to parse error response from shortener service' }));
+                console.warn(`Shortener service error (attempt ${attempt}):`, response.status, errorData.error);
+                
+                if (attempt === maxRetries) {
+                    showToast(_t('shorten-url-failed-fallback', { default: '短链接获取失败，已使用原始链接。' }), 'warning');
+                    throw new Error(`HTTP ${response.status}: ${errorData.error}`);
+                }
+                
+                // 非致命错误，等待后重试
+                await new Promise(resolve => setTimeout(resolve, 500 * attempt));
+                continue;
+            }
+
+            const data = await response.json();
+            if (data.shortUrl) {
+                console.log(`Short URL generated (attempt ${attempt}):`, data.shortUrl);
+                return data.shortUrl;
+            } else {
+                console.warn(`Shortener service did not return shortUrl (attempt ${attempt}):`, data.error || 'Unknown error from shortener');
+                if (attempt === maxRetries) {
+                    showToast(_t('shorten-url-failed-fallback', { default: '短链接获取失败，已使用原始链接。' }), 'warning');
+                    throw new Error(data.error || 'Unknown error from shortener');
+                }
+                await new Promise(resolve => setTimeout(resolve, 500 * attempt));
+            }
+        } catch (error) {
+            console.warn(`Error calling shortener service (attempt ${attempt}):`, error);
+            if (attempt === maxRetries) {
+                showToast(_t('shorten-url-failed-fallback', { default: '短链接获取失败，已使用原始链接。' }), 'warning');
+                throw error;
+            }
+            // 等待后重试，递增延迟
+            await new Promise(resolve => setTimeout(resolve, 1000 * attempt));
+        }
     }
 }
 
