@@ -71,6 +71,64 @@ const uploadQueue = {
     }
 };
 
+// 添加用于处理大文件夹的常量和配置
+const folderUploadConfig = {
+    maxFolderSize: 10 * 1024 * 1024, // 10MB
+    maxFileCount: 8, // 超过8个文件就打包
+    compressLargeFolder: true // 是否启用大文件夹自动压缩
+};
+
+// 添加ZIP压缩功能
+async function compressFolderToZip(files, folderName) {
+    try {
+        showToast(_t('compressing-folder', {default: '正在压缩文件夹，请稍候...'}), 'info');
+        
+        const zip = new JSZip();
+        
+        // 添加所有文件到zip
+        for (const file of files) {
+            const relativePath = file.webkitRelativePath || file.name;
+            const fileContent = await readFileAsArrayBuffer(file);
+            zip.file(relativePath, fileContent);
+        }
+        
+        // 生成zip文件
+        const zipBlob = await zip.generateAsync({
+            type: 'blob',
+            compression: 'DEFLATE',
+            compressionOptions: {
+                level: 6 // 压缩级别 1-9，9为最高压缩率但最慢
+            }
+        }, (metadata) => {
+            // 更新压缩进度
+            const percent = Math.floor(metadata.percent);
+            showToast(_t('compressing-progress', {default: `压缩进度: ${percent}%`}), 'info', 800);
+        });
+        
+        // 创建File对象
+        const zipFile = new File([zipBlob], `${folderName}.zip`, { 
+            type: 'application/zip',
+            lastModified: new Date().getTime()
+        });
+        
+        return zipFile;
+    } catch (error) {
+        console.error('文件夹压缩失败:', error);
+        showToast(_t('compress-failed', {default: '文件夹压缩失败'}), 'error');
+        throw error;
+    }
+}
+
+// 辅助函数：将文件读取为ArrayBuffer
+function readFileAsArrayBuffer(file) {
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = reject;
+        reader.readAsArrayBuffer(file);
+    });
+}
+
 $(document).ready(() => {
     // Directly start initialization of event listeners
     initEventListeners();
@@ -402,6 +460,7 @@ $(document).ready(() => {
         });
     }
 
+    // 修改uploadDirectory函数，添加自动压缩功能
     function uploadDirectory(fileList) {
         if (!fileList || !fileList.length) return;
         // 计算总大小和文件数量
@@ -423,8 +482,28 @@ $(document).ready(() => {
 
         const firstPath = fileList[0].webkitRelativePath || fileList[0].name;
         const folderName = firstPath.split('/')[0];
-        // 将文件夹上传任务添加到队列
-        uploadQueue.add(() => uploadDirectoryToIPFS(fileList, folderName, totalSize));
+        
+        // 判断是否需要压缩
+        const needsCompression = folderUploadConfig.compressLargeFolder && 
+            (totalSize > folderUploadConfig.maxFolderSize || fileCount > folderUploadConfig.maxFileCount);
+        
+        if (needsCompression) {
+            // 添加压缩任务到队列
+            uploadQueue.add(async () => {
+                try {
+                    const zipFile = await compressFolderToZip(fileList, folderName);
+                    // 上传压缩后的ZIP文件
+                    return uploadToImg2IPFS(zipFile);
+                } catch (error) {
+                    console.error('压缩上传失败:', error);
+                    showToast(_t('compress-upload-failed', {default: '压缩上传失败'}), 'error');
+                    throw error;
+                }
+            });
+        } else {
+            // 将文件夹上传任务添加到队列（原始方式）
+            uploadQueue.add(() => uploadDirectoryToIPFS(fileList, folderName, totalSize));
+        }
     }
 
     function uploadDirectoryToIPFS(fileList, folderName, totalSize) {
@@ -444,6 +523,9 @@ $(document).ready(() => {
                 // 'https://api.img2ipfs.org/api/v0/add?pin=false&recursive=true&wrap-with-directory=true'
             ];
             
+            // 增加请求超时时间，避免大文件夹上传导致超时
+            const uploadTimeout = Math.max(300000, totalSize / 1024 * 30); // 基于大小动态调整超时时间
+            
             const tryUpload = (apiIndex = 0, retryCount = 0) => {
                 if (apiIndex >= apis.length) {
                     handleError(randomClass, _t('all-apis-failed'));
@@ -458,7 +540,7 @@ $(document).ready(() => {
                     processData: false,
                     contentType: false,
                     data: formData,
-                    timeout: 300000,
+                    timeout: uploadTimeout, // 使用动态超时时间
                     xhr: () => {
                         const xhr = $.ajaxSettings.xhr();
                         if (xhr.upload) {
@@ -579,7 +661,7 @@ $(document).ready(() => {
         } else if (audioTypes.includes(extension)) {
             iconPath = '<svg class="icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M14,3.23V5.29C16.89,6.15 19,8.83 19,12C19,15.17 16.89,17.84 14,18.7V20.77C18,19.86 21,16.28 21,12C21,7.72 18,4.14 14,3.23M16.5,12C16.5,10.23 15.5,8.71 14,7.97V16C15.5,15.29 16.5,13.76 16.5,12M3,9V15H7L12,20V4L7,9H3Z" fill="#909399"/></svg>';
         } else if (archiveTypes.includes(extension)) {
-            iconPath = '<svg class="icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M20,6H12L10,4H4A2,2 0 0,0 2,6V18A2,2 0 0,0 4,20H20A2,2 0 0,0 22,18V8A2,2 0 0,0 20,6M15,16H6V14H15V16M18,12H6V10H18V12Z" fill="#909399"/></svg>';
+            iconPath = '<svg class="icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M14,17H12V15H10V13H12V15H14M14,9H12V11H14V13H12V11H10V9H12V7H10V5H12V7H14M19,3H5C3.89,3 3,3.89 3,5V19A2,2 0 0,0 5,21H19A2,2 0 0,0 21,19V5C21,3.89 20.1,3 19,3Z" fill="#909399"/></svg>';
         } else {
             iconPath = '<svg class="icon" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg"><path d="M961.536 531.251c-0.614-3.481-1.843-7.168-3.891-10.445L827.392 306.79v-28.876c0-10.445 0-20.276 0.205-29.901 0.819-89.703 1.433-174.285-101.376-179.2H303.923c-33.587 0-58.368 8.601-76.185 26.624-30.72 30.925-30.31 79.257-29.696 140.288 0 8.601 0.204 17.408 0.204 26.419v38.093c-2.867 2.253-5.324 4.915-7.168 8.192L64.717 523.879c-1.639 2.867-2.663 5.734-3.277 8.806-6.144 12.288-9.626 26.01-9.626 40.345v290.407c0 50.585 41.984 91.75 93.594 91.75h733.184c51.61 0 93.594-41.165 93.594-91.75V573.03c-0.205-14.95-4.096-29.286-10.65-41.779zM861.389 481.28h-33.997v-55.91l33.997 55.91zM271.565 138.65c5.53-5.53 16.384-8.397 32.358-8.397h420.045c36.25 1.843 42.803 11.264 41.78 117.145 0 9.83-0.206 19.866-0.206 30.516V481.28H664.576c-16.998 0-30.925 13.722-30.925 30.925 0 64.307-54.681 116.736-122.06 116.736S389.53 576.512 389.53 512.205c0-16.999-13.722-30.925-30.925-30.925H259.89V262.144c0-9.42 0-18.432-0.205-27.034-0.41-43.008-0.819-83.558 11.879-96.46z m-73.523 279.552v63.078h-36.864l36.864-63.078z m712.294 445.44c0 16.179-14.54 30.105-31.949 30.105H145.203c-17.203 0-31.949-13.721-31.949-30.105V573.03c0-16.179 14.541-30.105 31.95-30.105h185.548c15.155 83.763 90.522 147.456 181.043 147.456s165.888-63.898 181.043-147.456h185.55c17.202 0 31.948 13.721 31.948 30.105v290.612z" fill="#909399"></path><path d="M385.638 278.528H655.77c16.998 0 30.924-13.722 30.924-30.925s-13.721-30.925-30.924-30.925H385.638c-16.998 0-30.924 13.722-30.924 30.925s13.926 30.925 30.924 30.925z m-30.924 70.451c0 16.999 13.721 30.925 30.924 30.925H655.77c16.998 0 30.924-13.722 30.924-30.925 0-17.203-13.721-30.925-30.924-30.925H385.638c-16.998 0-30.924 13.927-30.924 30.925z" fill="#909399"></path></svg>';
         }
@@ -1106,6 +1188,18 @@ async function shareBatchFiles(passphrase) { // passphrase is now an argument, m
     }
 }
 
+// 新增：根据文件数量和大小自动选择是否压缩文件夹
+function shouldCompressFolder(fileList) {
+    if (!fileList || !fileList.length) return false;
+    // 计算文件夹大小
+    let totalSize = 0;
+    Array.from(fileList).forEach(f => totalSize += f.size);
+    const fileCount = fileList.length;
+
+    // 超过阈值则压缩
+    return totalSize > folderUploadConfig.maxFolderSize || fileCount > folderUploadConfig.maxFileCount;
+}
+
 // New function to update the state of the "Share Selected" button
 function updateShareSelectedButtonState() {
     const anyFilesUploaded = $('.item').length > 0;
@@ -1199,8 +1293,28 @@ function uploadDirectory(fileList) {
 
     const firstPath = fileList[0].webkitRelativePath || fileList[0].name;
     const folderName = firstPath.split('/')[0];
-    // 将文件夹上传任务添加到队列
-    uploadQueue.add(() => uploadDirectoryToIPFS(fileList, folderName, totalSize));
+    
+    // 判断是否需要压缩
+    const needsCompression = folderUploadConfig.compressLargeFolder && 
+        (totalSize > folderUploadConfig.maxFolderSize || fileCount > folderUploadConfig.maxFileCount);
+    
+    if (needsCompression) {
+        // 添加压缩任务到队列
+        uploadQueue.add(async () => {
+            try {
+                const zipFile = await compressFolderToZip(fileList, folderName);
+                // 上传压缩后的ZIP文件
+                return uploadToImg2IPFS(zipFile);
+            } catch (error) {
+                console.error('压缩上传失败:', error);
+                showToast(_t('compress-upload-failed', {default: '压缩上传失败'}), 'error');
+                throw error;
+            }
+        });
+    } else {
+        // 将文件夹上传任务添加到队列（原始方式）
+        uploadQueue.add(() => uploadDirectoryToIPFS(fileList, folderName, totalSize));
+    }
 }
 
 // 创建文件夹上传条目
