@@ -95,8 +95,12 @@ async function compressFolderToZip(files, folderName) {
             type: 'blob',
             compression: 'DEFLATE',
             compressionOptions: {
-                level: 6 // 压缩级别 1-9，9为最高压缩率但最慢
+                level: 3 // 压缩级别 1-9，9为最高压缩率但最慢
             }
+        }, function(metadata) {
+            // Optional: Log progress or update a UI element if needed
+            console.log(`Compression progress: ${metadata.percent.toFixed(2)}%`);
+            // ...existing code to update UI (if desired)...
         });
         
         // Show a completion toast with consistent duration (5000ms)
