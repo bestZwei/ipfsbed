@@ -49,7 +49,11 @@ function showToast(message, type = 'info', duration = 3000) {
         case 'error':
             icon = '<i class="fas fa-exclamation-circle" style="margin-right: 8px;"></i>';
             break;
+        case 'warning':
+            icon = '<i class="fas fa-exclamation-triangle" style="margin-right: 8px;"></i>';
+            break;
         case 'info':
+        default:
             icon = '<i class="fas fa-info-circle" style="margin-right: 8px;"></i>';
             break;
     }
@@ -74,17 +78,19 @@ function showToast(message, type = 'info', duration = 3000) {
         }, 700);
     });
     
-    // Auto remove after duration
-    setTimeout(() => {
-        if (document.getElementById(toastId)) {
-            toast.classList.add('hide');
-            setTimeout(() => {
-                if (toast.parentNode) {
-                    toast.parentNode.removeChild(toast);
-                }
-            }, 700);
-        }
-    }, duration);
+    // Auto remove after duration (only if duration > 0)
+    if (duration > 0) {
+        setTimeout(() => {
+            if (document.getElementById(toastId)) {
+                toast.classList.add('hide');
+                setTimeout(() => {
+                    if (toast.parentNode) {
+                        toast.parentNode.removeChild(toast);
+                    }
+                }, 700);
+            }
+        }, duration);
+    }
     
     return toastId;
 }

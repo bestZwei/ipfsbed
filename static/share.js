@@ -203,10 +203,10 @@ function displayFileDetails(cid, filename, filesize) {
         this.select();
         copyToClipboard(this.value)
             .then(() => {
-                showToast(_t('copied-format', {format: _t('copy-share-link')}), 'success');
+                showToast(_t('copied-format', {format: _t('copy-share-link')}), 'success', 3000);
             })
             .catch(() => {
-                showToast(_t('clipboard-error'), 'error');
+                showToast(_t('clipboard-error'), 'error', 3000);
             });
     });
 }

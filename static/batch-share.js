@@ -225,11 +225,11 @@ function copyFileUrl(index) {
     const fileUrl = getFileUrl(batchFiles[index]);
     copyToClipboard(fileUrl)
         .then(() => {
-            showToast(`URL for "${batchFiles[index].filename}" copied to clipboard!`, 'success');
+            showToast(_t('copied-format', {format: `"${batchFiles[index].filename}"`}), 'success', 3000);
         })
         .catch(err => {
             console.error('Failed to copy URL: ', err);
-            showToast('Failed to copy URL', 'error');
+            showToast(_t('clipboard-error', {default: 'Failed to copy URL'}), 'error', 3000);
         });
 }
 
