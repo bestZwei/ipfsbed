@@ -81,9 +81,6 @@ const folderUploadConfig = {
 // 添加ZIP压缩功能
 async function compressFolderToZip(files, folderName) {
     try {
-        // Show a persistent toast that will remain until compression is complete
-        const compressToastId = showToast(_t('compressing-folder', {default: '正在压缩文件夹，请稍候...'}), 'info', 0); 
-        
         const zip = new JSZip();
         
         // 添加所有文件到zip
@@ -101,17 +98,6 @@ async function compressFolderToZip(files, folderName) {
                 level: 6 // 压缩级别 1-9，9为最高压缩率但最慢
             }
         });
-        
-        // Remove the progress toast
-        const toastElem = document.getElementById(compressToastId);
-        if (toastElem) {
-            toastElem.classList.add('hide');
-            setTimeout(() => {
-                if (toastElem.parentNode) {
-                    toastElem.parentNode.removeChild(toastElem);
-                }
-            }, 700);
-        }
         
         // Show a completion toast with consistent duration (5000ms)
         showToast(_t('compression-complete', {default: '压缩完成，准备上传...'}), 'success', 5000);
