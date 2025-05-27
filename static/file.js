@@ -102,8 +102,11 @@ async function compressFolderToZip(files, folderName) {
         // Show a completion toast with consistent duration (5000ms)
         showToast(_t('compression-complete', {default: '压缩完成，准备上传...'}), 'success', 5000);
         
+        // 确保使用正确的文件夹名称，移除可能的尾随斜杠
+        const cleanFolderName = folderName.endsWith('/') ? folderName.slice(0, -1) : folderName;
+        
         // 创建File对象
-        const zipFile = new File([zipBlob], `${folderName}.zip`, { 
+        const zipFile = new File([zipBlob], `${cleanFolderName}.zip`, { 
             type: 'application/zip',
             lastModified: new Date().getTime()
         });
@@ -477,8 +480,16 @@ $(document).ready(() => {
             return;
         }
 
-        const firstPath = fileList[0].webkitRelativePath || fileList[0].name;
-        const folderName = firstPath.split('/')[0];
+        // 修复文件夹名称提取逻辑
+        let folderName = '';
+        if (fileList[0].webkitRelativePath) {
+            // 从相对路径中提取顶级文件夹名称
+            const pathParts = fileList[0].webkitRelativePath.split('/');
+            folderName = pathParts[0]; // 取第一个部分作为文件夹名称
+        } else {
+            // 如果没有相对路径，使用默认名称
+            folderName = 'uploaded_folder';
+        }
         
         // 判断是否需要压缩
         const needsCompression = folderUploadConfig.compressLargeFolder && 
@@ -1246,6 +1257,7 @@ function getFilesFromDataTransferItems(items) {
             if (entry.isFile) {
                 pending++;
                 entry.file(file => {
+                    // 确保设置正确的相对路径
                     file.webkitRelativePath = path + file.name;
                     files.push(file);
                     pending--;
@@ -1288,8 +1300,16 @@ function uploadDirectory(fileList) {
         return;
     }
 
-    const firstPath = fileList[0].webkitRelativePath || fileList[0].name;
-    const folderName = firstPath.split('/')[0];
+    // 修复文件夹名称提取逻辑
+    let folderName = '';
+    if (fileList[0].webkitRelativePath) {
+        // 从相对路径中提取顶级文件夹名称
+        const pathParts = fileList[0].webkitRelativePath.split('/');
+        folderName = pathParts[0]; // 取第一个部分作为文件夹名称
+    } else {
+        // 如果没有相对路径，使用默认名称
+        folderName = 'uploaded_folder';
+    }
     
     // 判断是否需要压缩
     const needsCompression = folderUploadConfig.compressLargeFolder && 
