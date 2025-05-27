@@ -63,23 +63,24 @@ function showToast(message, type = 'info', duration = 3000) {
     toast.className = `toast ${type}`;
     toast.innerHTML = `
         <span class="toast-message">${icon}${message}</span>
-        <span class="toast-close">×</span>
+        ${duration > 0 ? '<span class="toast-close">×</span>' : ''}
     `;
     
     document.querySelector('.toast-container').appendChild(toast);
     
-    // Attach close event
-    toast.querySelector('.toast-close').addEventListener('click', function() {
-        toast.classList.add('hide');
-        setTimeout(() => {
-            if (toast.parentNode) {
-                toast.parentNode.removeChild(toast);
-            }
-        }, 700);
-    });
-    
-    // Auto remove after duration (only if duration > 0)
+    // Only add close button and event listener if not persistent
     if (duration > 0) {
+        // Attach close event
+        toast.querySelector('.toast-close').addEventListener('click', function() {
+            toast.classList.add('hide');
+            setTimeout(() => {
+                if (toast.parentNode) {
+                    toast.parentNode.removeChild(toast);
+                }
+            }, 700);
+        });
+        
+        // Auto remove after duration
         setTimeout(() => {
             if (document.getElementById(toastId)) {
                 toast.classList.add('hide');

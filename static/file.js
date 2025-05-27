@@ -100,14 +100,6 @@ async function compressFolderToZip(files, folderName) {
             compressionOptions: {
                 level: 6 // 压缩级别 1-9，9为最高压缩率但最慢
             }
-        }, (metadata) => {
-            // Update the progress in the existing toast
-            const percent = Math.floor(metadata.percent);
-            const message = _t('compressing-progress', {default: `压缩进度: ${percent}%`});
-            const toastElem = document.getElementById(compressToastId);
-            if (toastElem) {
-                toastElem.querySelector('.toast-message').innerHTML = `<i class="fas fa-compress" style="margin-right: 8px;"></i>${message}`;
-            }
         });
         
         // Remove the progress toast
@@ -1505,6 +1497,7 @@ function createHistoryItem(item) {
 // Add helper function to escape HTML
 function escapeHtml(text) {
     const map = {
+
         '&': '&amp;',
         '<': '&lt;',
         '>': '&gt;',
