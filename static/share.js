@@ -322,23 +322,6 @@ function getFileTypeIcon(filename) {
     return iconPath;
 }
 
-// Handle directory browsing - simplified to browse only
-function handleDirectoryBrowsing(cid, dirname, gatewayUrl) {
-    // Create browse button for directories
-    const browseUrl = `${gatewayUrl}/ipfs/${cid}`;
-    
-    // Update download button for directory browsing
-    const downloadButton = document.getElementById('downloadButton');
-    downloadButton.innerHTML = '<i class="fas fa-folder-open" style="margin-right: 8px;"></i><span>' + _t('browse-folder') + '</span>';
-    downloadButton.href = browseUrl;
-    downloadButton.target = '_blank';
-    downloadButton.onclick = function(e) {
-        e.preventDefault();
-        window.open(browseUrl, '_blank');
-        showToast(_t('folder-opened'), 'success');
-    };
-}
-
 // Add function to update IPFS notice text
 function updateIPFSNotice() {
     const ipfsNotice = document.querySelector('.ipfs-notice');
