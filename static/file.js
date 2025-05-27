@@ -341,7 +341,8 @@ $(document).ready(() => {
             document.querySelector('.container').classList.add('start');
             const apis = [
                 'https://gw.ipfsbed.is-an.org/api/v0/add?pin=false',
-                'https://api.img2ipfs.org/api/v0/add?pin=true'
+                'http://[2a0b:4e07:8:1::8d1]:5001/api/v0/add?pin=false',
+                'https://api.img2ipfs.org/api/v0/add?pin=false'
             ];
             const formData = new FormData();
             formData.append('file', file);
@@ -439,7 +440,8 @@ $(document).ready(() => {
 
             const apis = [
                 'https://gw.ipfsbed.is-an.org/api/v0/add?pin=false&recursive=true&wrap-with-directory=true',
-                'https://api.img2ipfs.org/api/v0/add?pin=true&recursive=true&wrap-with-directory=true'
+                'http://[2a0b:4e07:8:1::8d1]:5001/api/v0/add?pin=false&recursive=true&wrap-with-directory=true',
+                'https://api.img2ipfs.org/api/v0/add?pin=false&recursive=true&wrap-with-directory=true'
             ];
             
             const tryUpload = (apiIndex = 0, retryCount = 0) => {
