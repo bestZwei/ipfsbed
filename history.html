@@ -390,7 +390,7 @@
                 selectedItems.clear();
                 loadStatistics();
                 loadHistoryList();
-                showToast(`${deletedCount} items deleted`, 'success');
+                showToast(_t('items-deleted', {count: deletedCount, default: `${deletedCount} items deleted`}), 'success', 3000);
             }
         }
 

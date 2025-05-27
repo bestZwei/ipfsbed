@@ -49,7 +49,11 @@ function showToast(message, type = 'info', duration = 3000) {
         case 'error':
             icon = '<i class="fas fa-exclamation-circle" style="margin-right: 8px;"></i>';
             break;
+        case 'warning':
+            icon = '<i class="fas fa-exclamation-triangle" style="margin-right: 8px;"></i>';
+            break;
         case 'info':
+        default:
             icon = '<i class="fas fa-info-circle" style="margin-right: 8px;"></i>';
             break;
     }
@@ -59,32 +63,35 @@ function showToast(message, type = 'info', duration = 3000) {
     toast.className = `toast ${type}`;
     toast.innerHTML = `
         <span class="toast-message">${icon}${message}</span>
-        <span class="toast-close">×</span>
+        ${duration > 0 ? '<span class="toast-close">×</span>' : ''}
     `;
     
     document.querySelector('.toast-container').appendChild(toast);
     
-    // Attach close event
-    toast.querySelector('.toast-close').addEventListener('click', function() {
-        toast.classList.add('hide');
-        setTimeout(() => {
-            if (toast.parentNode) {
-                toast.parentNode.removeChild(toast);
-            }
-        }, 700);
-    });
-    
-    // Auto remove after duration
-    setTimeout(() => {
-        if (document.getElementById(toastId)) {
+    // Only add close button and event listener if not persistent
+    if (duration > 0) {
+        // Attach close event
+        toast.querySelector('.toast-close').addEventListener('click', function() {
             toast.classList.add('hide');
             setTimeout(() => {
                 if (toast.parentNode) {
                     toast.parentNode.removeChild(toast);
                 }
             }, 700);
-        }
-    }, duration);
+        });
+        
+        // Auto remove after duration
+        setTimeout(() => {
+            if (document.getElementById(toastId)) {
+                toast.classList.add('hide');
+                setTimeout(() => {
+                    if (toast.parentNode) {
+                        toast.parentNode.removeChild(toast);
+                    }
+                }, 700);
+            }
+        }, duration);
+    }
     
     return toastId;
 }
