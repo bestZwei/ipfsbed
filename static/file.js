@@ -45,6 +45,32 @@ function updateProgress(e, randomClass) {
     $(`.${randomClass}`).find('.progress-status').text(`${percent}%`);
 }
 
+// Add upload queue management
+const uploadQueue = {
+    queue: [],
+    maxConcurrent: 3, // 最大同时上传文件数
+    current: 0,
+    
+    add(uploadTask) {
+        this.queue.push(uploadTask);
+        this.process();
+    },
+    
+    process() {
+        if (this.current >= this.maxConcurrent || this.queue.length === 0) {
+            return;
+        }
+        
+        const task = this.queue.shift();
+        this.current++;
+        
+        task().finally(() => {
+            this.current--;
+            this.process(); // 处理下一个任务
+        });
+    }
+};
+
 $(document).ready(() => {
     // Directly start initialization of event listeners
     initEventListeners();
@@ -305,76 +331,165 @@ $(document).ready(() => {
                 return;
             }
 
-            uploadToImg2IPFS(file);
+            // 将上传任务添加到队列
+            uploadQueue.add(() => uploadToImg2IPFS(file));
         });
     }
 
     function uploadToImg2IPFS(file) {
-        document.querySelector('.container').classList.add('start');
-        const apis = [
-            'https://gw.ipfsbed.is-an.org/api/v0/add?pin=false',
-            'https://2ipfs.zone.id/api/v0/add?pin=false',
-            'https://api.img2ipfs.org/api/v0/add?pin=true'
-            // 'https://ipfs.io/api/v0/add?pin=false',
-            // 'https://ipfs.crossbell.io/api/v0/add?pin=false',
-            // 'https://ipfs.4everland.xyz/api/v0/add?pin=false'
-        ];
-        const formData = new FormData();
-        formData.append('file', file);
-        const randomClass = Date.now().toString(36);
-        
-        $('.filelist .list').append(createFileItem(file, randomClass));
-        
-        // Add uploading class for animation
-        $(`.${randomClass}`).addClass('uploading');
-        
-        // 添加重试机制
-        const tryUpload = (apiIndex = 0, retryCount = 0) => {
-            if (apiIndex >= apis.length) {
-                handleError(randomClass, _t('all-apis-failed'));
-                return;
-            }
+        return new Promise((resolve, reject) => {
+            document.querySelector('.container').classList.add('start');
+            const apis = [
+                'https://gw.ipfsbed.is-an.org/api/v0/add?pin=false',
+                'https://2ipfs.zone.id/api/v0/add?pin=false',
+                'https://api.img2ipfs.org/api/v0/add?pin=true'
+            ];
+            const formData = new FormData();
+            formData.append('file', file);
+            const randomClass = Date.now().toString(36);
             
-            $.ajax({
-                url: apis[apiIndex],
-                type: 'post',
-                dataType: 'json',
-                processData: false,
-                contentType: false,
-                data: formData,
-                timeout: 120000, // 2分钟超时
-                xhr: () => {
-                    const xhr = $.ajaxSettings.xhr();
-                    if (xhr.upload) {
-                        xhr.upload.addEventListener('progress', e => updateProgress(e, randomClass), false);
-                    }
-                    return xhr;
-                },
-                success: res => {
-                    if (res.Hash) {
-                        handleUploadSuccess(res, randomClass, file); // Pass the file object
-                        setTimeout(() => seeding(res), 1000);
-                    } else {
-                        if (retryCount < 2) {
+            $('.filelist .list').append(createFileItem(file, randomClass));
+            $(`.${randomClass}`).addClass('uploading');
+            
+            const tryUpload = (apiIndex = 0, retryCount = 0) => {
+                if (apiIndex >= apis.length) {
+                    handleError(randomClass, _t('all-apis-failed'));
+                    reject(new Error('All APIs failed'));
+                    return;
+                }
+                
+                $.ajax({
+                    url: apis[apiIndex],
+                    type: 'post',
+                    dataType: 'json',
+                    processData: false,
+                    contentType: false,
+                    data: formData,
+                    timeout: 120000,
+                    xhr: () => {
+                        const xhr = $.ajaxSettings.xhr();
+                        if (xhr.upload) {
+                            xhr.upload.addEventListener('progress', e => updateProgress(e, randomClass), false);
+                        }
+                        return xhr;
+                    },
+                    success: async res => {
+                        if (res.Hash) {
+                            await handleUploadSuccess(res, randomClass, file);
+                            setTimeout(() => seeding(res), 1000);
+                            resolve(res);
+                        } else {
+                            if (retryCount < 2) {
+                                setTimeout(() => tryUpload(apiIndex, retryCount + 1), 1000);
+                            } else {
+                                tryUpload(apiIndex + 1, 0);
+                            }
+                        }
+                    },
+                    error: (xhr, status) => {
+                        if (status === 'timeout') {
+                            tryUpload(apiIndex + 1, 0);
+                        } else if (retryCount < 2) {
                             setTimeout(() => tryUpload(apiIndex, retryCount + 1), 1000);
                         } else {
                             tryUpload(apiIndex + 1, 0);
                         }
                     }
-                },
-                error: (xhr, status) => {
-                    if (status === 'timeout') {
-                        tryUpload(apiIndex + 1, 0);
-                    } else if (retryCount < 2) {
-                        setTimeout(() => tryUpload(apiIndex, retryCount + 1), 1000);
-                    } else {
-                        tryUpload(apiIndex + 1, 0);
-                    }
-                }
-            });
-        };
+                });
+            };
 
-        tryUpload();
+            tryUpload();
+        });
+    }
+
+    function uploadDirectory(fileList) {
+        if (!fileList || !fileList.length) return;
+        const firstPath = fileList[0].webkitRelativePath || fileList[0].name;
+        const folderName = firstPath.split('/')[0];
+        let totalSize = 0;
+        Array.from(fileList).forEach(f => totalSize += f.size);
+
+        // 将文件夹上传任务添加到队列
+        uploadQueue.add(() => uploadDirectoryToIPFS(fileList, folderName, totalSize));
+    }
+
+    function uploadDirectoryToIPFS(fileList, folderName, totalSize) {
+        return new Promise((resolve, reject) => {
+            const formData = new FormData();
+            Array.from(fileList).forEach(f => {
+                formData.append('file', f, f.webkitRelativePath || f.name);
+            });
+
+            const randomClass = Date.now().toString(36) + '_dir';
+            $('.filelist .list').append(createDirectoryItem(folderName, totalSize, randomClass));
+            $(`.${randomClass}`).addClass('uploading');
+
+            const apis = [
+                'https://gw.ipfsbed.is-an.org/api/v0/add?pin=false&recursive=true&wrap-with-directory=true',
+                'https://2ipfs.zone.id/api/v0/add?pin=false&recursive=true&wrap-with-directory=true',
+                'https://api.img2ipfs.org/api/v0/add?pin=true&recursive=true&wrap-with-directory=true'
+            ];
+            
+            const tryUpload = (apiIndex = 0, retryCount = 0) => {
+                if (apiIndex >= apis.length) {
+                    handleError(randomClass, _t('all-apis-failed'));
+                    reject(new Error('All APIs failed'));
+                    return;
+                }
+                
+                $.ajax({
+                    url: apis[apiIndex],
+                    type: 'post',
+                    dataType: 'text',
+                    processData: false,
+                    contentType: false,
+                    data: formData,
+                    timeout: 300000,
+                    xhr: () => {
+                        const xhr = $.ajaxSettings.xhr();
+                        if (xhr.upload) {
+                            xhr.upload.addEventListener('progress', e => updateProgress(e, randomClass), false);
+                        }
+                        return xhr;
+                    },
+                    success: async res => {
+                        const lines = res.trim().split('\n');
+                        let dirObj = null;
+                        for (let i = lines.length - 1; i >= 0; i--) {
+                            try {
+                                const obj = JSON.parse(lines[i]);
+                                if (obj.Name === folderName) {
+                                    dirObj = obj;
+                                    break;
+                                }
+                            } catch {}
+                        }
+                        if (dirObj && dirObj.Hash) {
+                            await handleDirectoryUploadSuccess(dirObj, folderName, totalSize, randomClass);
+                            setTimeout(() => seeding(dirObj), 1000);
+                            resolve(dirObj);
+                        } else {
+                            if (retryCount < 2) {
+                                setTimeout(() => tryUpload(apiIndex, retryCount + 1), 1000);
+                            } else {
+                                tryUpload(apiIndex + 1, 0);
+                            }
+                        }
+                    },
+                    error: (xhr, status) => {
+                        if (status === 'timeout') {
+                            tryUpload(apiIndex + 1, 0);
+                        } else if (retryCount < 2) {
+                            setTimeout(() => tryUpload(apiIndex, retryCount + 1), 1000);
+                        } else {
+                            tryUpload(apiIndex + 1, 0);
+                        }
+                    }
+                });
+            };
+            
+            tryUpload();
+        });
     }
 
     function createFileItem(file, randomClass) {
@@ -1107,7 +1222,7 @@ function uploadDirectory(fileList) {
                 }
                 return xhr;
             },
-            success: res => {
+            success: async res => {
                 // 解析最后一行为文件夹
                 const lines = res.trim().split('\n');
                 let dirObj = null;
@@ -1122,7 +1237,7 @@ function uploadDirectory(fileList) {
                     } catch {}
                 }
                 if (dirObj && dirObj.Hash) {
-                    handleDirectoryUploadSuccess(dirObj, folderName, totalSize, randomClass);
+                    await handleDirectoryUploadSuccess(dirObj, folderName, totalSize, randomClass);
                     setTimeout(() => seeding(dirObj), 1000);
                 } else {
                     if (retryCount < 2) {
