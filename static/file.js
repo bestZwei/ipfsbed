@@ -48,7 +48,7 @@ function updateProgress(e, randomClass) {
 // Add upload queue management
 const uploadQueue = {
     queue: [],
-    maxConcurrent: 4, // 最大同时上传文件数
+    maxConcurrent: 5, // 最大同时上传文件数
     current: 0,
     
     add(uploadTask) {
