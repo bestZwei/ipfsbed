@@ -1052,7 +1052,7 @@ async function shareBatchFiles(passphrase) { // passphrase is now an argument, m
             // Extract size from text like "文件大小: 1.2 MB" or "File size: 1.2 MB"
             const sizeMatch = sizeText.match(/[\d.,]+\s*(B|KB|MB|GB)/i);
             if (sizeMatch) {
-                const value = parseFloat(sizeMatch[0].replace(/[,\s]/g, ''));
+                const value = parseFloat(sizeMatch[0].replace(/,/g, ''));
                 const unit = sizeMatch[1].toUpperCase();
                 const multipliers = { 'B': 1, 'KB': 1024, 'MB': 1024*1024, 'GB': 1024*1024*1024 };
                 size = Math.round(value * (multipliers[unit] || 1));
@@ -1078,9 +1078,6 @@ async function shareBatchFiles(passphrase) { // passphrase is now an argument, m
         return;
     }
     
-    // Get the passphrase if set - Now passed as an argument
-    // const passphrase = $('#passphraseInput').val(); // OLD: Read from global input
-    
     let batchShareUrlToCopy; // Variable to hold the URL before copying
 
     // Create batch share
@@ -1089,28 +1086,21 @@ async function shareBatchFiles(passphrase) { // passphrase is now an argument, m
         const encryptedBatch = encryptData(files, passphrase);
         if (encryptedBatch) {
             const originalBatchShareUrl = `${window.location.origin}${window.location.pathname.replace('index.html', '')}batch-share.html?share=${encodeURIComponent(encryptedBatch)}`;
-            batchShareUrlToCopy = await getShortUrl(originalBatchShareUrl); // Get short URL
-            
+            batchShareUrlToCopy = await getShortUrl(originalBatchShareUrl);            
             copyToClipboard(batchShareUrlToCopy);
             showToast(_t('batch-share-link-copied'), 'success');
-            
-            // Open the batch share page in a new tab - REMOVED
-            // window.open(batchShareUrlToCopy, '_blank');
         } else {
             showToast(_t('batch-encryption-failed'), 'error');
-            return; // Return early if encryption failed
+            return;        
         }
     } else {
-        // Create a non-encrypted batch share URL
-        const batchData = encodeURIComponent(JSON.stringify(files));
-        const originalBatchShareUrl = `${window.location.origin}${window.location.pathname.replace('index.html', '')}batch-share.html?files=${batchData}`;
+        // Use new compressed format for non-encrypted batch shares
+        const compressedData = base64UrlEncode(JSON.stringify(files));
+        const originalBatchShareUrl = `${window.location.origin}${window.location.pathname.replace('index.html', '')}batch-share.html?d=${compressedData}`;
         batchShareUrlToCopy = await getShortUrl(originalBatchShareUrl); // Get short URL
         
         copyToClipboard(batchShareUrlToCopy);
         showToast(_t('batch-share-link-copied'), 'success');
-        
-        // Open the batch share page in a new tab - REMOVED
-        // window.open(batchShareUrlToCopy, '_blank');
     }
 }
 
