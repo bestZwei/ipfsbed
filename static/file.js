@@ -403,11 +403,25 @@ $(document).ready(() => {
 
     function uploadDirectory(fileList) {
         if (!fileList || !fileList.length) return;
-        const firstPath = fileList[0].webkitRelativePath || fileList[0].name;
-        const folderName = firstPath.split('/')[0];
+        // 计算总大小和文件数量
         let totalSize = 0;
         Array.from(fileList).forEach(f => totalSize += f.size);
+        const fileCount = fileList.length;
 
+        // 限制：最大 100MB，总文件数不超过 500
+        const maxFolderSize = 5242880 * 20;  // 100MB
+        const maxFolderFiles = 500;
+        if (totalSize > maxFolderSize) {
+            showToast(`文件夹大小不可超过 ${maxFolderSize/1024/1024} MB`, 'error');
+            return;
+        }
+        if (fileCount > maxFolderFiles) {
+            showToast(`文件夹内文件数量不可超过 ${maxFolderFiles} 个`, 'error');
+            return;
+        }
+
+        const firstPath = fileList[0].webkitRelativePath || fileList[0].name;
+        const folderName = firstPath.split('/')[0];
         // 将文件夹上传任务添加到队列
         uploadQueue.add(() => uploadDirectoryToIPFS(fileList, folderName, totalSize));
     }
@@ -1174,88 +1188,27 @@ function getFilesFromDataTransferItems(items) {
 // 文件夹上传
 function uploadDirectory(fileList) {
     if (!fileList || !fileList.length) return;
-    // 文件夹名取第一个文件的 webkitRelativePath 的首目录
-    const firstPath = fileList[0].webkitRelativePath || fileList[0].name;
-    const folderName = firstPath.split('/')[0];
-    // 计算总大小
+    // 计算总大小和文件数量
     let totalSize = 0;
     Array.from(fileList).forEach(f => totalSize += f.size);
+    const fileCount = fileList.length;
 
-    // 构建 FormData
-    const formData = new FormData();
-    Array.from(fileList).forEach(f => {
-        // 保持相对路径
-        formData.append('file', f, f.webkitRelativePath || f.name);
-    });
+    // 限制：最大 100MB，总文件数不超过 500
+    const maxFolderSize = 5242880 * 20;  // 100MB
+    const maxFolderFiles = 500;
+    if (totalSize > maxFolderSize) {
+        showToast(`文件夹大小不可超过 ${maxFolderSize/1024/1024} MB`, 'error');
+        return;
+    }
+    if (fileCount > maxFolderFiles) {
+        showToast(`文件夹内文件数量不可超过 ${maxFolderFiles} 个`, 'error');
+        return;
+    }
 
-    // 显示上传条目
-    const randomClass = Date.now().toString(36) + '_dir';
-    $('.filelist .list').append(createDirectoryItem(folderName, totalSize, randomClass));
-    $(`.${randomClass}`).addClass('uploading');
-
-    // 上传到 IPFS
-    const apis = [
-        'https://gw.ipfsbed.is-an.org/api/v0/add?pin=false&recursive=true&wrap-with-directory=true',
-        'https://api.img2ipfs.org/api/v0/add?pin=true&recursive=true&wrap-with-directory=true'
-    ];
-    const tryUpload = (apiIndex = 0, retryCount = 0) => {
-        if (apiIndex >= apis.length) {
-            handleError(randomClass, _t('all-apis-failed'));
-            return;
-        }
-        $.ajax({
-            url: apis[apiIndex],
-            type: 'post',
-            dataType: 'text' // IPFS 返回多行 JSON
-            ,
-            processData: false,
-            contentType: false,
-            data: formData,
-            timeout: 300000, // 5分钟
-            xhr: () => {
-                const xhr = $.ajaxSettings.xhr();
-                if (xhr.upload) {
-                    xhr.upload.addEventListener('progress', e => updateProgress(e, randomClass), false);
-                }
-                return xhr;
-            },
-            success: async res => {
-                // 解析最后一行为文件夹
-                const lines = res.trim().split('\n');
-                let dirObj = null;
-                for (let i = lines.length - 1; i >= 0; i--) {
-                    try {
-                        const obj = JSON.parse(lines[i]);
-                        // 目录对象的 Name 等于文件夹名
-                        if (obj.Name === folderName) {
-                            dirObj = obj;
-                            break;
-                        }
-                    } catch {}
-                }
-                if (dirObj && dirObj.Hash) {
-                    await handleDirectoryUploadSuccess(dirObj, folderName, totalSize, randomClass);
-                    setTimeout(() => seeding(dirObj), 1000);
-                } else {
-                    if (retryCount < 2) {
-                        setTimeout(() => tryUpload(apiIndex, retryCount + 1), 1000);
-                    } else {
-                        tryUpload(apiIndex + 1, 0);
-                    }
-                }
-            },
-            error: (xhr, status) => {
-                if (status === 'timeout') {
-                    tryUpload(apiIndex + 1, 0);
-                } else if (retryCount < 2) {
-                    setTimeout(() => tryUpload(apiIndex, retryCount + 1), 1000);
-                } else {
-                    tryUpload(apiIndex + 1, 0);
-                }
-            }
-        });
-    };
-    tryUpload();
+    const firstPath = fileList[0].webkitRelativePath || fileList[0].name;
+    const folderName = firstPath.split('/')[0];
+    // 将文件夹上传任务添加到队列
+    uploadQueue.add(() => uploadDirectoryToIPFS(fileList, folderName, totalSize));
 }
 
 // 创建文件夹上传条目
