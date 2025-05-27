@@ -81,7 +81,8 @@ const folderUploadConfig = {
 // 添加ZIP压缩功能
 async function compressFolderToZip(files, folderName) {
     try {
-        showToast(_t('compressing-folder', {default: '正在压缩文件夹，请稍候...'}), 'info');
+        // Show only one toast at the beginning
+        showToast(_t('compressing-folder', {default: '正在压缩文件夹，请稍候...'}), 'info', 0); // Set duration to 0 to keep it until manually removed
         
         const zip = new JSZip();
         
@@ -92,6 +93,14 @@ async function compressFolderToZip(files, folderName) {
             zip.file(relativePath, fileContent);
         }
         
+        // Create a progress element instead of showing multiple toasts
+        const progressToastId = 'compression-progress-' + Date.now();
+        $('.toast-container .toast').each(function() {
+            if ($(this).find('.toast-message').text().includes('压缩文件夹')) {
+                $(this).attr('id', progressToastId);
+            }
+        });
+        
         // 生成zip文件
         const zipBlob = await zip.generateAsync({
             type: 'blob',
@@ -100,10 +109,23 @@ async function compressFolderToZip(files, folderName) {
                 level: 6 // 压缩级别 1-9，9为最高压缩率但最慢
             }
         }, (metadata) => {
-            // 更新压缩进度
+            // Update the same toast message instead of creating a new one
             const percent = Math.floor(metadata.percent);
-            showToast(_t('compressing-progress', {default: `压缩进度: ${percent}%`}), 'info', 800);
+            const progressToast = $('#' + progressToastId);
+            if (progressToast.length) {
+                const message = _t('compressing-progress', {default: `压缩进度: ${percent}%`});
+                progressToast.find('.toast-message').html(`<i class="fas fa-compress" style="margin-right: 8px;"></i>${message}`);
+            }
         });
+        
+        // Remove the progress toast
+        $('#' + progressToastId).addClass('hide');
+        setTimeout(() => {
+            $('#' + progressToastId).remove();
+        }, 700);
+        
+        // Show a completion toast
+        showToast(_t('compression-complete', {default: '压缩完成，准备上传...'}), 'success', 2000);
         
         // 创建File对象
         const zipFile = new File([zipBlob], `${folderName}.zip`, { 
