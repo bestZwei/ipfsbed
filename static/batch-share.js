@@ -22,6 +22,12 @@ function updateBatchSharePageLanguage() {
     document.getElementById('downloadCancel').textContent = _t('batch-share-cancel');
     document.getElementById('loadingCancelBtn').textContent = _t('loading-cancel');
     
+    // Update IPFS notice
+    const ipfsNotice = document.querySelector('.ipfs-notice');
+    if (ipfsNotice) {
+        ipfsNotice.textContent = _t('ipfs-propagation-notice');
+    }
+    
     // Update sponsor text elements
     document.querySelectorAll('.sponsors-section [data-translate]').forEach(element => {
         const key = element.getAttribute('data-translate');

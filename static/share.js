@@ -48,6 +48,9 @@ function updateSharePageLanguage() {
         const key = element.getAttribute('data-translate');
         element.textContent = _t(key);
     });
+    
+    // Update IPFS notice
+    updateIPFSNotice();
 }
 
 // Check URL parameters and determine if it's an encrypted share or direct CID
@@ -336,6 +339,14 @@ function handleDirectoryBrowsing(cid, dirname, gatewayUrl) {
     };
 }
 
+// Add function to update IPFS notice text
+function updateIPFSNotice() {
+    const ipfsNotice = document.querySelector('.ipfs-notice');
+    if (ipfsNotice) {
+        ipfsNotice.textContent = _t('ipfs-propagation-notice');
+    }
+}
+
 // Initialize when DOM is ready
 document.addEventListener('DOMContentLoaded', function() {
     // Initialize language first to ensure _t is ready
@@ -343,6 +354,7 @@ document.addEventListener('DOMContentLoaded', function() {
         window.currentLang = window.initializeLanguage();
     }
     updateSharePageLanguage();
+    updateIPFSNotice();
     processShareUrl();
 
     // Add download button event listener
