@@ -198,6 +198,7 @@ function getFileTypeIcon(filename) {
 
 // Common gateway list used across the application
 const commonGateways = [
+    { value: "https://gw.crustgw.work", text: "crustgw" },
     { value: "https://i0.img2ipfs.com", text: "img2ipfs" },
     { value: "https://cdn.ipfsscan.io", text: "cdn-ipfsscan" },
     { value: "https://gateway.ipfsscan.io", text: "ipfsscan" },

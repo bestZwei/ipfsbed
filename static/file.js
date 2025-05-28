@@ -95,7 +95,7 @@ async function compressFolderToZip(files, folderName) {
             type: 'blob',
             compression: 'DEFLATE',
             compressionOptions: {
-                level: 3 // 压缩级别 1-9，9为最高压缩率但最慢
+                level: 6 // 压缩级别 1-9，9为最高压缩率但最慢
             }
         }, function(metadata) {
             // Optional: Log progress or update a UI element if needed
@@ -896,6 +896,7 @@ function copyShareLink(button) {
 function seeding(res) {
     const gateways = [
         // 主流公共网关
+        'https://gw.crustgw.work',
         'https://i0.img2ipfs.com/ipfs/',
         'https://cdn.ipfsscan.io/ipfs/',
         'https://gateway.ipfsscan.io/ipfs/',
