@@ -111,8 +111,8 @@ let sortedGateways = []; // 用于存储排序后的网关
 
 // 异步函数：测试网关延迟并排序
 async function pingAndSortGateways() {
-    console.log(_t('pinging-gateways', { default: '正在测试上传节点速度...'}));
-    showToast(_t('pinging-gateways-toast', { default: '节点测速中，请稍候...' }), 'info', 5000);
+    console.log(_t('pinging-gateways'));
+    showToast(_t('pinging-gateways-toast'), 'info', 5000);
 
     const pingPromises = GATEWAY_CONFIG.map(async (gateway) => {
         const startTime = performance.now();
@@ -154,12 +154,12 @@ async function pingAndSortGateways() {
     sortedGateways = results.slice().sort((a, b) => a.latency - b.latency);
 
     if (sortedGateways.length > 0 && sortedGateways[0].latency !== Infinity) {
-        const bestGatewayMsg = _t('best-gateway', { default: '最佳上传节点: '}) + sortedGateways[0].name + ` (${sortedGateways[0].latency.toFixed(2)} ms)`;
+        const bestGatewayMsg = _t('best-gateway') + sortedGateways[0].name + ` (${sortedGateways[0].latency.toFixed(2)} ms)`;
         console.log(bestGatewayMsg);
-        showToast(_t('gateways-sorted', { default: '上传节点测速完成，已选择最佳节点。'}), 'success');
+        showToast(_t('gateways-sorted'), 'success');
     } else {
-        console.warn(_t('all-gateways-failed-ping', { default: '所有上传节点测速失败，将按默认顺序尝试。'}));
-        showToast(_t('all-gateways-failed-ping-toast', { default: '节点测速失败，将按默认顺序上传。'}), 'warning');
+        console.warn(_t('all-gateways-failed-ping'));
+        showToast(_t('all-gateways-failed-ping-toast'), 'warning');
         sortedGateways = GATEWAY_CONFIG.slice(); // 回退到原始顺序
     }
 }
@@ -495,8 +495,8 @@ $(document).ready(async () => { // 将ready函数设为异步
             const apis = (sortedGateways.length > 0 ? sortedGateways : GATEWAY_CONFIG).map(g => g.addFileUrl);
             
             if (apis.length === 0) {
-                console.error("没有可用的上传API节点。");
-                showToast(_t('no-upload-apis', { default: '没有可用的上传节点。'}), 'error');
+                console.error(_t('no-upload-apis'));
+                showToast(_t('no-upload-apis'), 'error');
                 handleError(Date.now().toString(36), _t('no-upload-apis')); // randomClass 仅用于错误处理
                 reject(new Error('No upload APIs available'));
                 return;
@@ -629,11 +629,8 @@ $(document).ready(async () => { // 将ready函数设为异步
             const apis = (sortedGateways.length > 0 ? sortedGateways : GATEWAY_CONFIG).map(g => g.addDirUrl);
 
             if (apis.length === 0) {
-                console.error("没有可用的上传API节点 (目录)。");
-                showToast(_t('no-upload-apis-dir', { default: '没有可用的目录上传节点。'}), 'error');
-                handleError(randomClass, _t('no-upload-apis-dir'));
-                reject(new Error('No directory upload APIs available'));
-                return;
+                console.error(_t('no-upload-apis-dir'));
+                showToast(_t('no-upload-apis-dir'), 'error');
             }
             
             // 增加请求超时时间，避免大文件夹上传导致超时
