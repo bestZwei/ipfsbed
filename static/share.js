@@ -139,14 +139,16 @@ function processShareUrl() {
 
 // Add cancel loading functionality
 function cancelLoading() {
+    // Simply hide the loading indicator and return to file details
     document.getElementById('loadingIndicator').style.display = 'none';
     
-    // If we have current file details, show them instead of error
+    // If file details are available, show them again
     if (currentCid && currentFilename) {
         document.getElementById('fileDetails').style.display = 'block';
-        showToast(_t('loading-cancel') || 'Loading cancelled', 'info');
+        showToast(_t('loading-cancel') || 'Operation cancelled', 'info');
     } else {
-        // Only show error if we don't have file details to fall back to
+        // If no file details available yet, this means we're still in the initial loading phase
+        // In this case, we should show an error as the file couldn't be accessed
         document.getElementById('fileDetails').style.display = 'block';
         document.getElementById('fileIcon').innerHTML = '<i class="fas fa-times-circle" style="font-size: 60px; color: #f56c6c;"></i>';
         document.getElementById('fileName').textContent = _t('loading-cancel');
