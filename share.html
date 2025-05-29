@@ -33,7 +33,7 @@
             <div class="loading" id="loadingIndicator">
                 <div class="spinner"></div>
                 <p id="loadingText"></p>
-                <button class="loading-cancel" id="loadingCancelBtn" onclick="cancelLoading()">
+                <button class="loading-cancel" id="loadingCancelBtn" onclick="cancelDownload()">
                     <i class="fas fa-times"></i>
                     <span data-translate="loading-cancel">取消</span>
                 </button>
@@ -102,6 +102,18 @@
                 passwordToggle.title = _t('show-password');
             }
         });
+        
+        // Function to cancel download and return to file details
+        function cancelDownload() {
+            // Hide loading indicator
+            document.getElementById('loadingIndicator').style.display = 'none';
+            
+            // If we have file details, show them
+            if (currentCid && currentFilename) {
+                document.getElementById('fileDetails').style.display = 'block';
+                showToast(_t('loading-cancel') || 'Download cancelled', 'info');
+            }
+        }
         
         // Function to toggle password visibility
         function togglePasswordVisibility(inputId) {
