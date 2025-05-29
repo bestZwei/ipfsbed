@@ -34,7 +34,7 @@ async function getShortUrl(longUrl) {
     } catch (error) {
         console.warn('Error calling shortener service:', error);
         showToast(_t('shorten-url-failed-fallback', { default: '短链接获取失败，已使用原始链接。' }), 'warning');
-        return longUrl; // 失败时回退到长链接
+        return longUrl; // 失败时回退到原始链接
     }
 }
 
@@ -124,7 +124,7 @@ async function pingAndSortGateways() {
             // 但请注意，'no-cors' 模式下无法获取响应状态码，只能判断是否可达
             // 如果需要精确状态，目标服务器必须配置CORS
             const response = await fetch(gateway.pingUrl, {
-                method: 'GET', // IPFS /api/v0/version 通常支持 GET
+                method: 'POST', // IPFS /api/v0/version 通常支持 POST
                 signal: controller.signal,
                 cache: 'no-store', // 确保是新的请求
                 // mode: 'no-cors' // 如果目标API没有CORS头，可以尝试这个，但会限制错误处理
