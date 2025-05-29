@@ -78,6 +78,93 @@ const folderUploadConfig = {
     compressLargeFolder: true // 是否启用大文件夹自动压缩
 };
 
+// 定义全局网关配置
+const GATEWAY_CONFIG = [
+    {
+        id: 'gw-ipfsbed-1',
+        name: 'IPFSBed Gateway 1',
+        pingUrl: 'https://gw.ipfsbed.is-an.org/api/v0/version', // 用于测试延迟的URL
+        addFileUrl: 'https://gw.ipfsbed.is-an.org/api/v0/add?pin=false',
+        addDirUrl: 'https://gw.ipfsbed.is-an.org/api/v0/add?pin=false&recursive=true&wrap-with-directory=true',
+        latency: Infinity
+    },
+    {
+        id: 'gw-ipfsbed-2',
+        name: 'IPFSBed Gateway 2',
+        pingUrl: 'https://gw2.ipfsbed.is-an.org/api/v0/version',
+        addFileUrl: 'https://gw2.ipfsbed.is-an.org/api/v0/add?pin=false',
+        addDirUrl: 'https://gw2.ipfsbed.is-an.org/api/v0/add?pin=false&recursive=true&wrap-with-directory=true',
+        latency: Infinity
+    }
+    // 您可以在此添加更多备用网关配置
+    // 例如：
+    // {
+    //     id: 'public-gateway-1',
+    //     name: 'Public Gateway Example',
+    //     pingUrl: 'https://ipfs.io/api/v0/version',
+    //     addFileUrl: 'https://ipfs.io/api/v0/add?pin=false', // 注意：公共网关可能不允许直接add或有严格限制
+    //     addDirUrl: 'https://ipfs.io/api/v0/add?pin=false&recursive=true&wrap-with-directory=true',
+    //     latency: Infinity
+    // }
+];
+let sortedGateways = []; // 用于存储排序后的网关
+
+// 异步函数：测试网关延迟并排序
+async function pingAndSortGateways() {
+    console.log(_t('pinging-gateways', { default: '正在测试上传节点速度...'}));
+    showToast(_t('pinging-gateways-toast', { default: '节点测速中，请稍候...' }), 'info', 5000);
+
+    const pingPromises = GATEWAY_CONFIG.map(async (gateway) => {
+        const startTime = performance.now();
+        try {
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), 3000); // 3秒超时
+
+            // 使用 'no-cors' 模式进行ping，因为 /api/v0/version 可能没有CORS头部
+            // 但请注意，'no-cors' 模式下无法获取响应状态码，只能判断是否可达
+            // 如果需要精确状态，目标服务器必须配置CORS
+            const response = await fetch(gateway.pingUrl, {
+                method: 'GET', // IPFS /api/v0/version 通常支持 GET
+                signal: controller.signal,
+                cache: 'no-store', // 确保是新的请求
+                // mode: 'no-cors' // 如果目标API没有CORS头，可以尝试这个，但会限制错误处理
+            });
+            clearTimeout(timeoutId);
+
+            // 检查响应是否成功 (status 200-299)
+            // 如果使用了 mode: 'no-cors', response.ok 和 response.status 将不可靠
+            // 在这种情况下，只要请求没有抛出错误，就认为ping成功
+            // 为更准确，建议确保pingUrl的服务器配置了CORS
+            if (response.ok) { // 假设pingUrl支持CORS并且响应正常
+                gateway.latency = performance.now() - startTime;
+                console.log(`网关 ${gateway.name} 延迟: ${gateway.latency.toFixed(2)} ms`);
+            } else {
+                gateway.latency = Infinity;
+                console.warn(`网关 ${gateway.name} ping 失败或响应不正常: ${response.status}`);
+            }
+        } catch (error) {
+            gateway.latency = Infinity;
+            console.warn(`Ping 网关 ${gateway.name} 出错:`, error.name === 'AbortError' ? '超时' : error.message);
+        }
+        return gateway;
+    });
+
+    const results = await Promise.all(pingPromises);
+    // 根据延迟排序，Infinity会排在最后
+    sortedGateways = results.slice().sort((a, b) => a.latency - b.latency);
+
+    if (sortedGateways.length > 0 && sortedGateways[0].latency !== Infinity) {
+        const bestGatewayMsg = _t('best-gateway', { default: '最佳上传节点: '}) + sortedGateways[0].name + ` (${sortedGateways[0].latency.toFixed(2)} ms)`;
+        console.log(bestGatewayMsg);
+        showToast(_t('gateways-sorted', { default: '上传节点测速完成，已选择最佳节点。'}), 'success');
+    } else {
+        console.warn(_t('all-gateways-failed-ping', { default: '所有上传节点测速失败，将按默认顺序尝试。'}));
+        showToast(_t('all-gateways-failed-ping-toast', { default: '节点测速失败，将按默认顺序上传。'}), 'warning');
+        sortedGateways = GATEWAY_CONFIG.slice(); // 回退到原始顺序
+    }
+}
+
+
 // 添加ZIP压缩功能
 async function compressFolderToZip(files, folderName) {
     try {
@@ -133,7 +220,7 @@ function readFileAsArrayBuffer(file) {
     });
 }
 
-$(document).ready(() => {
+$(document).ready(async () => { // 将ready函数设为异步
     // Directly start initialization of event listeners
     initEventListeners();
     // Check if accessing a shared link
@@ -144,6 +231,9 @@ $(document).ready(() => {
 
     // Initialize buttons in disabled state
     $('.copyall, #shareSelected').addClass('disabled');
+    
+    // 页面加载时执行网关测速
+    await pingAndSortGateways();
 
     function initEventListeners() {
         $(document).on('paste', handlePasteUpload);
@@ -401,11 +491,17 @@ $(document).ready(() => {
     function uploadToImg2IPFS(file) {
         return new Promise((resolve, reject) => {
             document.querySelector('.container').classList.add('start');
-            const apis = [
-                'https://gw.ipfsbed.is-an.org/api/v0/add?pin=false',
-                'https://gw2.ipfsbed.is-an.org/api/v0/add?pin=false'
-                // 'https://api.img2ipfs.org/api/v0/add?pin=false'
-            ];
+            // 使用排序后的网关列表，如果列表为空则使用原始配置
+            const apis = (sortedGateways.length > 0 ? sortedGateways : GATEWAY_CONFIG).map(g => g.addFileUrl);
+            
+            if (apis.length === 0) {
+                console.error("没有可用的上传API节点。");
+                showToast(_t('no-upload-apis', { default: '没有可用的上传节点。'}), 'error');
+                handleError(Date.now().toString(36), _t('no-upload-apis')); // randomClass 仅用于错误处理
+                reject(new Error('No upload APIs available'));
+                return;
+            }
+
             const formData = new FormData();
             formData.append('file', file);
             const randomClass = Date.now().toString(36);
@@ -529,11 +625,16 @@ $(document).ready(() => {
             $('.filelist .list').append(createDirectoryItem(folderName, totalSize, randomClass));
             $(`.${randomClass}`).addClass('uploading');
 
-            const apis = [
-                'https://gw.ipfsbed.is-an.org/api/v0/add?pin=false&recursive=true&wrap-with-directory=true',
-                'https://gw2.ipfsbed.is-an.org/api/v0/add?pin=false&recursive=true&wrap-with-directory=true'
-                // 'https://api.img2ipfs.org/api/v0/add?pin=false&recursive=true&wrap-with-directory=true'
-            ];
+            // 使用排序后的网关列表，如果列表为空则使用原始配置
+            const apis = (sortedGateways.length > 0 ? sortedGateways : GATEWAY_CONFIG).map(g => g.addDirUrl);
+
+            if (apis.length === 0) {
+                console.error("没有可用的上传API节点 (目录)。");
+                showToast(_t('no-upload-apis-dir', { default: '没有可用的目录上传节点。'}), 'error');
+                handleError(randomClass, _t('no-upload-apis-dir'));
+                reject(new Error('No directory upload APIs available'));
+                return;
+            }
             
             // 增加请求超时时间，避免大文件夹上传导致超时
             const uploadTimeout = Math.max(300000, totalSize / 1024 * 30); // 基于大小动态调整超时时间
