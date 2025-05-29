@@ -95,7 +95,7 @@ async function compressFolderToZip(files, folderName) {
             type: 'blob',
             compression: 'DEFLATE',
             compressionOptions: {
-                level: 3 // 压缩级别 1-9，9为最高压缩率但最慢
+                level: 6 // 压缩级别 1-9，9为最高压缩率但最慢
             }
         }, function(metadata) {
             // Optional: Log progress or update a UI element if needed
@@ -403,7 +403,7 @@ $(document).ready(() => {
             document.querySelector('.container').classList.add('start');
             const apis = [
                 'https://gw.ipfsbed.is-an.org/api/v0/add?pin=false',
-                'http://[2a0b:4e07:8:1::8d1]:5001/api/v0/add?pin=false'
+                'https://gw2.ipfsbed.is-an.org/api/v0/add?pin=false'
                 // 'https://api.img2ipfs.org/api/v0/add?pin=false'
             ];
             const formData = new FormData();
@@ -896,6 +896,7 @@ function copyShareLink(button) {
 function seeding(res) {
     const gateways = [
         // 主流公共网关
+        'https://gw.crustgw.work',
         'https://i0.img2ipfs.com/ipfs/',
         'https://cdn.ipfsscan.io/ipfs/',
         'https://gateway.ipfsscan.io/ipfs/',

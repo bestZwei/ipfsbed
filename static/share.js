@@ -139,12 +139,38 @@ function processShareUrl() {
 
 // Add cancel loading functionality
 function cancelLoading() {
+    // 设置取消标志
+    if (window.downloadCancelled !== undefined) {
+        window.downloadCancelled = true;
+    }
+    
+    // 隐藏加载指示器
     document.getElementById('loadingIndicator').style.display = 'none';
-    document.getElementById('fileDetails').style.display = 'block';
-    document.getElementById('fileIcon').innerHTML = '<i class="fas fa-times-circle" style="font-size: 60px; color: #f56c6c;"></i>';
-    document.getElementById('fileName').textContent = _t('loading-cancel');
-    document.getElementById('fileSize').textContent = _t('selected-files-invalid');
-    document.getElementById('downloadButton').style.display = 'none';
+    
+    // 如果有文件详情，恢复显示文件详情
+    if (currentCid && currentFilename) {
+        document.getElementById('fileDetails').style.display = 'block';
+        // 重新启用下载按钮
+        const downloadButton = document.getElementById('downloadButton');
+        if (downloadButton) {
+            downloadButton.classList.remove('disabled');
+            const buttonText = downloadButton.querySelector('span');
+            if (buttonText) {
+                buttonText.textContent = currentFilename && currentFilename.endsWith('/') ? 
+                    (_t('browse-folder') || '浏览文件夹') : 
+                    (_t('download-button') || 'Download');
+            }
+        }
+        showToast(_t('loading-cancel') || '已取消', 'info', 3000);
+    } else {
+        // 如果没有文件详情，显示取消消息但不显示错误
+        document.getElementById('fileDetails').style.display = 'block';
+        document.getElementById('fileIcon').innerHTML = '<i class="fas fa-info-circle" style="font-size: 60px; color: #909399;"></i>';
+        document.getElementById('fileName').textContent = _t('loading-cancel') || '已取消';
+        document.getElementById('fileSize').textContent = _t('click-to-retry') || '您可以重新尝试访问';
+        document.getElementById('downloadButton').style.display = 'none';
+        showToast(_t('loading-cancel') || '已取消', 'info', 3000);
+    }
 }
 
 // Display file details and setup download button
@@ -260,14 +286,33 @@ async function forceDownloadFile(url, filename, btn) {
     }
     
     try {
+        // 重置取消标志
+        window.downloadCancelled = false;
+        
         btn.classList.add('disabled');
         btn.querySelector('span').textContent = _t('download-progress') || 'Downloading...';
         // 显示loading
         document.getElementById('loadingIndicator').style.display = 'flex';
 
+        // 检查是否被取消
+        if (window.downloadCancelled) {
+            throw new Error('Download cancelled');
+        }
+
         const response = await fetch(url);
-        if (!response.ok) throw new Error('Network error');
+        if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+        
+        // 再次检查是否被取消
+        if (window.downloadCancelled) {
+            throw new Error('Download cancelled');
+        }
+        
         const blob = await response.blob();
+
+        // 最后检查是否被取消
+        if (window.downloadCancelled) {
+            throw new Error('Download cancelled');
+        }
 
         // 创建临时a标签下载
         const a = document.createElement('a');
@@ -280,12 +325,23 @@ async function forceDownloadFile(url, filename, btn) {
             document.body.removeChild(a);
         }, 100);
 
+        showToast(_t('download-started') || 'Download started', 'success');
+
     } catch (e) {
-        showToast(_t('download-error'), 'error');
+        console.error('Download error:', e);
+        if (window.downloadCancelled || e.message === 'Download cancelled') {
+            showToast(_t('loading-cancel') || 'Download cancelled', 'info');
+        } else {
+            showToast(_t('download-error'), 'error');
+        }
     } finally {
         btn.classList.remove('disabled');
-        btn.querySelector('span').textContent = _t('download-button') || 'Download';
+        btn.querySelector('span').textContent = filename && filename.endsWith('/') ? 
+            (_t('browse-folder') || '浏览文件夹') : 
+            (_t('download-button') || 'Download');
         document.getElementById('loadingIndicator').style.display = 'none';
+        // 重置取消标志
+        window.downloadCancelled = false;
     }
 }
 
@@ -339,6 +395,9 @@ document.addEventListener('DOMContentLoaded', function() {
     updateSharePageLanguage();
     updateIPFSNotice();
     processShareUrl();
+
+    // 初始化下载取消标志
+    window.downloadCancelled = false;
 
     // Add download button event listener
     document.getElementById('downloadButton').addEventListener('click', function(e) {
