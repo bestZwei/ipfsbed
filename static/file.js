@@ -81,31 +81,21 @@ const folderUploadConfig = {
 // 定义全局网关配置
 const GATEWAY_CONFIG = [
     {
-        id: 'gw-ipfsbed-1',
-        name: 'IPFSBed Gateway 1',
-        pingUrl: 'https://gw.ipfsbed.is-an.org/api/v0/version', // 用于测试延迟的URL
-        addFileUrl: 'https://gw.ipfsbed.is-an.org/api/v0/add?pin=false',
-        addDirUrl: 'https://gw.ipfsbed.is-an.org/api/v0/add?pin=false&recursive=true&wrap-with-directory=true',
+        id: 'gw-ipfsbed-0',
+        name: 'Gateway0',
+        pingUrl: 'https://gw-ipfsbed.is-an.org/api/v0/version',
+        addFileUrl: 'https://gw-ipfsbed.is-an.org/api/v0/add?pin=false',
+        addDirUrl: 'https://gw-ipfsbed.is-an.org/api/v0/add?pin=false&recursive=true&wrap-with-directory=true',
         latency: Infinity
     },
     {
-        id: 'gw-ipfsbed-2',
-        name: 'IPFSBed Gateway 2',
-        pingUrl: 'https://gw2.ipfsbed.is-an.org/api/v0/version',
-        addFileUrl: 'https://gw2.ipfsbed.is-an.org/api/v0/add?pin=false',
-        addDirUrl: 'https://gw2.ipfsbed.is-an.org/api/v0/add?pin=false&recursive=true&wrap-with-directory=true',
+        id: 'gw-ipfsbed-1',
+        name: 'Gateway1',
+        pingUrl: 'https://gw1-ipfsbed.is-an.org/api/v0/version',
+        addFileUrl: 'https://gw1-ipfsbed.is-an.org/api/v0/add?pin=false',
+        addDirUrl: 'https://gw1-ipfsbed.is-an.org/api/v0/add?pin=false&recursive=true&wrap-with-directory=true',
         latency: Infinity
     }
-    // 您可以在此添加更多备用网关配置
-    // 例如：
-    // {
-    //     id: 'public-gateway-1',
-    //     name: 'Public Gateway Example',
-    //     pingUrl: 'https://ipfs.io/api/v0/version',
-    //     addFileUrl: 'https://ipfs.io/api/v0/add?pin=false', // 注意：公共网关可能不允许直接add或有严格限制
-    //     addDirUrl: 'https://ipfs.io/api/v0/add?pin=false&recursive=true&wrap-with-directory=true',
-    //     latency: Infinity
-    // }
 ];
 let sortedGateways = []; // 用于存储排序后的网关
 
