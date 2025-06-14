@@ -95,6 +95,14 @@ const GATEWAY_CONFIG = [
         addFileUrl: 'https://gw1-ipfsbed.is-an.org/api/v0/add?pin=false',
         addDirUrl: 'https://gw1-ipfsbed.is-an.org/api/v0/add?pin=false&recursive=true&wrap-with-directory=true',
         latency: Infinity
+    },
+    {
+        id: 'gw-ipfsbed-2',
+        name: 'Gateway2',
+        pingUrl: 'https://gw2-ipfsbed.is-an.org/api/v0/version',
+        addFileUrl: 'https://gw2-ipfsbed.is-an.org/api/v0/add?pin=false',
+        addDirUrl: 'https://gw2-ipfsbed.is-an.org/api/v0/add?pin=false&recursive=true&wrap-with-directory=true',
+        latency: Infinity
     }
 ];
 let sortedGateways = []; // 用于存储排序后的网关
