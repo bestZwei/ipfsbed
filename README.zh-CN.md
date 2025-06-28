@@ -130,6 +130,19 @@ IPFSBED提供多种IPFS网关来访问您的文件。根据您的位置和网络
 
 部署后，您的IPFSBED实例将在`your-project-name.pages.dev`上可用。您还可以在Cloudflare Pages设置中配置自定义域名。
 
+---
+
+## 使用腾讯 EdgeOne Pages 部署
+
+您也可以通过 [腾讯 EdgeOne Pages](https://edgeone.ai/pages) 一键部署 IPFSBED：
+
+[![Use EdgeOne Pages to deploy](https://cdnstatic.tencentcs.com/edgeone/pages/deploy.svg)](https://edgeone.ai/pages/new?repository-url=https%3A%2F%2Fgithub.com%2Fbestzwei%2Fipfsbed)
+
+点击上方按钮即可在 EdgeOne Pages 部署本项目。  
+您可以在部署控制台中根据需要调整构建设置和环境变量。
+
+---
+
 ### 使用自己的IPFS网关
 
 为了获得更好的性能和控制，您务必部署自己的IPFS网关：

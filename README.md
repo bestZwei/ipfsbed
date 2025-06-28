@@ -129,6 +129,19 @@ You can easily deploy your own instance of IPFSBED using Cloudflare Pages:
 
 After deployment, your IPFSBED instance will be available at `your-project-name.pages.dev`. You can also configure a custom domain in the Cloudflare Pages settings.
 
+---
+
+## Deployment with Tencent EdgeOne Pages
+
+You can also deploy IPFSBED easily using [Tencent EdgeOne Pages](https://edgeone.ai/pages):
+
+[![Use EdgeOne Pages to deploy](https://cdnstatic.tencentcs.com/edgeone/pages/deploy.svg)](https://edgeone.ai/pages/new?repository-url=https%3A%2F%2Fgithub.com%2Fbestzwei%2Fipfsbed)
+
+Click the button above to deploy this project to EdgeOne Pages.  
+You can adjust build settings and environment variables as needed in the deployment console.
+
+---
+
 ### Using Your Own IPFS Gateway
 
 For better performance and control, you have to deploy your own IPFS gateway:
