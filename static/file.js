@@ -40,7 +40,9 @@ async function getShortUrl(longUrl) {
 
 // Move updateProgress function to global scope
 function updateProgress(e, randomClass) {
-    const percent = Math.floor((e.loaded / e.total) * 100);
+    if (!e) return;
+    // Guard against missing content-length (e.total === 0) to avoid NaN%
+    const percent = e.total ? Math.min(100, Math.floor((e.loaded / e.total) * 100)) : 0;
     $(`.${randomClass}`).find('.progress-inner').css('width', `${percent}%`);
     $(`.${randomClass}`).find('.progress-status').text(`${percent}%`);
 }
@@ -254,10 +256,10 @@ $(document).ready(async () => { // 将ready函数设为异步
             $('#file, #directory').hide();
         });
         
-        // Try to restore toggle state from localStorage
+        // Try to restore toggle state from localStorage and apply it
         const savedDirectoryMode = localStorage.getItem('ipfsbed_directory_mode');
         if (savedDirectoryMode === 'true') {
-            $('#uploadModeToggle').prop('checked', true);
+            $('#uploadModeToggle').prop('checked', true).trigger('change');
         }
         
         // Update click handler to use correct input based on mode
@@ -700,7 +702,10 @@ $(document).ready(async () => { // 将ready函数设为异步
         // Get file icon based on file type
         const fileIcon = getFileTypeIcon(file.name);
         const passphrase = $('#passphraseInput').val();
-        
+
+        // Escape file name for safe HTML insertion (prevents layout breakage / XSS from filenames)
+        const safeName = escapeHtml(file.name);
+
         // Determine which copy icon/text to show initially based on passphrase
         let copyButtonTitle = passphrase ? _t('copy-share-link') : _t('copy-link');
         let copyFunction = passphrase ? `copyShareLink(this)` : `copyLinkUrl(this)`;
@@ -711,7 +716,7 @@ $(document).ready(async () => { // 将ready函数设为异步
                     <input type="checkbox" class="file-select-checkbox" title="${_t('select-for-batch-sharing')}">
                     ${fileIcon}
                     <div class="desc">
-                        <div class="desc__name">${file.name}</div>
+                        <div class="desc__name" title="${safeName}">${safeName}</div>
                         <div class="desc__size">${_t('file-size', {size: formatBytes(file.size)})}</div>
                     </div>
                     <a href="javascript:void(0);" class="link copy-primary-link" title="${copyButtonTitle}" onclick="${copyFunction}; return false;">
@@ -743,7 +748,7 @@ $(document).ready(async () => { // 将ready函数设为异步
                 <!-- Hidden inputs to store the data -->
                 <input type="hidden" class="data-url" value="">
                 <input type="hidden" class="data-cid" value="">
-                <input type="hidden" class="data-filename" value="${file.name}">
+                <input type="hidden" class="data-filename" value="${escapeHtml(file.name)}">
                 <input type="hidden" class="data-passphrase-protected" value="${passphrase ? 'true' : 'false'}">
             </div>
         `;
@@ -969,16 +974,7 @@ function copyCID(button) {
     }, 300);
 }
 
-// Helper function for copying to clipboard
-function copyToClipboard(text) {
-    const textarea = document.createElement('textarea');
-    textarea.value = text;
-    document.body.appendChild(textarea);
-    textarea.select();
-    document.execCommand('copy');
-    document.body.removeChild(textarea);
-}
-
+// NOTE: copyToClipboard is provided by common.js (Promise-based, with clipboard API + fallback).
 // Add this new function specifically for share links if needed, or rely on copyLinkUrl
 function copyShareLink(button) {
     // This function is now effectively the same as copyLinkUrl when a passphrase is set
@@ -1059,6 +1055,9 @@ function showToast(message, type = 'info', duration = 3000) {
             break;
         case 'info':
             icon = '<i class="fas fa-info-circle" style="margin-right: 8px;"></i>';
+            break;
+        case 'warning':
+            icon = '<i class="fas fa-exclamation-triangle" style="margin-right: 8px;"></i>';
             break;
     }
     

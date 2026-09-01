@@ -16,13 +16,13 @@
 
 .history-header h1 {
     margin: 0;
-    color: #333;
+    color: var(--foreground);
     font-size: 28px;
 }
 
 .history-header h1 i {
     margin-right: 10px;
-    color: #409eff;
+    color: var(--accent);
 }
 
 .header-actions {
@@ -88,11 +88,11 @@
 
 /* Controls Section */
 .controls-section {
-    background: #f8f9fa;
+    background: var(--bg-subtle);
     padding: 20px;
     border-radius: 12px;
     margin-bottom: 20px;
-    border: 1px solid #e9ecef;
+    border: 1px solid var(--border);
 }
 
 .search-box {
@@ -105,21 +105,21 @@
     left: 12px;
     top: 50%;
     transform: translateY(-50%);
-    color: #999;
+    color: var(--muted-soft);
     z-index: 1;
 }
 
 .search-box input {
     width: 100%;
     padding: 12px 12px 12px 40px;
-    border: 2px solid #e9ecef;
+    border: 2px solid var(--border);
     border-radius: 8px;
     font-size: 14px;
     transition: border-color 0.3s ease;
 }
 
 .search-box input:focus {
-    border-color: #409eff;
+    border-color: var(--accent);
     outline: none;
 }
 
@@ -132,7 +132,7 @@
 
 .filter-controls select {
     padding: 8px 12px;
-    border: 2px solid #e9ecef;
+    border: 2px solid var(--border);
     border-radius: 6px;
     background: white;
     min-width: 120px;
@@ -156,7 +156,7 @@
     align-items: center;
     gap: 6px;
     text-decoration: none;
-    background: #409eff;
+    background: var(--accent);
     color: white;
 }
 
@@ -196,12 +196,12 @@
     display: flex;
     align-items: center;
     padding: 15px 20px;
-    border-bottom: 1px solid #f0f0f0;
+    border-bottom: 1px solid var(--border);
     transition: background-color 0.3s ease;
 }
 
 .history-item:hover {
-    background-color: #f8f9fa;
+    background-color: var(--bg-subtle);
 }
 
 .history-item:last-child {
@@ -230,7 +230,7 @@
 
 .item-name {
     font-weight: 600;
-    color: #333;
+    color: var(--foreground);
     margin-bottom: 5px;
     word-break: break-all;
 }
@@ -239,7 +239,7 @@
     display: flex;
     gap: 15px;
     font-size: 13px;
-    color: #666;
+    color: var(--muted);
     flex-wrap: wrap;
 }
 
@@ -268,14 +268,14 @@
     padding: 8px;
     border-radius: 6px;
     cursor: pointer;
-    color: #666;
+    color: var(--muted);
     transition: all 0.3s ease;
     font-size: 14px;
 }
 
 .btn-icon:hover {
-    background: #f0f0f0;
-    color: #333;
+    background: var(--border);
+    color: var(--foreground);
 }
 
 .btn-icon.btn-danger:hover {
@@ -294,22 +294,22 @@
 
 .pagination-btn {
     background: white;
-    border: 2px solid #e9ecef;
+    border: 2px solid var(--border);
     padding: 8px 12px;
     border-radius: 6px;
     cursor: pointer;
     transition: all 0.3s ease;
-    color: #333;
+    color: var(--foreground);
 }
 
 .pagination-btn:hover {
-    border-color: #409eff;
-    color: #409eff;
+    border-color: var(--accent);
+    color: var(--accent);
 }
 
 .pagination-btn.active {
-    background: #409eff;
-    border-color: #409eff;
+    background: var(--accent);
+    border-color: var(--accent);
     color: white;
 }
 
@@ -317,18 +317,18 @@
 .empty-state {
     text-align: center;
     padding: 60px 20px;
-    color: #666;
+    color: var(--muted);
 }
 
 .empty-state i {
     font-size: 64px;
-    color: #ddd;
+    color: var(--border-strong);
     margin-bottom: 20px;
 }
 
 .empty-state h3 {
     margin: 0 0 10px 0;
-    color: #333;
+    color: var(--foreground);
 }
 
 .empty-state p {
@@ -379,44 +379,4 @@
     }
 }
 
-/* Dark mode support */
-@media (prefers-color-scheme: dark) {
-    .history-container {
-        background: #1a1a1a;
-        color: #e0e0e0;
-    }
 
-    .controls-section {
-        background: #2d2d2d;
-        border-color: #404040;
-    }
-
-    .search-box input,
-    .filter-controls select {
-        background: #2d2d2d;
-        border-color: #404040;
-        color: #e0e0e0;
-    }
-
-    .history-list {
-        background: #2d2d2d;
-    }
-
-    .history-item {
-        border-bottom-color: #404040;
-    }
-
-    .history-item:hover {
-        background-color: #353535;
-    }
-
-    .item-name {
-        color: #e0e0e0;
-    }
-
-    .pagination-btn {
-        background: #2d2d2d;
-        border-color: #404040;
-        color: #e0e0e0;
-    }
-}
