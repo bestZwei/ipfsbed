@@ -534,7 +534,7 @@ $(document).ready(async () => { // 将ready函数设为异步
                     success: async res => {
                         if (res.Hash) {
                             await handleUploadSuccess(res, randomClass, file);
-                            setTimeout(() => seeding(res), 1000);
+                            setTimeout(() => seeding(res), 200);
                             resolve(res);
                         } else {
                             if (retryCount < 2) {
@@ -672,7 +672,7 @@ $(document).ready(async () => { // 将ready函数设为异步
                         }
                         if (dirObj && dirObj.Hash) {
                             await handleDirectoryUploadSuccess(dirObj, folderName, totalSize, randomClass);
-                            setTimeout(() => seeding(dirObj), 1000);
+                            setTimeout(() => seeding(dirObj), 200);
                             resolve(dirObj);
                         } else {
                             if (retryCount < 2) {
@@ -1042,6 +1042,9 @@ function seeding(res) {
             method,
             mode: 'no-cors',
             cache: 'reload',
+            // keepalive：页面被关闭/跳转后，浏览器仍保证把请求发出去，
+            // 不会因为页面卸载而 abort（GET/HEAD 无请求体，不受 64KB 配额限制）
+            keepalive: true,
             signal: controller.signal
         })
             .then(() => {})
