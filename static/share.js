@@ -276,6 +276,23 @@ function updateFileAccessLinks() {
     }
 }
 
+// 通过原生导航触发下载。
+// 跨域 fetch/XHR 经常被网关前面的 WAF（Cloudflare 等）判定为可疑请求直接 403，
+// 且需要网关返回 CORS 头；而浏览器自身的导航下载不受 CORS 限制，也不会被当作 XHR 拦截，
+// 还能断点续传、不占用 JS 堆内存（大文件友好）。
+// download=true 是 kubo 网关标准参数，用于把 Content-Disposition 从 inline 改成 attachment。
+function nativeDownload(url, filename) {
+    const a = document.createElement('a');
+    a.href = url + (url.includes('?') ? '&' : '?') + 'download=true';
+    a.rel = 'noopener';
+    a.target = '_self';
+    // 跨域时 download 属性会被浏览器忽略，此时文件名由网关的 Content-Disposition 决定
+    if (filename) a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    setTimeout(() => a.remove(), 1000);
+}
+
 // 强制下载文件的函数
 async function forceDownloadFile(url, filename, btn) {
     // Check if this is a folder
@@ -328,11 +345,14 @@ async function forceDownloadFile(url, filename, btn) {
         showToast(_t('download-started') || 'Download started', 'success');
 
     } catch (e) {
-        console.error('Download error:', e);
         if (window.downloadCancelled || e.message === 'Download cancelled') {
             showToast(_t('loading-cancel') || 'Download cancelled', 'info');
         } else {
-            showToast(_t('download-error'), 'error');
+            // fetch 失败（网关无 CORS 头 / WAF 拦截跨域 XHR / 网络错误）
+            // 并不代表文件下不到，回退到浏览器原生下载即可
+            console.warn('[download] fetch failed, fallback to native download:', e.message);
+            nativeDownload(url, filename);
+            showToast(_t('download-started') || 'Download started', 'success');
         }
     } finally {
         btn.classList.remove('disabled');
