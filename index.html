@@ -160,7 +160,7 @@
     </div>
     <!-- Hidden section for passphrase prompt when accessing a shared link -->
     <div id="shareAccessPrompt">
-        <div>
+        <div class="modal-content">
             <h3 data-translate="passphrase-prompt-title">Enter Passphrase</h3>
             <div class="input-wrapper">
                 <label for="accessPassphraseInput" data-translate="passphrase-prompt-label">Passphrase:</label>
@@ -169,8 +169,10 @@
                     <i class="fas fa-eye"></i>
                 </button>
             </div>
-            <button id="submitAccessPassphrase" data-translate="passphrase-submit">Unlock</button>
-            <p id="passphraseError"></p>
+            <div class="modal-actions" style="justify-content: center;">
+                <button id="submitAccessPassphrase" class="primary" data-translate="passphrase-submit">Unlock</button>
+            </div>
+            <p id="passphraseError" style="color: var(--error); font-size: 13px; margin-top: 10px;"></p>
         </div>
     </div>
 
@@ -222,41 +224,6 @@
                 toggleButton.title = _t('show-password');
             }
         }
-
-        // Toggle between file and directory upload modes
-        const uploadModeToggle = document.getElementById('uploadModeToggle');
-        const fileInput = document.getElementById('file');
-        const directoryInput = document.getElementById('directory');
-
-        // Initialize toggle state from localStorage
-        document.addEventListener('DOMContentLoaded', function() {
-            const savedDirectoryMode = localStorage.getItem('ipfsbed_directory_mode');
-            if (savedDirectoryMode === 'true') {
-                uploadModeToggle.checked = true;
-                // Trigger change event to ensure proper configuration
-                uploadModeToggle.dispatchEvent(new Event('change'));
-            }
-        });
-
-        uploadModeToggle.addEventListener('change', function() {
-            const isDirectoryMode = this.checked;
-            localStorage.setItem('ipfsbed_directory_mode', isDirectoryMode ? 'true' : 'false');
-            
-            // Configure file inputs based on mode
-            if (isDirectoryMode) {
-                directoryInput.setAttribute('webkitdirectory', '');
-                directoryInput.setAttribute('directory', '');
-                fileInput.removeAttribute('webkitdirectory');
-                fileInput.removeAttribute('directory');
-                console.log("Switched to directory mode");
-            } else {
-                directoryInput.removeAttribute('webkitdirectory');
-                directoryInput.removeAttribute('directory');
-                fileInput.removeAttribute('webkitdirectory');
-                fileInput.removeAttribute('directory');
-                console.log("Switched to file mode");
-            }
-        });
     </script>
 </body>
 </html>
