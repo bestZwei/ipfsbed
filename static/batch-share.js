@@ -282,6 +282,19 @@ function getSelectedFiles() {
     return selected;
 }
 
+// 通过原生导航触发下载：不受 CORS 限制，也不会被网关 WAF 当作跨域 XHR 拦截，
+// 支持大文件直下且不占 JS 堆内存。download=true 让网关返回 attachment。
+function nativeDownload(url, filename) {
+    const a = document.createElement('a');
+    a.href = url + (url.includes('?') ? '&' : '?') + 'download=true';
+    a.rel = 'noopener';
+    a.target = '_self';
+    if (filename) a.download = filename; // 跨域时被忽略，文件名由网关 Content-Disposition 决定
+    document.body.appendChild(a);
+    a.click();
+    setTimeout(() => a.remove(), 1000);
+}
+
 // Download a single file
 async function downloadSingleFile(index) {
     if (index < 0 || index >= batchFiles.length) return;
@@ -337,11 +350,13 @@ async function downloadSingleFile(index) {
         
         showToast(_t('download-started') || 'Download started', 'success');
     } catch (e) {
-        console.error('Download error:', e);
         if (singleDownloadCancelled) {
             showToast(_t('loading-cancel') || 'Download cancelled', 'info');
         } else {
-            showToast(_t('upload-error') || 'Download failed', 'error');
+            // 网关无 CORS 头 / WAF 拦截跨域 XHR 时，回退到浏览器原生下载
+            console.warn('[download] fetch failed, fallback to native download:', e.message);
+            nativeDownload(fileUrl, file.filename);
+            showToast(_t('download-started') || 'Download started', 'success');
         }
     } finally {
         // Hide loading indicator
