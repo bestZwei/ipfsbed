@@ -534,7 +534,7 @@ $(document).ready(async () => { // 将ready函数设为异步
                     success: async res => {
                         if (res.Hash) {
                             await handleUploadSuccess(res, randomClass, file);
-                            setTimeout(() => seeding(res), 1000);
+                            setTimeout(() => seeding(res), 200);
                             resolve(res);
                         } else {
                             if (retryCount < 2) {
@@ -672,7 +672,7 @@ $(document).ready(async () => { // 将ready函数设为异步
                         }
                         if (dirObj && dirObj.Hash) {
                             await handleDirectoryUploadSuccess(dirObj, folderName, totalSize, randomClass);
-                            setTimeout(() => seeding(dirObj), 1000);
+                            setTimeout(() => seeding(dirObj), 200);
                             resolve(dirObj);
                         } else {
                             if (retryCount < 2) {
@@ -988,7 +988,7 @@ function copyShareLink(button) {
 function seeding(res) {
     const gateways = [
         // 主流公共网关
-        'https://gw.crustgw.work',
+        'https://gw.crustgw.work/ipfs/',
         'https://i0.img2ipfs.com/ipfs/',
         'https://cdn.ipfsscan.io/ipfs/',
         'https://gateway.ipfsscan.io/ipfs/',
@@ -1020,13 +1020,48 @@ function seeding(res) {
         'https://ipfs.allgram.best/ipfs/',
         'https://ipfs.metaversis.io/ipfs/',
         'https://ipfs-internal.xnftdata.com/ipfs/'
-,
     ];
-    gateways.forEach(gateway => {
-        fetch(gateway + res.Hash)
-            .then(response => console.log(`Seeding at ${gateway}: ${response.status}`))
-            .catch(error => console.error(`Error seeding at ${gateway}:`, error));
-    });
+
+    // 限速：每批并发预热，避免瞬间打出几十个请求被网关限流
+    const CONCURRENCY = 6;
+    const TIMEOUT = 15000;
+    const cid = res.Hash;
+    const size = Number(res.Size) || 0;
+
+    // HEAD 只触发网关解析路径 / 查 DHT / 回源，不下载文件内容；
+    // 若大文件也用 GET，30 个网关会把文件整份下载 30 遍（N × 文件大小 的流量）。
+    // 小文件则用 GET，顺带让网关完整缓存住内容。
+    const method = size > 0 && size < 5 * 1024 * 1024 ? 'GET' : 'HEAD';
+
+    const warmUp = gateway => {
+        const controller = new AbortController();
+        const timer = setTimeout(() => controller.abort(), TIMEOUT);
+        // no-cors：请求照样发出并触发网关回源抓取，但浏览器不做 CORS 校验，
+        // 避免大量 "blocked by CORS policy" 报错（响应状态不可读，这是预期行为）
+        return fetch(gateway + cid, {
+            method,
+            mode: 'no-cors',
+            cache: 'reload',
+            // keepalive：页面被关闭/跳转后，浏览器仍保证把请求发出去，
+            // 不会因为页面卸载而 abort（GET/HEAD 无请求体，不受 64KB 配额限制）
+            keepalive: true,
+            signal: controller.signal
+        })
+            .then(() => {})
+            .catch(() => {})
+            .finally(() => clearTimeout(timer));
+    };
+
+    (async () => {
+        const queue = gateways.slice();
+        const workers = Array.from({ length: Math.min(CONCURRENCY, queue.length) }, async () => {
+            while (queue.length) {
+                await warmUp(queue.shift());
+            }
+        });
+        await Promise.all(workers);
+        console.debug(`[seeding] warmed up ${gateways.length} gateways for ${cid}`);
+    })();
 }
 
 function copyAllLinks() {
